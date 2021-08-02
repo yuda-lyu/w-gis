@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-tw">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html charset=UTF-8" />
+        <title>getCenterOfMassMultiPolygon</title>
+
+        <!-- @babel/polyfill已廢棄 -->
+        <script nomodule src="https://cdn.jsdelivr.net/npm/@babel/polyfill@7.12.1/dist/polyfill.min.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/wsemi/dist/wsemi.umd.js"></script>
+    
+        <script src="../dist/w-gis.umd.js"></script>
+
+    </head>
+
+    <body>
+
+        <div>See console.log</div>
+
+        <script>
+
+            let gis = window['w-gis']
+            console.log(gis)
+                            
+            let pg
+            let p
+
+            pg = [
+                [0, 0],
+                [100, 0],
+                [1, 1],
+                [0, 1],
+                [0, 0], //閉合不會影響質心值
+            ]
+            p = gis.getCenterOfMassMultiPolygon(pg)
+            console.log(p)
+            // => [ 33.336633663366335, 0.3366336633663366 ]
+
+            pg = [
+                [0, 0],
+                [100, 0],
+                [1, 1],
+                [0, 1],
+            ]
+            p = gis.getCenterOfMassMultiPolygon(pg)
+            console.log(p)
+            // => [ 33.336633663366335, 0.3366336633663366 ]
+
+        </script>
+
+    </body>
+
+</html>

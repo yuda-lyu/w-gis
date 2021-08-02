@@ -1,0 +1,38 @@
+{
+  "name": "w-gis",
+  "version": "1.0.3",
+  "description": "A tool for GIS analysis.",
+  "main": "dist/w-gis.umd.js",
+  "dependencies": {
+    "@turf/turf": "^6.5.0",
+    "lodash": "^4.17.21",
+    "proj4": "^2.7.5",
+    "wsemi": "^1.6.3"
+  },
+  "devDependencies": {
+    "w-package-tools": "^1.0.56"
+  },
+  "scripts": {
+    "test": "mocha --parallel --timeout 60000 --experimental-modules --es-module-specifier-resolution=node",
+    "deploy": "gh-pages -d docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuda-lyu/w-gis.git"
+  },
+  "keywords": [
+    "package",
+    "tool",
+    "GIS",
+    "@turf",
+    "proj4",
+    "nodejs",
+    "browser"
+  ],
+  "author": "yuda-lyu(semisphere)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuda-lyu/w-gis/issues"
+  },
+  "homepage": "https://github.com/yuda-lyu/w-gis#readme"
+}

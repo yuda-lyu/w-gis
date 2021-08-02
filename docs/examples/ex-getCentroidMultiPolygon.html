@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-tw">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html charset=UTF-8" />
+        <title>getCentroidMultiPolygon</title>
+
+        <!-- @babel/polyfill已廢棄 -->
+        <script nomodule src="https://cdn.jsdelivr.net/npm/@babel/polyfill@7.12.1/dist/polyfill.min.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/wsemi/dist/wsemi.umd.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.3/dist/w-gis.umd.js"></script>
+
+    </head>
+
+    <body>
+
+        <div>See console.log</div>
+
+        <script>
+
+            let gis = window['w-gis']
+            console.log(gis)
+                        
+            let pg
+            let p
+
+            pg = [
+                [0, 0],
+                [100, 0],
+                [1, 1],
+                [0, 1],
+                [0, 0], //閉合會影響形心值, turf問題
+            ]
+            p = gis.getCentroidMultiPolygon(pg)
+            console.log(p)
+            // => [ 25.25, 0.5 ]
+
+            pg = [
+                [0, 0],
+                [100, 0],
+                [1, 1],
+                [0, 1],
+            ]
+            p = gis.getCentroidMultiPolygon(pg)
+            console.log(p)
+            // => [ 33.666666666666664, 0.3333333333333333 ]
+
+        </script>
+
+    </body>
+
+</html>
