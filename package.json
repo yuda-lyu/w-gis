@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A tool for GIS analysis.",
   "main": "dist/w-gis.umd.js",
   "dependencies": {

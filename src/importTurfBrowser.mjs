@@ -1,4 +1,5 @@
 import b642str from 'wsemi/src/b642str.mjs'
+import haskey from 'wsemi/src/haskey.mjs'
 import isWindow from 'wsemi/src/isWindow.mjs'
 import getGlobal from 'wsemi/src/getGlobal.mjs'
 import j from './importTurfBrowser.json'
@@ -12,7 +13,13 @@ function init() {
         return null
     }
 
+    //g
     let g = getGlobal()
+
+    //check
+    if (haskey(g, 'turf')) {
+        return g.turf
+    }
 
     //ele
     let ele = g.document.createElement('script')
