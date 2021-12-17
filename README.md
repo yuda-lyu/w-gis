@@ -13,7 +13,7 @@ To view documentation or get support, visit [docs](https://yuda-lyu.github.io/w-
 
 ## Installation
 ### Using npm(ES6 module):
-> **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `lodash` and `wsemi`.
+> **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `d3-tricontour`, `lodash` and `wsemi`.
 ```alias
 npm i w-gis
 ```
@@ -23,6 +23,6 @@ npm i w-gis
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.6/dist/w-gis.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.7/dist/w-gis.umd.js"></script>
 
 ```
