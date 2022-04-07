@@ -8,7 +8,7 @@ import j from './importTurfBrowser.json'
 function init() {
     //@turf目前沒辦法由Nodejs端按需引入的方式直接打包成為前端使用umd程式碼, 故改直接引用@turf官方編譯min.js檔, 於前端直接插入head中, 直接使用window.turf
 
-    //check
+    //check, 若要編譯成webworker, 得再確認
     if (!isWindow()) {
         return null
     }
