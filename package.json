@@ -1,17 +1,17 @@
 {
   "name": "w-gis",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A tool for GIS analysis.",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "d3-tricontour": "^1.0.2",
     "lodash": "^4.17.21",
-    "proj4": "^2.7.5",
-    "wsemi": "^1.6.34"
+    "proj4": "^2.8.0",
+    "wsemi": "^1.6.54"
   },
   "devDependencies": {
-    "w-package-tools": "^1.0.59"
+    "w-package-tools": "^1.0.65"
   },
   "scripts": {
     "test": "mocha --parallel --timeout 60000 --experimental-modules --es-module-specifier-resolution=node",
