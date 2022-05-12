@@ -1,14 +1,13 @@
 {
   "name": "w-gis",
-  "version": "1.0.8",
-  "description": "A tool for GIS analysis.",
+  "version": "1.0.9",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
     "d3-tricontour": "^1.0.2",
     "lodash": "^4.17.21",
     "proj4": "^2.8.0",
-    "wsemi": "^1.6.54"
+    "wsemi": "^1.6.62"
   },
   "devDependencies": {
     "w-package-tools": "^1.0.65"
@@ -25,15 +24,11 @@
     "package",
     "tool",
     "GIS",
-    "@turf",
+    "turf",
     "proj4",
     "nodejs",
     "browser"
   ],
   "author": "yuda-lyu(semisphere)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/yuda-lyu/w-gis/issues"
-  },
-  "homepage": "https://github.com/yuda-lyu/w-gis#readme"
+  "license": "MIT"
 }

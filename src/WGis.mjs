@@ -9,10 +9,10 @@ import cloneDeep from 'lodash/cloneDeep'
 import isernot from 'wsemi/src/isernot.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import isWindow from 'wsemi/src/isWindow.mjs'
-import proj4 from 'proj4'
 import { tricontour } from 'd3-tricontour'
 import turfBrowser from './importTurfBrowser.mjs'
 import turfNode from './importTurfNode.mjs'
+import convertCoordinate from './convertCoordinate.mjs'
 
 
 let turf = null
@@ -39,84 +39,6 @@ let difference = turf.difference
 let bezierSpline = turf.bezierSpline
 let buffer = turf.buffer
 let booleanPointInPolygon = turf.booleanPointInPolygon
-
-
-//proj4 defs
-proj4.defs([
-    [
-        'EPSG:4326',
-        '+title=WGS84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees'],
-    [
-        'EPSG:3826',
-        '+title=TWD97 TM2 +proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +units=m +no_defs'
-    ],
-    [
-        'EPSG:3828',
-        '+title=TWD67 TM2 +proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=aust_SA +towgs84=-752,-358,-179,-0.0000011698,0.0000018398,0.0000009822,0.00002329 +units=m +no_defs'
-    ]
-])
-
-
-//proj4 EPSG
-let EPSG3826 = new proj4.Proj('EPSG:3826') //TWD97 TM2(121分帶)
-let EPSG3828 = new proj4.Proj('EPSG:3828') //TWD67 TM2(121分帶)
-let EPSG4326 = new proj4.Proj('EPSG:4326') //WGS84
-
-
-/**
- * 4326轉3826(WGS84經緯度轉TWD97 TM2)
- *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/cvWGS84toTWD97TM2.test.js Github}
- * @memberOf w-gis
- * @param {Array} ds 輸入經緯度座標陣列，第0個元素為經度，第1個元素緯度，單位deg
- * @returns {Array} 回傳x,y座標陣列，第0個元素為x，第1個元素y，單位m
- * @example
- */
-function cvWGS84toTWD97TM2(ds) {
-    return proj4(EPSG4326, EPSG3826, ds)
-}
-
-
-/**
- * 4326轉3828(WGS84經緯度轉TWD67 TM2)
- *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/cvWGS84toTWD67TM2.test.js Github}
- * @memberOf w-gis
- * @param {Array} ds 輸入經緯度座標陣列，第0個元素為經度，第1個元素緯度，單位deg
- * @returns {Array} 回傳x,y座標陣列，第0個元素為x，第1個元素y，單位m
- * @example
- */
-function cvWGS84toTWD67TM2(ds) {
-    return proj4(EPSG4326, EPSG3828, ds)
-}
-
-
-/**
- * 3826轉4326(TWD97 TM2轉WGS84經緯度)
- *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/cvTWD97TM2toWGS84.test.js Github}
- * @memberOf w-gis
- * @param {Array} ds 輸入x,y座標陣列，第0個元素為x，第1個元素y，單位m
- * @returns {Array} 回傳經緯度座標陣列，第0個元素為經度，第1個元素緯度，單位deg
- * @example
- */
-function cvTWD97TM2toWGS84(ds) {
-    return proj4(EPSG3826, EPSG4326, ds)
-}
-
-
-/**
- * 3828轉4326(TWD67 TM2轉WGS84經緯度)
- *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/cvTWD67TM2toWGS84.test.js Github}
- * @memberOf w-gis
- * @param {Array} ds 輸入x,y座標陣列，第0個元素為x，第1個元素y，單位m
- * @returns {Array} 回傳經緯度座標陣列，第0個元素為經度，第1個元素緯度，單位deg
- * @example
- */
-function cvTWD67TM2toWGS84(ds) {
-    return proj4(EPSG3828, EPSG4326, ds)
-}
 
 
 function toMultiPolygon(v) {
@@ -604,11 +526,8 @@ function calcContours(points, opt = {}) {
 
 
 let WGis = {
+
     toMultiPolygon,
-    cvWGS84toTWD97TM2,
-    cvWGS84toTWD67TM2,
-    cvTWD97TM2toWGS84,
-    cvTWD67TM2toWGS84,
     getCentroidMultiPolygon,
     getCenterOfMassMultiPolygon,
     getArea,
@@ -619,6 +538,9 @@ let WGis = {
     splineMultiPolygon,
     fixGeometryMultiPolygon,
     calcContours,
+
+    convertCoordinate,
+
 }
 
 
