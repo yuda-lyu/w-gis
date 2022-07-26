@@ -5,6 +5,7 @@ import max from 'lodash/max'
 import get from 'lodash/get'
 import filter from 'lodash/filter'
 import size from 'lodash/size'
+import isNumber from 'lodash/isNumber'
 import cloneDeep from 'lodash/cloneDeep'
 import isernot from 'wsemi/src/isernot.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
@@ -14,7 +15,6 @@ import { tricontour } from 'd3-tricontour'
 import turfBrowser from './importTurfBrowser.mjs'
 import turfNode from './importTurfNode.mjs'
 import convertCoordinate from './convertCoordinate.mjs'
-import { isNumber } from 'lodash'
 
 
 let turf = null
