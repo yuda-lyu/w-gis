@@ -527,6 +527,8 @@ function calcContours(points, opt = {}) {
 
 let WGis = {
 
+    turf,
+
     toMultiPolygon,
     getCentroidMultiPolygon,
     getCenterOfMassMultiPolygon,
