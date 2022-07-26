@@ -8,11 +8,13 @@ import size from 'lodash/size'
 import cloneDeep from 'lodash/cloneDeep'
 import isernot from 'wsemi/src/isernot.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
+import isbol from 'wsemi/src/isbol.mjs'
 import isWindow from 'wsemi/src/isWindow.mjs'
 import { tricontour } from 'd3-tricontour'
 import turfBrowser from './importTurfBrowser.mjs'
 import turfNode from './importTurfNode.mjs'
 import convertCoordinate from './convertCoordinate.mjs'
+import { isNumber } from 'lodash'
 
 
 let turf = null
@@ -138,7 +140,7 @@ function isPointInPolygon(p, pgs) {
 
 
 function parseGeometryCollection(data) {
-    let gs = get(data, 'geometry.geometries')
+    let gs = get(data, 'geometry.geometries', [])
     let pgs = []
     each(gs, (v) => {
         if (v.type === 'Polygon') {
@@ -201,10 +203,10 @@ function clipMultiPolygon(pgs, pgsCut) {
 }
 
 
-function splineMultiPolygon(pgs, option) {
+function splineMultiPolygon(pgs, opt = {}) {
     //splineMultiPolygon(pgs, { resolution: 50000, sharpness: 0.05 })
 
-    function core(pg, option) {
+    function core(pg, opt = {}) {
 
         //cloneDeep
         pg = cloneDeep(pg)
@@ -212,7 +214,7 @@ function splineMultiPolygon(pgs, option) {
         //pgNew
         let pgNew = map(pg, (ps, k) => {
             let line = lineString(ps)
-            let r = bezierSpline(line, option)
+            let r = bezierSpline(line, opt)
             let psNew = get(r, 'geometry.coordinates')
             return psNew
         })
@@ -225,10 +227,40 @@ function splineMultiPolygon(pgs, option) {
 
     //core
     pgs = map(pgs, (pg) => {
-        return core(pg, option)
+        return core(pg, opt)
     })
 
     return pgs
+}
+
+
+function simplifyMultiPolygon(pgs, opt = {}) {
+
+    //check
+    if (!isearr(pgs)) {
+        return null
+    }
+
+    //tolerance
+    let tolerance = get(opt, 'tolerance')
+    if (!isNumber(tolerance)) {
+        tolerance = 0.005
+    }
+
+    //highQuality
+    let highQuality = get(opt, 'highQuality')
+    if (!isbol(highQuality)) {
+        highQuality = true
+    }
+
+    //simplify
+    let r = turf.simplify(turf.multiPolygon(toMultiPolygon(pgs)), { tolerance, highQuality })
+
+    //get pgs
+    r = get(r, 'geometry.coordinates', [])
+    // console.log('r',r)
+
+    return r
 }
 
 
@@ -538,11 +570,13 @@ let WGis = {
     clipMultiPolygon,
     maskMultiPolygon,
     splineMultiPolygon,
+    simplifyMultiPolygon,
     fixGeometryMultiPolygon,
     calcContours,
 
     invCoordPolygon,
     invCoordMultiPolygon,
+
     convertCoordinate,
 
 }
