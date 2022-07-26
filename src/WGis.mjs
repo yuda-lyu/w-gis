@@ -539,6 +539,8 @@ let WGis = {
     fixGeometryMultiPolygon,
     calcContours,
 
+    invCoordPolygon,
+    invCoordMultiPolygon,
     convertCoordinate,
 
 }
