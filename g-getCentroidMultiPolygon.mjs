@@ -1,4 +1,4 @@
-import gis from './src/WGis.mjs'
+import getCentroidMultiPolygon from './src/getCentroidMultiPolygon.mjs'
 
 
 let pg
@@ -11,7 +11,7 @@ pg = [
     [0, 1],
     [0, 0], //閉合會影響形心值, turf問題
 ]
-p = gis.getCentroidMultiPolygon(pg)
+p = getCentroidMultiPolygon(pg)
 console.log(p)
 // => [ 25.25, 0.5 ]
 
@@ -21,7 +21,7 @@ pg = [
     [1, 1],
     [0, 1],
 ]
-p = gis.getCentroidMultiPolygon(pg)
+p = getCentroidMultiPolygon(pg)
 console.log(p)
 // => [ 33.666666666666664, 0.3333333333333333 ]
 

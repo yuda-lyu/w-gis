@@ -2,7 +2,7 @@ import b642str from 'wsemi/src/b642str.mjs'
 import haskey from 'wsemi/src/haskey.mjs'
 import isWindow from 'wsemi/src/isWindow.mjs'
 import getGlobal from 'wsemi/src/getGlobal.mjs'
-import j from './importTurfBrowser.json'
+import b64 from './_turfCoreBrowser.mjs'
 
 
 function init() {
@@ -23,9 +23,6 @@ function init() {
 
     //ele
     let ele = g.document.createElement('script')
-
-    //b64
-    let b64 = j.b64
 
     //innerHTML
     ele.innerHTML = b642str(b64)
