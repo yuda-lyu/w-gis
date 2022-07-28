@@ -23,6 +23,6 @@ npm i w-gis
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.15/dist/w-gis.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.16/dist/w-gis.umd.js"></script>
 
 ```

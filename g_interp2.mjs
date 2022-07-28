@@ -10,16 +10,16 @@ p = {
     y: 205,
 }
 r = interp2(ps, p)
-console.log(p, r)
-// => { x: 243, y: 205 } 94.93541171916787
+console.log(r)
+// => { x: 243, y: 205, z: 94.93541171916787 }
 
 p = {
     x: 283,
     y: 205,
 }
 r = interp2(ps, p)
-console.log(p, r)
-// => { x: 283, y: 205 } 115.17591167501384
+console.log(r)
+// => { x: 283, y: 205, z: 115.17591167501384 }
 
 
 //node --experimental-modules --es-module-specifier-resolution=node g_interp2.mjs

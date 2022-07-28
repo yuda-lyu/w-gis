@@ -282,7 +282,11 @@ function interp2(psSrc, psTar, opt = {}) {
         let y = p[keyY]
         // console.log('psSrcItr', psSrcItr, 'x', x, 'y', y)
         let z = addPoint(psSrcItr, x, y)
-        r = z
+        r = {
+            [keyX]: x,
+            [keyY]: y,
+            [keyZ]: z,
+        }
     }
     else {
         r = []
@@ -290,7 +294,11 @@ function interp2(psSrc, psTar, opt = {}) {
             let x = p[keyX]
             let y = p[keyY]
             let z = addPoint(psSrcItr, x, y)
-            r.push(z)
+            r.push({
+                [keyX]: x,
+                [keyY]: y,
+                [keyZ]: z,
+            })
         })
     }
 
