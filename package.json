@@ -1,9 +1,10 @@
 {
   "name": "w-gis",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
+    "d3-delaunay": "^6.0.2",
     "d3-tricontour": "^1.0.2",
     "lodash": "^4.17.21",
     "polybooljs": "^1.2.0",

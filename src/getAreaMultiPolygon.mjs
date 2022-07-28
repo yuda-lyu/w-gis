@@ -3,7 +3,7 @@ import turf from './getTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 
 
-function getArea(pgs) {
+function getAreaMultiPolygon(pgs) {
 
     //check
     if (!isearr(pgs)) {
@@ -17,4 +17,4 @@ function getArea(pgs) {
 }
 
 
-export default getArea
+export default getAreaMultiPolygon

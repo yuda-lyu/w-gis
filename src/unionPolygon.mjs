@@ -4,8 +4,8 @@ import polybooljs from 'polybooljs'
 import toPolygon from './toPolygon.mjs'
 
 
-function intersectPolygon(pgs1, pgs2) {
-    //turf的intersect準確性與適用性比較差, 得使用polybooljs比較好
+function unionPolygon(pgs1, pgs2) {
+    //turf的union準確性與適用性比較差, 得使用polybooljs比較好
 
     //check
     if (!isearr(pgs1)) {
@@ -19,8 +19,8 @@ function intersectPolygon(pgs1, pgs2) {
     pgs1 = toPolygon(pgs1)
     pgs2 = toPolygon(pgs2)
 
-    //intersect
-    let ints = polybooljs.intersect(
+    //union
+    let ints = polybooljs.union(
         { regions: pgs1 },
         { regions: pgs2 }
     )
@@ -32,4 +32,4 @@ function intersectPolygon(pgs1, pgs2) {
 }
 
 
-export default intersectPolygon
+export default unionPolygon

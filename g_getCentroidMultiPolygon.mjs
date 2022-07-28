@@ -26,4 +26,4 @@ console.log(p)
 // => [ 33.666666666666664, 0.3333333333333333 ]
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-getCentroidMultiPolygon.mjs
+//node --experimental-modules --es-module-specifier-resolution=node g_getCentroidMultiPolygon.mjs

@@ -1,27 +1,20 @@
 import each from 'lodash/each'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
-import intersectPolygon from './intersectPolygon.mjs'
+import unionPolygon from './unionPolygon.mjs'
 
 
-// function intersectMultiPolygon(pgs1, pgs2) {
+// function unionMultiPolygon(pgs1, pgs2) {
+//     //turf版本可能問題較多, 待測試改用polybooljs.union
 
-//     //check
-//     if (!isearr(pgs1)) {
-//         return null
-//     }
-//     if (!isearr(pgs2)) {
-//         return null
-//     }
-
-//     //intersect, turf版引用
-//     let r = turf.intersect(turf.helpers.multiPolygon(toMultiPolygon(pgs1)), turf.helpers.multiPolygon(toMultiPolygon(pgs2)))
+//     //union
+//     let r = turf.union(turf.helpers.multiPolygon(toMultiPolygon(pgs1)), turf.helpers.multiPolygon(toMultiPolygon(pgs2)))
 
 //     return distilMultiPolygon(r)
 // }
 
 
-function intersectMultiPolygon(pgs1, pgs2) {
+function unionMultiPolygon(pgs1, pgs2) {
 
     //check
     if (!isearr(pgs1)) {
@@ -44,7 +37,7 @@ function intersectMultiPolygon(pgs1, pgs2) {
         if (k === 0) {
             return true //跳出換下一個
         }
-        pgs = intersectPolygon(pgs, v)
+        pgs = unionPolygon(pgs, v)
     })
 
     //toMultiPolygon
@@ -54,4 +47,4 @@ function intersectMultiPolygon(pgs1, pgs2) {
 }
 
 
-export default intersectMultiPolygon
+export default unionMultiPolygon

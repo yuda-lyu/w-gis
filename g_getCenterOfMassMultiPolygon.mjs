@@ -26,4 +26,4 @@ console.log(p)
 // => [ 33.336633663366335, 0.3366336633663366 ]
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-getCenterOfMassMultiPolygon.mjs
+//node --experimental-modules --es-module-specifier-resolution=node g_getCenterOfMassMultiPolygon.mjs

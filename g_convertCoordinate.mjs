@@ -19,4 +19,4 @@ r = convertCoordinate('TWD97TM2', 'TWD67TM2', ps)
 console.log('TWD97TM2', 'to', 'TWD67TM2', r)
 // => TWD97TM2 to TWD67TM2 [ 249171.10639535502, 2655228.8440549527 ]
 
-//node --experimental-modules --es-module-specifier-resolution=node g-convertCoordinate.mjs
+//node --experimental-modules --es-module-specifier-resolution=node g_convertCoordinate.mjs
