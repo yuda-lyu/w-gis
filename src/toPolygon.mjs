@@ -1,19 +1,17 @@
-import map from 'lodash/map'
+import flatten from 'lodash/flatten'
 import getPointDepth from './getPointDepth.mjs'
 
 
-function toMultiPolygon(v) {
+function toPolygon(v) {
     let d = getPointDepth(v)
     if (d === 3) {
-        return v
+        return flatten(v)
     }
     if (d === 2) {
-        return map(v, (vv) => {
-            return [vv]
-        })
+        return v
     }
     if (d === 1) {
-        return [[v]]
+        return [v]
     }
     if (d === 0) {
         return []
@@ -22,4 +20,4 @@ function toMultiPolygon(v) {
 }
 
 
-export default toMultiPolygon
+export default toPolygon
