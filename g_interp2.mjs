@@ -21,5 +21,13 @@ r = interp2(ps, p)
 console.log(r)
 // => { x: 283, y: 205, z: 115.17591167501384 }
 
+p = {
+    x: 1160,
+    y: 380,
+}
+r = interp2(ps, p)
+console.log(r)
+// => { x: 1160, y: 380, z: null }
+
 
 //node --experimental-modules --es-module-specifier-resolution=node g_interp2.mjs

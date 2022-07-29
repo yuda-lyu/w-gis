@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 import each from 'lodash/each'
+import map from 'lodash/map'
+import sum from 'lodash/sum'
 import size from 'lodash/size'
 import toNumber from 'lodash/toNumber'
 import isestr from 'wsemi/src/isestr.mjs'
@@ -229,44 +231,62 @@ function interp2(psSrc, psTar, opt = {}) {
         let queryA = gap(queryPoly)
         // console.log('queryA', queryA)
 
-        //neighborIndices
-        let neighborIndices = []
-        for (let i of postVor.delaunay.neighbors(newIdx)) {
-            neighborIndices.push(i)
-        }
-
-        //subValues
-        let subValues = neighborIndices.map((idx) => {
-
-            //pgs1, pgs2
-            let pgs1 = [queryPoly]
-            let pgs2 = [initialVor.cellPolygon(idx)]
-            //console.log('pgs1',pgs1,'pgs2',pgs2)
-
-            //intersect
-            let ints = intersectPolygon(pgs1, pgs2)
-            //console.log('ints',ints)
-
-            //intersectA
-            let intersectA = 0
-            if (size(ints) === 1) {
-                try {
-                    intersectA = gap(ints[0])
-                    //console.log('getAreaPolygon',d3.getAreaPolygon(is.regions[0]),getAreaPolygon(is.regions[0]))
-                }
-                catch (err) {}
-            }
-
-            return {
-                ia: intersectA,
-                idx: idx,
-            }
-        })
-
         //newPointVal
-        let newPointVal = subValues.map(o => {
-            return (o.ia / queryA) * data[o.idx][keyZ]
-        }).reduce((a, c) => a + c, 0)
+        let newPointVal = null
+        if (queryA > 0) {
+
+            //neighborIndices
+            let neighborIndices = []
+            // for (let i of postVor.delaunay.neighbors(newIdx)) { //因為postVor.delaunay.neighbors是generator, 考慮要支援ie11得使用while與next讀取
+            //     neighborIndices.push(i)
+            // }
+            let sq = postVor.delaunay.neighbors(newIdx)
+            // console.log(`sq`, sq)
+            let next = sq.next()
+            while (!next.done) {
+                let v = next.value
+                neighborIndices.push(v)
+                next = sq.next()
+            }
+
+            //subValues
+            let subValues = map(neighborIndices, (idx) => {
+
+                //pgs1, pgs2
+                let pgs1 = [queryPoly]
+                let pgs2 = [initialVor.cellPolygon(idx)]
+                //console.log('pgs1',pgs1,'pgs2',pgs2)
+
+                //intersect
+                let ints = intersectPolygon(pgs1, pgs2)
+                //console.log('ints',ints)
+
+                //intersectA
+                let intersectA = 0
+                if (size(ints) === 1) {
+                    try {
+                        intersectA = gap(ints[0])
+                    //console.log('getAreaPolygon',d3.getAreaPolygon(is.regions[0]),getAreaPolygon(is.regions[0]))
+                    }
+                    catch (err) {}
+                }
+
+                return {
+                    ia: intersectA,
+                    idx: idx,
+                }
+            })
+
+            //newPointVal
+            newPointVal = map(subValues, (o) => {
+                return (o.ia / queryA) * data[o.idx][keyZ]
+            })
+            newPointVal = sum(newPointVal)
+            // if (isNaN(newPointVal)) {
+            //     console.log('isNaN(newPointVal)', subValues, 'queryA', queryA)
+            // }
+
+        }
 
         //update newPointVal
         data[data.length - 1][keyZ] = newPointVal
