@@ -1,18 +1,24 @@
 import isearr from 'wsemi/src/isearr.mjs'
-import turf from './getTurf.mjs'
+import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
 
-function maskMultiPolygon(pgs) {
+function maskMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
         return null
     }
 
-    //pgNew
-    let r = turf.mask(turf.helpers.multiPolygon(toMultiPolygon(pgs)))
+    //toMultiPolygon
+    pgs = toMultiPolygon(pgs, opt)
+
+    //multiPolygon
+    pgs = turf.helpers.multiPolygon(pgs)
+
+    //mask
+    let r = turf.mask(pgs)
 
     return distilMultiPolygon(r)
 }

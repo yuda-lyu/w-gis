@@ -1,9 +1,9 @@
 import isearr from 'wsemi/src/isearr.mjs'
-import turf from './getTurf.mjs'
+import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 
 
-function isPointInPolygon(p, pgs) {
+function isPointInPolygon(p, pgs, opt = {}) {
 
     //check
     if (!isearr(p)) {
@@ -13,7 +13,15 @@ function isPointInPolygon(p, pgs) {
         return null
     }
 
-    let r = turf.booleanPointInPolygon(p, turf.helpers.multiPolygon(toMultiPolygon(pgs)))
+    //toMultiPolygon
+    pgs = toMultiPolygon(pgs, opt)
+
+    //multiPolygon
+    pgs = turf.helpers.multiPolygon(pgs)
+
+    //booleanPointInPolygon
+    let r = turf.booleanPointInPolygon(p, pgs)
+
     return r
 }
 

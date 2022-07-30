@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -154,7 +154,2978 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
 
+        
+            
+<h4 class="name" id=".turf"><span class="type-signature">(static) </span>turf<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="importTurf.mjs.html">importTurf.mjs</a>, <a href="importTurf.mjs.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>取得引用turf物件</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/importTurf.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let r = importTurfconsole.log(r)// => [Module: null prototype] {//   along: [Function: along],//   angle: [Function: angle],//   applyFilter: [Function: applyFilter],//   area: [Function: area],//   ...</code></pre>
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".convertCoordinate"><span class="type-signature">(static) </span>convertCoordinate<span class="signature">(cdFrom, cdTo, ps)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="convertCoordinate.mjs.html">convertCoordinate.mjs</a>, <a href="convertCoordinate.mjs.html#line113">line 113</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>座標轉換</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/convertCoordinate.test.js">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pslet rps = [121, 24]r = convertCoordinate('WGS84', 'TWD97TM2', ps)console.log('WGS84', 'to', 'TWD97TM2', r)// => WGS84 to TWD97TM2 [ 250000, 2655023.124957118 ]ps = [121, 24]r = convertCoordinate('WGS84', 'TWD67TM2', ps)console.log('WGS84', 'to', 'TWD67TM2', r)// => WGS84 to TWD67TM2 [ 249171.1063953548, 2655228.969012536 ]ps = [250000, 2655023]r = convertCoordinate('TWD97TM2', 'TWD67TM2', ps)console.log('TWD97TM2', 'to', 'TWD67TM2', r)// => TWD97TM2 to TWD67TM2 [ 249171.10639535502, 2655228.8440549527 ]</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cdFrom</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>輸入來源座標系統字串</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cdTo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>輸入轉出座標系統字串</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ps</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>輸入座標(x,y)陣列</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳轉換之座標陣列</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fixCloseMultiPolygon"><span class="type-signature">(static) </span>fixCloseMultiPolygon<span class="signature">(pgs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="fixCloseMultiPolygon.mjs.html">fixCloseMultiPolygon.mjs</a>, <a href="fixCloseMultiPolygon.mjs.html#line124">line 124</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>修復MultiPolygon內各RingString為閉合</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/fixCloseMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pgslet rpgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = fixCloseMultiPolygon(pgs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]pgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = fixCloseMultiPolygon(pgs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = fixCloseMultiPolygon(pgs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]pgs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = fixCloseMultiPolygon(pgs)console.log(JSON.stringify(r))// => [[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = fixCloseMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygonsconsole.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]],[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = fixCloseMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStringsconsole.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]],[[0,0],[10,0],[10,1],[0,1],[0,0]]]]pgs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = fixCloseMultiPolygon(pgs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]],[[0,0],[10,0],[10,1],[0,1],[0,0]]]]</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳形心座標陣列</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAreaMultiPolygon"><span class="type-signature">(static) </span>getAreaMultiPolygon<span class="signature">(pgs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getAreaMultiPolygon.mjs.html">getAreaMultiPolygon.mjs</a>, <a href="getAreaMultiPolygon.mjs.html#line124">line 124</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算MultiPolygon面積
+得要考慮多區域、剔除區域之組合: http://esri.github.io/geometry-api-java/doc/Polygon.html</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pgslet rpgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = getAreaMultiPolygon(pgs)console.log(r)// => 100pgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = getAreaMultiPolygon(pgs)console.log(r)// => 100pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = getAreaMultiPolygon(pgs)console.log(r)// => 100pgs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getAreaMultiPolygon(pgs)console.log(r)// => 10pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getAreaMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons故面積直接加總console.log(r)// => 110pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getAreaMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStringsconsole.log(r)// => 90pgs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = getAreaMultiPolygon(pgs)console.log(r)// => 90</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳面積數字</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAreaMultiPolygonSm"><span class="type-signature">(static) </span>getAreaMultiPolygonSm<span class="signature">(pgs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getAreaMultiPolygonSm.mjs.html">getAreaMultiPolygonSm.mjs</a>, <a href="getAreaMultiPolygonSm.mjs.html#line122">line 122</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算MultiPolygon面積，輸入各點為經緯度座標，輸出為平方公尺面積</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pgslet rpgs = [ //ringString    [121, 23],    [122, 23],    [122, 24],    [121, 24],    [121, 23], //閉合]r = getAreaMultiPolygonSm(pgs)console.log(r)// => 11364090825.686134pgs = [ //ringString    [121, 23],    [122, 23],    [122, 24],    [121, 24],]r = getAreaMultiPolygonSm(pgs)console.log(r)// => 11364090825.686134pgs = [ //polygon    [        [121, 23],        [122, 23],        [122, 24],        [121, 24],    ]]r = getAreaMultiPolygonSm(pgs)console.log(r)// => 11364090825.686134pgs = [ //polygon    [        [121, 23],        [121.5, 23],        [121.5, 24],        [121, 24],    ]]r = getAreaMultiPolygonSm(pgs)console.log(r)// => 5682045412.843067pgs = [ //polygon    [        [121, 23],        [122, 23],        [122, 24],        [121, 24],    ],    [        [121, 23],        [121.5, 23],        [121.5, 24],        [121, 24],    ]]r = getAreaMultiPolygonSm(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons故面積直接加總console.log(r)// => 17046136238.529202pgs = [ //polygon    [        [121, 23],        [122, 23],        [122, 24],        [121, 24],    ],    [        [121, 23],        [121.5, 23],        [121.5, 24],        [121, 24],    ]]r = getAreaMultiPolygonSm(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings, 但turf計算時只取最後ringString計算面積console.log(r)// => 5682045412.843067pgs = [ //multiPolygon    [        [            [121, 23],            [122, 23],            [122, 24],            [121, 24],        ],        [            [121, 23],            [121.5, 23],            [121.5, 24],            [121, 24],        ]    ]]r = getAreaMultiPolygonSm(pgs) //turf計算時只取最後ringString計算面積console.log(r)// => 5682045412.843067</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳面積數字，單位為m2</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAreaPolygon"><span class="type-signature">(static) </span>getAreaPolygon<span class="signature">(pg)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getAreaPolygon.mjs.html">getAreaPolygon.mjs</a>, <a href="getAreaPolygon.mjs.html#line105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算Polygon面積
+得要考慮多區域、剔除區域之組合: http://esri.github.io/geometry-api-java/doc/Polygon.html</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pglet rpg = [    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = getAreaPolygon(pg)console.log(r)// => 100pg = [    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = getAreaPolygon(pg)console.log(r)// => 100pg = [    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = getAreaPolygon(pg)console.log(r)// => 100pg = [    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getAreaPolygon(pg)console.log(r)// => 10pg = [    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getAreaPolygon(pg)console.log(r)// => 90pg = [    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [ //第 2 RingString 與第 1 RingString 不重疊, 但polygon第1個為主要區, 其後為剔除區, 此為有問題多邊形        [200, 0],        [210, 0],        [210, 1],        [200, 1],    ]]r = getAreaPolygon(pg)console.log(r)// => 90, 實際為110</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[[x1,y1],[x2,y2],...]RingString構成之陣列</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳面積數字</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAreaRingString"><span class="type-signature">(static) </span>getAreaRingString<span class="signature">(rs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getAreaRingString.mjs.html">getAreaRingString.mjs</a>, <a href="getAreaRingString.mjs.html#line58">line 58</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算RingString面積</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaRingString.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let rslet rrs = [    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = getAreaRingString(rs)console.log(r)// => 100rs = [    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = getAreaRingString(rs)console.log(r)// => 100rs = [    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = getAreaRingString(rs)console.log(r)// => 0</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>rs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入RingString資料陣列，為[x,y]點構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>useAbs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入面積是否取絕對值，預設true</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳面積數字</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getCenterOfMassMultiPolygon"><span class="type-signature">(static) </span>getCenterOfMassMultiPolygon<span class="signature">(pgs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getCenterOfMassMultiPolygon.mjs.html">getCenterOfMassMultiPolygon.mjs</a>, <a href="getCenterOfMassMultiPolygon.mjs.html#line123">line 123</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算MultiPolygon質心座標</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getCenterOfMassMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pgslet rpgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = getCenterOfMassMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = getCenterOfMassMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = getCenterOfMassMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCenterOfMassMultiPolygon(pgs)console.log(JSON.stringify(r))// => [5,0.5]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCenterOfMassMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygonsconsole.log(JSON.stringify(r))// => [50,0.5] //非2個ringString共構的polygon質心, 僅計算第1個pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCenterOfMassMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStringsconsole.log(JSON.stringify(r))// => [50,0.5] //非第1個ringString剔除第2個ringString的質心, 僅計算第1個pgs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = getCenterOfMassMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5] //非第1個ringString剔除第2個ringString的質心, 僅計算第1個</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳面積數字</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getCentroidMultiPolygon"><span class="type-signature">(static) </span>getCentroidMultiPolygon<span class="signature">(pgs, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="getCentroidMultiPolygon.mjs.html">getCentroidMultiPolygon.mjs</a>, <a href="getCentroidMultiPolygon.mjs.html#line125">line 125</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>計算MultiPolygon形心座標</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/getCentroidMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let pgslet rpgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = getCentroidMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = getCentroidMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = getCentroidMultiPolygon(pgs)console.log(JSON.stringify(r))// => [50,0.5]pgs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCentroidMultiPolygon(pgs)console.log(JSON.stringify(r))// => [5,0.5]pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCentroidMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygonsconsole.log(JSON.stringify(r))// => [27.5,0.5] //非2個ringString共構的polygon形心console.log('(50*10+5*1)/11', (50 * 10 + 5 * 1) / 11)// => (50*10+5*1)/11 45.90909090909091pgs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = getCentroidMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStringsconsole.log(JSON.stringify(r))// => [27.5,0.5] //非第1個ringString剔除第2個ringString的形心pgs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = getCentroidMultiPolygon(pgs)console.log(JSON.stringify(r))// => [27.5,0.5] //非第1個ringString剔除第2個ringString的形心</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳形心座標陣列</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".interp2"><span class="type-signature">(static) </span>interp2<span class="signature">(psSrc, psTar)</span><span class="type-signature"> &rarr; {Array|Object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="interp2.mjs.html">interp2.mjs</a>, <a href="interp2.mjs.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>基於三角網格與自然鄰點內插法(Natural Neighbor Interpolation)計算指定內插點數值</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let ps = [{ 'x': 243, 'y': 206, 'z': 95 }, { 'x': 233, 'y': 225, 'z': 146 }, { 'x': 21, 'y': 325, 'z': 22 }, { 'x': 953, 'y': 28, 'z': 223 }, { 'x': 1092, 'y': 290, 'z': 39 }, { 'x': 744, 'y': 200, 'z': 191 }, { 'x': 174, 'y': 3, 'z': 22 }, { 'x': 537, 'y': 368, 'z': 249 }, { 'x': 1151, 'y': 371, 'z': 86 }, { 'x': 814, 'y': 252, 'z': 125 }]let plet rp = {    x: 243,    y: 205,}r = interp2(ps, p)console.log(r)// => { x: 243, y: 205, z: 94.93541171916787 }p = {    x: 283,    y: 205,}r = interp2(ps, p)console.log(r)// => { x: 283, y: 205, z: 115.17591167501384 }p = {    x: 1160,    y: 380,}r = interp2(ps, p)console.log(r)// => { x: 1160, y: 380, z: null }</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>psSrc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>psTar</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt.keyX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'x'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入點物件之x座標欄位字串，預設'x'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt.keyY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'y'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入點物件之y座標欄位字串，預設'y'</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt.keyZ</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'z'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入點物件之z座標或值欄位字串，預設'z'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳點物件陣列或點物件</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toMultiPolygon"><span class="type-signature">(static) </span>toMultiPolygon<span class="signature">(v, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="toMultiPolygon.mjs.html">toMultiPolygon.mjs</a>, <a href="toMultiPolygon.mjs.html#line122">line 122</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>轉換RingString、polygon、MultiPolygon成為MultiPolygon</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/toMultiPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let rslet rrs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = toMultiPolygon(rs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]rs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = toMultiPolygon(rs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1]]]]rs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = toMultiPolygon(rs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1]]]]rs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = toMultiPolygon(rs)console.log(JSON.stringify(r))// => [[[[0,0],[10,0],[10,1],[0,1]]]]rs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = toMultiPolygon(rs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygonsconsole.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1]]],[[[0,0],[10,0],[10,1],[0,1]]]]rs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = toMultiPolygon(rs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStringsconsole.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1]],[[0,0],[10,0],[10,1],[0,1]]]]rs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = toMultiPolygon(rs)console.log(JSON.stringify(r))// => [[[[0,0],[100,0],[100,1],[0,1]],[[0,0],[10,0],[10,1],[0,1]]]]</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入資料陣列</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'polygons'</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳資料陣列</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toPolygon"><span class="type-signature">(static) </span>toPolygon<span class="signature">(v)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="toPolygon.mjs.html">toPolygon.mjs</a>, <a href="toPolygon.mjs.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>轉換RingString、polygon、MultiPolygon成為Polygon</p>
+<p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/toPolygon.test.mjs">Github</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>let rslet rrs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],    [0, 0], //閉合]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[100,0],[100,1],[0,1],[0,0]]]rs = [ //ringString    [0, 0],    [100, 0],    [100, 1],    [0, 1],]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[100,0],[100,1],[0,1]]]rs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ]]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[100,0],[100,1],[0,1]]]rs = [ //polygon    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[10,0],[10,1],[0,1]]]rs = [ //polygon    [        [0, 0],        [100, 0],        [100, 1],        [0, 1],    ],    [        [0, 0],        [10, 0],        [10, 1],        [0, 1],    ]]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[100,0],[100,1],[0,1]],[[0,0],[10,0],[10,1],[0,1]]]rs = [ //multiPolygon    [        [            [0, 0],            [100, 0],            [100, 1],            [0, 1],        ],        [            [0, 0],            [10, 0],            [10, 1],            [0, 1],        ]    ]]r = toPolygon(rs)console.log(JSON.stringify(r))// => [[[0,0],[100,0],[100,1],[0,1]],[[0,0],[10,0],[10,1],[0,1]]]</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>輸入資料陣列</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>回傳資料陣列</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
@@ -174,7 +3145,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Fri Jul 29 2022 11:44:44 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Sat Jul 30 2022 16:05:06 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

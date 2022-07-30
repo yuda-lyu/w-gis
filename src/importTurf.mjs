@@ -3,6 +3,24 @@ import turfBrowser from './_importTurfBrowser.mjs'
 import turfNode from './_importTurfNode.mjs'
 
 
+/**
+ * 取得引用turf物件
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/importTurf.test.mjs Github}
+ * @memberOf w-gis
+ * @returns {Object} 回傳turf物件
+ * @example
+ *
+ * let r = importTurf
+ * console.log(r)
+ * // => [Module: null prototype] {
+ * //   along: [Function: along],
+ * //   angle: [Function: angle],
+ * //   applyFilter: [Function: applyFilter],
+ * //   area: [Function: area],
+ * //   ...
+ *
+ */
 let turf = null
 if (isWindow()) {
     // console.log('use turfBrowser')

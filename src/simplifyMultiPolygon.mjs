@@ -3,7 +3,7 @@ import isearr from 'wsemi/src/isearr.mjs'
 import isbol from 'wsemi/src/isbol.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
 import cdbl from 'wsemi/src/cdbl.mjs'
-import turf from './getTurf.mjs'
+import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 
 
@@ -27,8 +27,14 @@ function simplifyMultiPolygon(pgs, opt = {}) {
         highQuality = true
     }
 
+    //toMultiPolygon
+    pgs = toMultiPolygon(pgs, opt)
+
+    //multiPolygon
+    pgs = turf.helpers.multiPolygon(pgs)
+
     //simplify
-    let r = turf.simplify(turf.multiPolygon(toMultiPolygon(pgs)), { tolerance, highQuality })
+    let r = turf.simplify(pgs, { tolerance, highQuality })
 
     //get pgs
     r = get(r, 'geometry.coordinates', [])

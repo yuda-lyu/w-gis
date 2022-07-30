@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import size from 'lodash/size'
 import isearr from 'wsemi/src/isearr.mjs'
 import { tricontour } from 'd3-tricontour'
-import getAreaMultiPolygon from './getAreaMultiPolygon.mjs'
+import getAreaMultiPolygonSm from './getAreaMultiPolygonSm.mjs'
 import getCentroidMultiPolygon from './getCentroidMultiPolygon.mjs'
 import clipMultiPolygon from './clipMultiPolygon.mjs'
 import intersectMultiPolygon from './intersectMultiPolygon.mjs'
@@ -68,7 +68,7 @@ function calcContours(points, opt = {}) {
         return {
             latLngs: v.coordinates,
             level: v.value,
-            effectArea: getAreaMultiPolygon(v.coordinates),
+            effectArea: getAreaMultiPolygonSm(v.coordinates),
             effectAreaCentroid: getCentroidMultiPolygon(v.coordinates), //要先計算, 否則之後會被相減計算成真實等值區域, 就不是影響區域的中心了
         }
     })

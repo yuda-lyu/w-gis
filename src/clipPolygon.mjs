@@ -6,7 +6,6 @@ import toPolygon from './toPolygon.mjs'
 
 function clipPolygon(pgs1, pgs2) {
     //代表pgs1減去pgs2
-    //turf的difference準確性與適用性比較差, 得使用polybooljs比較好
 
     //check
     if (!isearr(pgs1)) {

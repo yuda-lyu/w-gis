@@ -83,12 +83,12 @@ proj4.defs([
 /**
  * 座標轉換
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-geo/blob/master/test/convertCoordinate.test.js Github}
- * @memberOf w-geo
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/convertCoordinate.test.js Github}
+ * @memberOf w-gis
  * @param {String} cdFrom 輸入來源座標系統字串
  * @param {String} cdTo 輸入轉出座標系統字串
  * @param {Array} ps 輸入座標(x,y)陣列
- * @returns {Array} 回傳轉出座標陣列
+ * @returns {Array} 回傳轉換之座標陣列
  * @example
  *
  * let ps

@@ -1,13 +1,14 @@
-import get from 'lodash/get'
+import map from 'lodash/map'
+import size from 'lodash/size'
+import isEqual from 'lodash/isEqual'
 import isearr from 'wsemi/src/isearr.mjs'
-import turf from './importTurf.mjs'
-import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
+import toMultiPolygon from './toMultiPolygon.mjs'
 
 
 /**
- * 計算MultiPolygon形心座標
+ * 修復MultiPolygon內各RingString為閉合
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getCentroidMultiPolygon.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/fixCloseMultiPolygon.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} pgs 輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
@@ -25,9 +26,9 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *     [0, 1],
  *     [0, 0], //閉合
  * ]
- * r = getCentroidMultiPolygon(pgs)
+ * r = fixCloseMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [50,0.5]
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]
  *
  * pgs = [ //ringString
  *     [0, 0],
@@ -35,9 +36,9 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *     [100, 1],
  *     [0, 1],
  * ]
- * r = getCentroidMultiPolygon(pgs)
+ * r = fixCloseMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [50,0.5]
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]
  *
  * pgs = [ //polygon
  *     [
@@ -47,9 +48,9 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getCentroidMultiPolygon(pgs)
+ * r = fixCloseMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [50,0.5]
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]]]
  *
  * pgs = [ //polygon
  *     [
@@ -59,29 +60,9 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getCentroidMultiPolygon(pgs)
+ * r = fixCloseMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [5,0.5]
- *
- * pgs = [ //polygon
- *     [
- *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ],
- *     [
- *         [0, 0],
- *         [10, 0],
- *         [10, 1],
- *         [0, 1],
- *     ]
- * ]
- * r = getCentroidMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons
- * console.log(JSON.stringify(r))
- * // => [27.5,0.5] //非2個ringString共構的polygon形心
- * console.log('(50*10+5*1)/11', (50 * 10 + 5 * 1) / 11)
- * // => (50*10+5*1)/11 45.90909090909091
+ * // => [[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
  *
  * pgs = [ //polygon
  *     [
@@ -97,9 +78,27 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getCentroidMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = fixCloseMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons
  * console.log(JSON.stringify(r))
- * // => [27.5,0.5] //非第1個ringString剔除第2個ringString的形心
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]]],[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
+ *
+ * pgs = [ //polygon
+ *     [
+ *         [0, 0],
+ *         [100, 0],
+ *         [100, 1],
+ *         [0, 1],
+ *     ],
+ *     [
+ *         [0, 0],
+ *         [10, 0],
+ *         [10, 1],
+ *         [0, 1],
+ *     ]
+ * ]
+ * r = fixCloseMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]],[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
  *
  * pgs = [ //multiPolygon
  *     [
@@ -117,12 +116,12 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *         ]
  *     ]
  * ]
- * r = getCentroidMultiPolygon(pgs)
+ * r = fixCloseMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [27.5,0.5] //非第1個ringString剔除第2個ringString的形心
+ * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]],[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
  *
  */
-function getCentroidMultiPolygon(pgs, opt = {}) {
+function fixCloseMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
@@ -130,22 +129,25 @@ function getCentroidMultiPolygon(pgs, opt = {}) {
     }
 
     //toMultiPolygon
-    // psg = toMultiPolygon(pgs) //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+    pgs = toMultiPolygon(pgs, opt)
 
-    //fixCloseMultiPolygon, 因turf的centroid會受RingString未閉合影響得修正成為閉合
-    pgs = fixCloseMultiPolygon(pgs, opt)
+    //修復成為閉合, turf的centroid得要輸入閉合RingString
+    pgs = map(pgs, (pg) => {
+        pg = map(pg, (rs) => {
+            let i0 = 0
+            let i1 = size(rs) - 1
+            let rs0 = rs[i0]
+            let rs1 = rs[i1]
+            if (!isEqual(rs0, rs1)) {
+                rs.push(rs0)
+            }
+            return rs
+        })
+        return pg
+    })
 
-    //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
-
-    //centroid
-    let r = turf.centroid(pgs)
-
-    //pt
-    let pt = get(r, 'geometry.coordinates', [])
-
-    return pt
+    return pgs
 }
 
 
-export default getCentroidMultiPolygon
+export default fixCloseMultiPolygon

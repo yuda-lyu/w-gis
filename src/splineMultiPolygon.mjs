@@ -1,7 +1,7 @@
 import map from 'lodash/map'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
-import turf from './getTurf.mjs'
+import turf from './importTurf.mjs'
 
 
 function splineMultiPolygon(pgs, opt = {}) {
