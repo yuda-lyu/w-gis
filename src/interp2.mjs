@@ -120,6 +120,21 @@ function toArrayXYZ(ps, opt = {}) {
 /**
  * 基於三角網格與自然鄰點內插法(Natural Neighbor Interpolation)計算指定內插點數值
  *
+ * A Fast and Accurate Algorithm for Natural Neighbor Interpolation
+ * https://gwlucastrig.github.io/TinfourDocs/NaturalNeighborTinfourAlgorithm/index.html
+ *
+ * Natural neighbor interpolation
+ * https://observablehq.com/@karlerss/natural-neighbor-interpolation
+ *
+ * An Introduction to Natural Neighbor Interpolation
+ * https://gwlucastrig.github.io/TinfourDocs/NaturalNeighborIntro/index.html
+ *
+ * d3-delaunay
+ * https://github.com/d3/d3-delaunay
+ *
+ * Delaunator
+ * https://github.com/mapbox/delaunator
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} psSrc 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列
