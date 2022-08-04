@@ -310,8 +310,16 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                 // console.log('pgs1', pgs1, 'pgs2', pgs2)
 
                 //intersect
-                let ints = intersectPolygon(pgs1, pgs2)
-                // console.log('ints', ints)
+                let ints = []
+                try {
+                    ints = intersectPolygon(pgs1, pgs2)
+                    // console.log('ints', ints)
+                }
+                catch (err) {
+                    console.log('pgs1', pgs1)
+                    console.log('pgs2', pgs2)
+                    console.log(err)
+                }
 
                 //intersectA
                 let intersectA = 0
