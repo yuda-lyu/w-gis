@@ -265,6 +265,10 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
 
     //scaleXY
     let scaleXY = get(opt, 'scaleXY')
+    if (!isnum(scaleXY)) {
+        scaleXY = 1
+    }
+    scaleXY = cdbl(scaleXY)
 
     //krigingModel
     let krigingModel = get(opt, 'model')
@@ -317,7 +321,7 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
 
     //interp2Normalize
     let itnm = interp2Normalize(psSrc, { scaleXY })
-    psSrc = itnm.psSrc //複寫正規化數據
+    psSrc = itnm.ps //複寫正規化數據
     let nv = itnm.nv
     let inv = itnm.inv
 

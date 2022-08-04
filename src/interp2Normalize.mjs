@@ -6,7 +6,7 @@ import cdbl from 'wsemi/src/cdbl.mjs'
 import normalizeArray from './normalizeArray.mjs'
 
 
-function interp2Normalize(psSrc, opt = {}) {
+function interp2Normalize(ps, opt = {}) {
 
     //scaleXY
     let scaleXY = get(opt, 'scaleXY')
@@ -14,16 +14,17 @@ function interp2Normalize(psSrc, opt = {}) {
         scaleXY = 1
     }
     scaleXY = cdbl(scaleXY)
+    // console.log('scaleXY', scaleXY)
 
     //nxy
-    let _x = map(psSrc, 'x')
-    let _y = map(psSrc, 'y')
+    let _x = map(ps, 'x')
+    let _y = map(ps, 'y')
     let _xy = [..._x, ..._y]
     let nxy = normalizeArray(_xy)
     // console.log('nxy', nxy)
 
     //nz
-    let nz = normalizeArray(map(psSrc, 'z'))
+    let nz = normalizeArray(map(ps, 'z'))
     // console.log('nz', nz)
 
     //st
@@ -65,17 +66,17 @@ function interp2Normalize(psSrc, opt = {}) {
         return iv / scaleXY * st[i].range + st[i].min
     }
 
-    //normalize psSrc
-    psSrc = map(psSrc, (v) => {
+    //normalize ps
+    ps = map(ps, (v) => {
         let x = nv(v.x, 0)
         let y = nv(v.y, 1)
         let z = nv(v.z, 2)
         return { x, y, z }
     })
-    // console.log('normalize psSrc', psSrc)
+    // console.log('normalize ps', ps)
 
     return {
-        psSrc,
+        ps,
         nv,
         inv,
     }
