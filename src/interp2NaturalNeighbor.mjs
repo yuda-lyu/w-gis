@@ -69,7 +69,7 @@ import { Delaunay } from 'd3-delaunay'
  * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
- * @param {Number} [opt.scaleXY=1] 輸入正規化範圍數值，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Number} [opt.scale=1] 輸入正規化範圍數值，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @returns {Array|Object} 回傳點物件陣列或點物件
  * @example
  *
@@ -145,7 +145,7 @@ import { Delaunay } from 'd3-delaunay'
  *     x: 243,
  *     y: 207,
  * }
- * r = interp2NaturalNeighbor(ps, p, { scaleXY: 1000 })
+ * r = interp2NaturalNeighbor(ps, p, { scale: 1000 })
  * console.log(r)
  * // => { x: 243, y: 207, z: 97.29447682486855 }
  *
@@ -190,12 +190,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         keyZ = 'z'
     }
 
-    //scaleXY
-    let scaleXY = get(opt, 'scaleXY')
-    if (!isnum(scaleXY)) {
-        scaleXY = 1
+    //scale
+    let scale = get(opt, 'scale')
+    if (!isnum(scale)) {
+        scale = 1
     }
-    scaleXY = cdbl(scaleXY)
+    scale = cdbl(scale)
 
     //ptsXYZtoArr
     psSrc = ptsXYZtoArr(psSrc, opt)
@@ -220,7 +220,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     // console.log('ptsXYtoArr psTar', psTar)
 
     //interp2Normalize
-    let itnm = interp2Normalize(psSrc, { scaleXY })
+    let itnm = interp2Normalize(psSrc, { scale })
     // console.log('itnm.st', itnm.st)
     // console.log('itnm.psMinMax', itnm.psMinMax)
     psSrc = itnm.ps //複寫正規化數據
@@ -249,7 +249,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     // // console.log('intDny.hullPolygon', hpg)
 
     //vbox
-    let vbox = [0, 0, scaleXY, scaleXY]
+    let vbox = [0, 0, scale, scale]
 
     //iniVor
     let iniVor = intDny.voronoi(vbox)

@@ -10,13 +10,13 @@ import normalizeArray from './normalizeArray.mjs'
 
 function interp2Normalize(ps, opt = {}) {
 
-    //scaleXY
-    let scaleXY = get(opt, 'scaleXY')
-    if (!isnum(scaleXY)) {
-        scaleXY = 1
+    //scale
+    let scale = get(opt, 'scale')
+    if (!isnum(scale)) {
+        scale = 1
     }
-    scaleXY = cdbl(scaleXY)
-    // console.log('scaleXY', scaleXY)
+    scale = cdbl(scale)
+    // console.log('scale', scale)
 
     //nx, ny, nz
     let nx = normalizeArray(map(ps, 'x'))
@@ -60,7 +60,7 @@ function interp2Normalize(ps, opt = {}) {
         if (!isNumber(v)) {
             return null
         }
-        return (v - st[i].min) / st[i].range * scaleXY
+        return (v - st[i].min) / st[i].range * scale
     }
 
     //inv
@@ -71,7 +71,7 @@ function interp2Normalize(ps, opt = {}) {
         if (!isNumber(iv)) {
             return null
         }
-        return iv / scaleXY * st[i].range + st[i].min
+        return iv / scale * st[i].range + st[i].min
     }
 
     //normalize ps
@@ -83,7 +83,7 @@ function interp2Normalize(ps, opt = {}) {
     })
     // console.log('normalize ps', ps)
 
-    //psX
+    //psMinMax
     let psx = map(ps, 'x')
     let psxMin = min(psx)
     let psxMax = max(psx)
@@ -93,20 +93,21 @@ function interp2Normalize(ps, opt = {}) {
     let psz = map(ps, 'z')
     let pszMin = min(psz)
     let pszMax = max(psz)
+    let psMinMax = {
+        xmin: psxMin,
+        xmax: psxMax,
+        ymin: psyMin,
+        ymax: psyMax,
+        zmin: pszMin,
+        zmax: pszMax,
+    }
 
     return {
         ps,
+        psMinMax,
+        st,
         nv,
         inv,
-        st,
-        psMinMax: {
-            psxMin,
-            psxMax,
-            psyMin,
-            psyMax,
-            pszMin,
-            pszMax,
-        },
     }
 }
 

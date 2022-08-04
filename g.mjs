@@ -66,7 +66,7 @@ p = {
     x: 243,
     y: 205,
 }
-r = interp2Kriging(ps, p, { scaleXY: 1000 })
+r = interp2Kriging(ps, p, { scale: 1000 })
 console.log(r)
 // => { x: 243, y: 205, z: 94.88479948418878 }
 

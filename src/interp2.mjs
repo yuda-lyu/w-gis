@@ -102,7 +102,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  *     x: 243,
  *     y: 207,
  * }
- * r = interp2(ps, p, { scaleXY: 1000 })
+ * r = interp2(ps, p, { scale: 1000 })
  * console.log(r)
  * // => { x: 243, y: 207, z: 97.29447682486855 }
  *
