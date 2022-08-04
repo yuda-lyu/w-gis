@@ -1,9 +1,19 @@
+import get from 'lodash/get'
 import map from 'lodash/map'
 import isNumber from 'lodash/isNumber'
+import isnum from 'wsemi/src/isnum.mjs'
+import cdbl from 'wsemi/src/cdbl.mjs'
 import normalizeArray from './normalizeArray.mjs'
 
 
-function interp2Normalize(psSrc) {
+function interp2Normalize(psSrc, opt = {}) {
+
+    //scaleXY
+    let scaleXY = get(opt, 'scaleXY')
+    if (!isnum(scaleXY)) {
+        scaleXY = 1
+    }
+    scaleXY = cdbl(scaleXY)
 
     //nxy
     let _x = map(psSrc, 'x')
@@ -41,7 +51,7 @@ function interp2Normalize(psSrc) {
         if (!isNumber(v)) {
             return null
         }
-        return (v - st[i].min) / st[i].range
+        return (v - st[i].min) / st[i].range * scaleXY
     }
 
     //inv
@@ -52,7 +62,7 @@ function interp2Normalize(psSrc) {
         if (!isNumber(iv)) {
             return null
         }
-        return iv * st[i].range + st[i].min
+        return iv / scaleXY * st[i].range + st[i].min
     }
 
     //normalize psSrc

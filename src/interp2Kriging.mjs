@@ -25,6 +25,7 @@ import kriging from './kriging.mjs'
  * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
+ * @param {Number} [opt.scaleXY=1] 輸入正規化範圍數值，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @param {String} [opt.model='exponential'] 輸入擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
  * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] 輸入自動擬合參數alpha數值，預設100
@@ -89,6 +90,15 @@ import kriging from './kriging.mjs'
  * //   { x: 243, y: 205, z: 94.88479948418727 },
  * //   { x: 283, y: 205, z: 116.32333499687815 }
  * // ]
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * p = {
+ *     x: 243,
+ *     y: 205,
+ * }
+ * r = interp2Kriging(ps, p, { scaleXY: 1000 })
+ * console.log(r)
+ * // => { x: 243, y: 205, z: 94.88479948418826 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -253,6 +263,9 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
         keyZ = 'z'
     }
 
+    //scaleXY
+    let scaleXY = get(opt, 'scaleXY')
+
     //krigingModel
     let krigingModel = get(opt, 'model')
     if (krigingModel !== 'exponential' && krigingModel !== 'gaussian' && krigingModel !== 'spherical') {
@@ -303,7 +316,7 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
     // console.log('ptsXYtoArr psTar', psTar)
 
     //interp2Normalize
-    let itnm = interp2Normalize(psSrc)
+    let itnm = interp2Normalize(psSrc, { scaleXY })
     psSrc = itnm.psSrc //複寫正規化數據
     let nv = itnm.nv
     let inv = itnm.inv
