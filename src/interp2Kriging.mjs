@@ -30,7 +30,7 @@ import kriging from './kriging.mjs'
  * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] 輸入自動擬合參數alpha數值，預設100
  * @param {Boolean} [opt.returnWithVariogram=false] 輸入是否回傳擬合半變異數結果布林值，預設false
- * @returns {Array|Object} 回傳點物件陣列或點物件，若使用returnWithVariogram=true則回傳物件資訊
+ * @returns {Array|Object} 回傳點物件陣列或點物件，若使用returnWithVariogram=true則回傳物件資訊，若發生錯誤則回傳錯誤訊息物件
  * @example
  *
  * let ps
