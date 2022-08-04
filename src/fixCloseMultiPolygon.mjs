@@ -12,7 +12,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * @memberOf w-gis
  * @param {Array} pgs 輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.mode='polygons'] 輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
  * @returns {Array} 回傳形心座標陣列
  * @example
  *
@@ -96,7 +96,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = fixCloseMultiPolygon(pgs, { mode: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = fixCloseMultiPolygon(pgs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
  * console.log(JSON.stringify(r))
  * // => [[[[0,0],[100,0],[100,1],[0,1],[0,0]],[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
  *
