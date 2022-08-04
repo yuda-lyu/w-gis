@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 import map from 'lodash/map'
+import min from 'lodash/min'
+import max from 'lodash/max'
 import isNumber from 'lodash/isNumber'
 import isnum from 'wsemi/src/isnum.mjs'
 import cdbl from 'wsemi/src/cdbl.mjs'
@@ -16,26 +18,32 @@ function interp2Normalize(ps, opt = {}) {
     scaleXY = cdbl(scaleXY)
     // console.log('scaleXY', scaleXY)
 
-    //nxy
-    let _x = map(ps, 'x')
-    let _y = map(ps, 'y')
-    let _xy = [..._x, ..._y]
-    let nxy = normalizeArray(_xy)
-    // console.log('nxy', nxy)
-
-    //nz
+    //nx, ny, nz
+    let nx = normalizeArray(map(ps, 'x'))
+    let ny = normalizeArray(map(ps, 'y'))
     let nz = normalizeArray(map(ps, 'z'))
+    // console.log('nx', nx)
+    // console.log('ny', ny)
     // console.log('nz', nz)
 
-    //st
-    let stxy = {
-        min: nxy.min,
-        max: nxy.max,
-        range: nxy.range,
-    }
+    //rangeXY
+    let rangeXY = Math.max(nx.range, ny.range)
+
+    //rangeXYHalf
+    let rangeXYHalf = rangeXY / 2
+
+    //st, x,y使用同網格尺寸縮放
     let st = [
-        stxy,
-        stxy,
+        {
+            min: nx.mid - rangeXYHalf,
+            max: nx.mid + rangeXYHalf,
+            range: rangeXY,
+        },
+        {
+            min: ny.mid - rangeXYHalf,
+            max: ny.mid + rangeXYHalf,
+            range: rangeXY,
+        },
         {
             min: nz.min,
             max: nz.max,
@@ -75,10 +83,30 @@ function interp2Normalize(ps, opt = {}) {
     })
     // console.log('normalize ps', ps)
 
+    //psX
+    let psx = map(ps, 'x')
+    let psxMin = min(psx)
+    let psxMax = max(psx)
+    let psy = map(ps, 'y')
+    let psyMin = min(psy)
+    let psyMax = max(psy)
+    let psz = map(ps, 'z')
+    let pszMin = min(psz)
+    let pszMax = max(psz)
+
     return {
         ps,
         nv,
         inv,
+        st,
+        psMinMax: {
+            psxMin,
+            psxMax,
+            psyMin,
+            psyMax,
+            pszMin,
+            pszMax,
+        },
     }
 }
 

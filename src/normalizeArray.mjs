@@ -82,13 +82,13 @@ function normalizeArrayCore(arr) {
             min: rmin,
             max: rmax,
             range: rmax - rmin,
+            mid: (rmax + rmin) / 2,
             avg: mean(arr),
         }
     }
 
     //nmarr
-    let nmarr = (arr, rmin, rmax) => {
-        let rrng = rmax - rmin
+    let nmarr = (arr, rmin, rmax, rrng) => {
         return map(arr, (v) => {
             return (v - rmin) / rrng
         })
@@ -97,7 +97,7 @@ function normalizeArrayCore(arr) {
     //nm
     let nm = (arr) => {
         let s = sta(arr)
-        let arrt = nmarr(arr, s.min, s.max)
+        let arrt = nmarr(arr, s.min, s.max, s.range)
         return {
             arr: arrt,
             ...s,
