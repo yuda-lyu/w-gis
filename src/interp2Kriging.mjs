@@ -25,7 +25,7 @@ import kriging from './kriging.mjs'
  * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
- * @param {Number} [opt.scale=1] 輸入正規化範圍數值，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @param {String} [opt.model='exponential'] 輸入擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
  * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] 輸入自動擬合參數alpha數值，預設100

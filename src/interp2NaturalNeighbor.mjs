@@ -69,7 +69,7 @@ import { Delaunay } from 'd3-delaunay'
  * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
- * @param {Number} [opt.scale=1] 輸入正規化範圍數值，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @returns {Array|Object} 回傳點物件陣列或點物件
  * @example
  *

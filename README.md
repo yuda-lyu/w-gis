@@ -13,7 +13,7 @@ To view documentation or get support, visit [docs](https://yuda-lyu.github.io/w-
 
 ## Installation
 ### Using npm(ES6 module):
-> **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `d3-tricontour`, `lodash` and `wsemi`.
+> **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `d3-tricontour`, `d3-delaunay`, `polybooljs`, `lodash` and `wsemi`.
 ```alias
 npm i w-gis
 ```
