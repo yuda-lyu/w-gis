@@ -120,7 +120,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  *         x: 243,
  *         y: 207,
  *     }
- *     r = interp2(ps, p, { useSync: true }) //interp2.wk.umd.js不支援sync模式
+ *     r = interp2(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式
  *     console.log(r)
  *     // => { x: 243, y: 207, z: 97.29447682486813 }
  *
