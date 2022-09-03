@@ -3,7 +3,9 @@ import map from 'lodash/map'
 import min from 'lodash/min'
 import max from 'lodash/max'
 import get from 'lodash/get'
+import take from 'lodash/take'
 import size from 'lodash/size'
+import cloneDeep from 'lodash/cloneDeep'
 import isearr from 'wsemi/src/isearr.mjs'
 import { tricontour } from 'd3-tricontour'
 import getAreaMultiPolygonSm from './getAreaMultiPolygonSm.mjs'
@@ -12,29 +14,67 @@ import clipMultiPolygon from './clipMultiPolygon.mjs'
 import intersectMultiPolygon from './intersectMultiPolygon.mjs'
 
 
-function calcContours(points, opt = {}) {
+function getContours(pts, thresholds) {
 
-    function getContours(pts) {
+    //tricontour
+    let tric = tricontour()
 
-        //tricontour
-        let tric = tricontour()
+    //thresholds
+    if (isearr(thresholds)) {
+        tric.thresholds(thresholds) //[0, 25, 50]
+    }
 
-        //calc
-        let contours = tric(pts)
-        // console.log('calcContours contours1', contours)
-        // contours = [contours[0], contours[1], contours[2], contours[3]]
-        // console.log('calcContours contours2', contours)
+    //calc
+    let contours = tric(pts)
+    // console.log('calcContours contours1', contours)
+    // contours = [contours[0], contours[1], contours[2], contours[3]]
+    // console.log('calcContours contours2', contours)
 
-        //偵測最末多邊形
-        let ub = size(contours) - 1
-        let contourLast = contours[ub]
-        let coordinates = get(contourLast, 'coordinates', []) //coordinates
-        if (size(coordinates) === 0) {
-            contours[ub].sepZone = 'top'
+    //偵測從最末數來第一個無效多邊形
+    let ub = size(contours) - 1
+    for (let i = ub; i >= 1; i--) {
+
+        //ipre
+        let ipre = i - 1
+
+        //contourPre
+        let contourPre = contours[ipre]
+
+        //coordinatesPre
+        let coordinatesPre = get(contourPre, 'coordinates', [])
+
+        //nPre
+        let nPre = size(coordinatesPre)
+
+        //contourNow
+        let contourNow = contours[i]
+
+        //coordinatesNow
+        let coordinatesNow = get(contourNow, 'coordinates', [])
+
+        //nNow
+        let nNow = size(coordinatesNow)
+
+        //check
+        if (nPre > 0 && nNow === 0) {
+            //找到從最末數來第一個無效多邊形
+
+            //set sepZone=top
+            contours[i].sepZone = 'top'
+
+            //take
+            contours = take(contours, i + 1)
+
+            break
         }
 
-        return contours
     }
+
+    return contours
+}
+
+
+function calcContours(points, opt = {}) {
 
     //containInner
     let containInner = get(opt, 'containInner', null)
@@ -44,6 +84,12 @@ function calcContours(points, opt = {}) {
 
     //clipOuter
     let clipOuter = get(opt, 'clipOuter', null)
+
+    //thresholds
+    let thresholds = get(opt, 'thresholds', null)
+
+    //useThresholds
+    let useThresholds = isearr(thresholds)
 
     //valueMin, valueMax
     let valueMin = points[0][2]
@@ -60,8 +106,8 @@ function calcContours(points, opt = {}) {
     // console.log('valueMin', valueMin, 'valueMax', valueMax)
 
     //contours
-    let contours = getContours(points)
-    // console.log('contours', cloneDeep(contours))
+    let contours = getContours(points, thresholds)
+    // console.log('contours', cloneDeep(contours), 'thresholds', thresholds)
 
     //check
     if (!isearr(contours)) {
@@ -82,8 +128,8 @@ function calcContours(points, opt = {}) {
     })
     // console.log('polylines from contours', cloneDeep(polylines))
 
-    //針對可能超出數據區添加polyline
-    if (true) {
+    //check, 若沒有設定thresholds則不需要補虛擬polyline
+    if (!useThresholds) {
 
         //pmin, pmax
         let ls = map(polylines, 'level')
@@ -100,6 +146,7 @@ function calcContours(points, opt = {}) {
                 latLngs: [],
                 level: valueMax,
                 effectArea: 0,
+                effectAreaCentroid: null,
             })
         }
 
@@ -112,6 +159,7 @@ function calcContours(points, opt = {}) {
                 latLngs: [],
                 level: valueMin,
                 effectArea: 0,
+                effectAreaCentroid: null,
             }
             polylines = [pl, ...polylines]
         }
@@ -119,8 +167,8 @@ function calcContours(points, opt = {}) {
     }
     // console.log('polylines for vartual level', cloneDeep(polylines))
 
-    //若不是於超出數據區新增虛擬polyline, 因tricontour會給出繪圖間距而不是實際資料間距, 故會出現level值大於或小於原數據上下限
-    if (true) {
+    //若沒有設定thresholds則自動修正level, 因tricontour會給出繪圖間距而不是實際資料間距, 故會出現level值大於或小於原數據上下限
+    if (!useThresholds) {
         each(polylines, (v, k) => {
             v.level = Math.min(v.level, valueMax)
             v.level = Math.max(v.level, valueMin)
@@ -137,9 +185,9 @@ function calcContours(points, opt = {}) {
         let p1 = polylines[i + 1]
         // console.log(i, 'p0', p0, p0.level, 'p1', p1, p1.level)
 
-        //ps0, ps1
-        let ps0 = p0.latLngs
-        let ps1 = p1.latLngs
+        //latLngs0, latLngs1
+        let latLngs0 = p0.latLngs
+        let latLngs1 = p1.latLngs
 
         //range
         let range = {
@@ -150,23 +198,34 @@ function calcContours(points, opt = {}) {
 
         //clipMultiPolygon
         let latLngs = []
-        latLngs = clipMultiPolygon(ps0, ps1)
+        latLngs = clipMultiPolygon(latLngs0, latLngs1)
         if (p0.mode === 'virtualStart') { //若為virtualStart, 則代表直接使用下1個polylines成為等值區域, 方能代表凹陷區
-            latLngs = ps1 //因為既有屬性都是取前者, 故若virtualStart係使用後者p1, 就代表全部polygonSet都會有真實effectArea
+            latLngs = latLngs1 //因為既有屬性都是取前者, 故若virtualStart係使用後者p1, 就代表全部polygonSet都會有真實effectArea
         }
         else if (p1.sepZone === 'top') { //若後者sepZone為top, 代表無多邊形數據, 得要使用前者多邊形建構
-            latLngs = ps0
+            latLngs = latLngs0
         }
         else {
-            latLngs = clipMultiPolygon(ps0, ps1)
+            latLngs = clipMultiPolygon(latLngs0, latLngs1)
         }
 
-        polygonSets.push({
-            ...p0,
+        //p
+        let p = cloneDeep(p0)
+
+        //delete level, 已轉成range
+        delete p.level
+
+        //ps
+        let ps = {
+            ...p,
+            sepZone: get(p1, 'sepZone', ''),
             latLngs,
             range,
-            // sepZone:get(ps1)
-        })
+        }
+
+        //push
+        polygonSets.push(ps)
+
     }
     // console.log('polygonSets from polylines', cloneDeep(polygonSets))
 
