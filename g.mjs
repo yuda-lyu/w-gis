@@ -1,110 +1,115 @@
 import _ from 'lodash'
 import w from 'wsemi'
-import interp2 from './src/interp2.mjs'
-// import interp2 from './dist/interp2.wk.umd.js'
+import convertCoordinate from './src/convertCoordinate.mjs'
 
 
-async function test() {
+let ps
+let r
 
-    let ps
-    let p
-    let r
+//from WGS84
+ps = [121, 24]
+r = convertCoordinate('WGS84', 'TWD97', ps)
+console.log('WGS84', 'to', 'TWD97', r)
+// => WGS84 to TWD97 [ 121, 24.000000000000004 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 243,
-        y: 207,
-    }
-    r = await interp2(ps, p)
-    console.log(r)
-    // => { x: 243, y: 207, z: 97.29447682486813 }
+ps = [121, 24]
+r = convertCoordinate('WGS84', 'TWD67', ps)
+console.log('WGS84', 'to', 'TWD67', r)
+// => WGS84 to TWD67 [ 120.99185287062672, 24.001775588106096 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 283,
-        y: 207,
-    }
-    r = await interp2(ps, p)
-    console.log(r)
-    // => { x: 283, y: 207, z: 114.43040421951906 }
+ps = [121, 24]
+r = convertCoordinate('WGS84', 'TWD97TM2', ps)
+console.log('WGS84', 'to', 'TWD97TM2', r)
+// => WGS84 to TWD97TM2 [ 250000, 2655023.124957118 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 1160,
-        y: 380,
-    }
-    r = await interp2(ps, p)
-    console.log(r)
-    // => { x: 1160, y: 380, z: null }
+ps = [121, 24]
+r = convertCoordinate('WGS84', 'TWD67TM2', ps)
+console.log('WGS84', 'to', 'TWD67TM2', r)
+// => WGS84 to TWD67TM2 [ 249171.1063953548, 2655228.969012536 ]
 
-    ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]
-    p = {
-        a: 243,
-        b: 207,
-    }
-    r = await interp2(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
-    console.log(r)
-    // => { a: 243, b: 207, c: 97.29447682486813 }
+//from TWD97
+ps = [121, 24.000000000000004]
+r = convertCoordinate('TWD97', 'WGS84', ps)
+console.log('TWD97', 'to', 'WGS84', r)
+// => TWD97 to WGS84 [ 121, 24.000000000000004 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = [
-        {
-            x: 243,
-            y: 207,
-        },
-        {
-            x: 283,
-            y: 207,
-        },
-    ]
-    r = await interp2(ps, p)
-    console.log(r)
-    // => [
-    //   { x: 243, y: 207, z: 97.29447682486813 },
-    //   { x: 283, y: 207, z: 114.43040421951906 }
-    // ]
+ps = [121, 24.000000000000004]
+r = convertCoordinate('TWD97', 'TWD67', ps)
+console.log('TWD97', 'to', 'TWD67', r)
+// => TWD97 to TWD67 [ 120.99185287062672, 24.001775588106103 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 243,
-        y: 207,
-    }
-    r = await interp2(ps, p, { method: 'kriging' })
-    console.log(r)
-    // => { x: 243, y: 207, z: 97.4283695751981 }
+ps = [121, 24.000000000000004]
+r = convertCoordinate('TWD97', 'TWD97TM2', ps)
+console.log('TWD97', 'to', 'TWD97TM2', r)
+// => TWD97 to TWD97TM2 [ 250000, 2655023.124957118 ]
 
-    ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.00021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.00028, z: 223 }, { x: 0.0001092, y: 0.000290, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.0003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.0001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
-    p = {
-        x: 0.000243,
-        y: 0.000207,
-    }
-    r = await interp2(ps, p)
-    console.log(r)
-    // => { x: 0.000243, y: 0.000207, z: 97.29447682486834 }
+ps = [121, 24.000000000000004]
+r = convertCoordinate('TWD97', 'TWD67TM2', ps)
+console.log('TWD97', 'to', 'TWD67TM2', r)
+// => TWD97 to TWD67TM2 [ 249171.1063953548, 2655228.9690125366 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 243,
-        y: 207,
-    }
-    r = await interp2(ps, p, { scale: 1000 })
-    console.log(r)
-    // => { x: 243, y: 207, z: 97.29447682486855 }
+//from TWD67
+ps = [120.99185287062672, 24.001775588106103]
+r = convertCoordinate('TWD67', 'WGS84', ps)
+console.log('TWD67', 'to', 'WGS84', r)
+// => TWD67 to WGS84 [ 120.99999996996448, 24.000000006583658 ]
 
-    ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
-    p = {
-        x: 243,
-        y: 207,
-    }
-    r = interp2(ps, p, { useSync: true })
-    console.log(r)
-    // => { x: 243, y: 207, z: 97.29447682486813 }
+ps = [120.99185287062672, 24.001775588106103]
+r = convertCoordinate('TWD67', 'TWD97', ps)
+console.log('TWD67', 'to', 'TWD97', r)
+// => TWD67 to TWD97 [ 120.99999996996448, 24.000000006583658 ]
 
-}
-test()
-    .catch((err) => {
-        console.log(err)
-    })
+ps = [120.99185287062672, 24.001775588106103]
+r = convertCoordinate('TWD67', 'TWD97TM2', ps)
+console.log('TWD67', 'to', 'TWD97TM2', r)
+// => TWD67 to TWD97TM2 [ 249999.99694413712, 2655023.125686239 ]
+
+ps = [120.99185287062672, 24.001775588106103]
+r = convertCoordinate('TWD67', 'TWD67TM2', ps)
+console.log('TWD67', 'to', 'TWD67TM2', r)
+// => TWD67 to TWD67TM2 [ 249171.1063953548, 2655228.969012536 ]
+
+//from TWD97TM2
+ps = [250000, 2655023.124957118]
+r = convertCoordinate('TWD97TM2', 'WGS84', ps)
+console.log('TWD97TM2', 'to', 'WGS84', r)
+// => TWD97TM2 to WGS84 [ 121, 24.000000000000004 ]
+
+ps = [250000, 2655023.124957118]
+r = convertCoordinate('TWD97TM2', 'TWD97', ps)
+console.log('TWD97TM2', 'to', 'TWD97', r)
+// => TWD97TM2 to TWD97 [ 121, 24.000000000000004 ]
+
+ps = [250000, 2655023.124957118]
+r = convertCoordinate('TWD97TM2', 'TWD67', ps)
+console.log('TWD97TM2', 'to', 'TWD67', r)
+// => TWD97TM2 to TWD67 [ 120.99185287062672, 24.001775588106103 ]
+
+ps = [250000, 2655023.124957118]
+r = convertCoordinate('TWD97TM2', 'TWD67TM2', ps)
+console.log('TWD97TM2', 'to', 'TWD67TM2', r)
+// => TWD97TM2 to TWD67TM2 [ 249171.1063953548, 2655228.9690125366 ]
+
+//from TWD67TM2
+ps = [249171.1063953548, 2655228.969012536]
+r = convertCoordinate('TWD67TM2', 'WGS84', ps)
+console.log('TWD67TM2', 'to', 'WGS84', r)
+// => TWD67TM2 to WGS84 [ 120.99999996996448, 24.000000006583658 ]
+
+ps = [249171.1063953548, 2655228.969012536]
+r = convertCoordinate('TWD67TM2', 'TWD97', ps)
+console.log('TWD67TM2', 'to', 'TWD97', r)
+// => TWD67TM2 to TWD97 [ 120.99999996996448, 24.000000006583658 ]
+
+ps = [249171.1063953548, 2655228.969012536]
+r = convertCoordinate('TWD67TM2', 'TWD67', ps)
+console.log('TWD67TM2', 'to', 'TWD67', r)
+// => TWD67TM2 to TWD67 [ 120.99185287062672, 24.001775588106096 ]
+
+ps = [249171.1063953548, 2655228.969012536]
+r = convertCoordinate('TWD67TM2', 'TWD97TM2', ps)
+console.log('TWD67TM2', 'to', 'TWD97TM2', r)
+// => TWD67TM2 to TWD97TM2 [ 249999.99694413712, 2655023.125686239 ]
 
 
 //node --experimental-modules --es-module-specifier-resolution=node g.mjs
