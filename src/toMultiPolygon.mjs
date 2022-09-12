@@ -10,8 +10,8 @@ import getPointDepth from './getPointDepth.mjs'
  * @memberOf w-gis
  * @param {Array} v 輸入資料陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.supposeType='polygons'] 輸入提取模式，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
- * @returns {Array} 回傳資料陣列
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @returns {Array} 回傳MultiPolygon陣列
  * @example
  *
  * let rs

@@ -1,5 +1,3 @@
-// import each from 'lodash/each'
-// import size from 'lodash/size'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 // import clipPolygon from './clipPolygon.mjs'
