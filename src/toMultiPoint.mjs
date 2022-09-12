@@ -78,24 +78,6 @@ import getPointDepth from './getPointDepth.mjs'
  * console.log(JSON.stringify(r))
  * // => {"type":"Feature","properties":{},"geometry":{"type":"MultiPoint","coordinates":[[0,0],[100,0],[100,1],[0,1],[0,0],[10,0],[10,1],[0,1]]}}
  *
- * pgs = [ //polygon
- *     [
- *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ],
- *     [
- *         [0, 0],
- *         [10, 0],
- *         [10, 1],
- *         [0, 1],
- *     ]
- * ]
- * r = toMultiPoint(pgs, { supposeType: 'ringStrings' })
- * console.log(JSON.stringify(r))
- * // => {"type":"Feature","properties":{},"geometry":{"type":"MultiPoint","coordinates":[[0,0],[100,0],[100,1],[0,1],[0,0],[10,0],[10,1],[0,1]]}}
- *
  * pgs = [ //multiPolygon
  *     [
  *         [

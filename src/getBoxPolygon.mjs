@@ -77,24 +77,6 @@ import toMultiPoint from './toMultiPoint.mjs'
  * console.log(JSON.stringify(r))
  * // => [0,0,100,1]
  *
- * pgs = [ //polygon
- *     [
- *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ],
- *     [
- *         [0, 0],
- *         [10, 0],
- *         [10, 1],
- *         [0, 1],
- *     ]
- * ]
- * r = getBoxPolygon(pgs, { supposeType: 'ringStrings' })
- * console.log(JSON.stringify(r))
- * // => [0,0,100,1]
- *
  * pgs = [ //multiPolygon
  *     [
  *         [
