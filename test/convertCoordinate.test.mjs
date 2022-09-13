@@ -65,13 +65,27 @@ describe(`convertCoordinate`, function() {
 
     k++
     oin[k] = {
+        from: 'WGS84',
+        to: 'UTMTM6',
+        ps: [121, 24],
+    }
+    out[k] = [295715.5173190569, 2655913.497631182]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 4
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
         from: 'TWD97',
         to: 'WGS84',
         ps: [121, 24.000000000000004],
     }
     out[k] = [121, 24.000000000000004]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 4
+        k = 5
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -85,7 +99,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99185287062672, 24.001775588106103]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 5
+        k = 6
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -99,7 +113,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [250000, 2655023.124957118]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 6
+        k = 7
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -113,7 +127,21 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [249171.1063953548, 2655228.9690125366]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 7
+        k = 8
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'TWD97',
+        to: 'UTMTM6',
+        ps: [121, 24.000000000000004],
+    }
+    out[k] = [295715.5173190569, 2655913.4976311824]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 9
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -127,7 +155,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99999996996448, 24.000000006583658]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 8
+        k = 10
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -141,7 +169,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99999996996448, 24.000000006583658]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 9
+        k = 11
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -155,7 +183,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [249999.99694413712, 2655023.125686239]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 10
+        k = 12
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -169,7 +197,21 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [249171.1063953548, 2655228.969012536]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 11
+        k = 13
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'TWD67',
+        to: 'UTMTM6',
+        ps: [120.99185287062672, 24.001775588106103],
+    }
+    out[k] = [295715.51731826895, 2655913.4976365822]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 14
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -183,7 +225,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [121, 24.000000000000004]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 12
+        k = 15
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -197,7 +239,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [121, 24.000000000000004]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 13
+        k = 16
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -211,7 +253,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99185287062672, 24.001775588106103]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 14
+        k = 17
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -225,7 +267,21 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [249171.1063953548, 2655228.9690125366]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 15
+        k = 18
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'TWD97TM2',
+        to: 'UTMTM6',
+        ps: [250000, 2655023.124957118],
+    }
+    out[k] = [295715.5173190569, 2655913.4976311824]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 19
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -239,7 +295,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99999996996448, 24.000000006583658]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 16
+        k = 20
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -253,7 +309,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99999996996448, 24.000000006583658]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 17
+        k = 21
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -267,7 +323,7 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [120.99185287062672, 24.001775588106096]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 18
+        k = 22
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -281,7 +337,91 @@ describe(`convertCoordinate`, function() {
     }
     out[k] = [249999.99694413712, 2655023.125686239]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
-        k = 19
+        k = 23
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'TWD67TM2',
+        to: 'UTMTM6',
+        ps: [249171.1063953548, 2655228.969012536],
+    }
+    out[k] = [295715.51731826895, 2655913.4976365822]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 24
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'UTMTM6',
+        to: 'WGS84',
+        ps: [295715.5173190569, 2655913.497631182],
+    }
+    out[k] = [120.99999997049657, 24.000000006421075]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 25
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'UTMTM6',
+        to: 'TWD97',
+        ps: [295715.5173190569, 2655913.497631182],
+    }
+    out[k] = [120.99999997049657, 24.000000006421075]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 26
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'UTMTM6',
+        to: 'TWD67',
+        ps: [295715.5173190569, 2655913.497631182],
+    }
+    out[k] = [120.99185287063509, 24.00177558805831]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 27
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'UTMTM6',
+        to: 'TWD97TM2',
+        ps: [295715.5173190569, 2655913.497631182],
+    }
+    out[k] = [249999.99699827324, 2655023.1256682333]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 28
+        let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        from: 'UTMTM6',
+        to: 'TWD67TM2',
+        ps: [295715.5173190569, 2655913.497631182],
+    }
+    out[k] = [249171.10639620616, 2655228.9690072443]
+    it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
+        k = 29
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
