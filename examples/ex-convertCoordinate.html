@@ -70,9 +70,8 @@
                 if(!w.isestr(text)){
                     return []
                 }
-                if(text.indexOf(',')>=0){
-                    text=w.replace(text,',',' ')
-                }
+                text=w.replace(text,',',' ')
+                text=w.replace(text,'\t',' ')
                 let ls=w.sep(text,'\n')
                 let rs=_.map(ls,(l)=>{
                     let vs=w.sep(l,' ')
