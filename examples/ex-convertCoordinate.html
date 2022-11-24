@@ -12,7 +12,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/wsemi/dist/wsemi.umd.js"></script>
     
-        <script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.32/dist/w-gis.umd.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.33/dist/w-gis.umd.js"></script>
         <script>
             let w=wsemi
         </script>
@@ -25,30 +25,22 @@
 
             <div style="padding-right:10px;">
                 <div style="">TWD67(TM2)</div>
-                <textarea id="TWD67TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67TM2');">
-
-                </textarea>
+                <textarea id="TWD67TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67TM2');"></textarea>
             </div>
 
             <div style="padding-right:10px;">
                 <div style="">TWD67</div>
-                <textarea id="TWD67" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67');">
-
-                </textarea>
+                <textarea id="TWD67" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67');"></textarea>
             </div>
 
             <div style="padding-right:10px;">
                 <div style="">TWD97(TM2)</div>
-                <textarea id="TWD97TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97TM2');">
-
-                </textarea>
+                <textarea id="TWD97TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97TM2');"></textarea>
             </div>
 
             <div style="padding-right:10px;">
                 <div style="">TWD97</div>
-                <textarea id="TWD97" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97');">
-
-                </textarea>
+                <textarea id="TWD97" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97');"></textarea>
             </div>
 
             <div style="padding-right:10px;">
@@ -78,9 +70,8 @@
                 if(!w.isestr(text)){
                     return []
                 }
-                if(text.indexOf(',')>=0){
-                    text=w.replace(text,',',' ')
-                }
+                text=w.replace(text,',',' ')
+                text=w.replace(text,'\t',' ')
                 let ls=w.sep(text,'\n')
                 let rs=_.map(ls,(l)=>{
                     let vs=w.sep(l,' ')
