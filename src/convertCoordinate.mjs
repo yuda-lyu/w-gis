@@ -50,6 +50,8 @@ proj4.defs([
 /**
  * 座標轉換
  *
+ * [台灣常用的坐標系統及EPSG代碼](https://gis.rchss.sinica.edu.tw/qgis/?p=2823&cpage=1)
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/convertCoordinate.test.js Github}
  * @memberOf w-gis
  * @param {String} cdFrom 輸入來源座標系統字串

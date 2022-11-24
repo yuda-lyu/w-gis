@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-tw">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html charset=UTF-8" />
+        <title>convertCoordinate</title>
+
+        <!-- @babel/polyfill已廢棄 -->
+        <script nomodule src="https://cdn.jsdelivr.net/npm/@babel/polyfill@7.12.1/dist/polyfill.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/wsemi/dist/wsemi.umd.js"></script>
+    
+        <script src="../dist/w-gis.umd.js"></script>
+        <script>
+            let w=wsemi
+        </script>
+
+    </head>
+
+    <body style="padding:10px 0px 10px 10px; margin:0;">
+
+        <div style="display:flex;">
+
+            <div style="padding-right:10px;">
+                <div style="">TWD67(TM2)</div>
+                <textarea id="TWD67TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67TM2');">
+
+                </textarea>
+            </div>
+
+            <div style="padding-right:10px;">
+                <div style="">TWD67</div>
+                <textarea id="TWD67" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD67');">
+
+                </textarea>
+            </div>
+
+            <div style="padding-right:10px;">
+                <div style="">TWD97(TM2)</div>
+                <textarea id="TWD97TM2" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97TM2');">
+
+                </textarea>
+            </div>
+
+            <div style="padding-right:10px;">
+                <div style="">TWD97</div>
+                <textarea id="TWD97" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('TWD97');">
+
+                </textarea>
+            </div>
+
+            <div style="padding-right:10px;">
+                <div style="">WGS84</div>
+                <textarea id="WGS84" style="width:18.5vw; height:92vh; resize:none; font-size:0.7rem;" oninput="calc('WGS84');">
+120,23
+120.654272,23.12314566
+                </textarea>
+            </div>
+
+        </div>
+
+        <script>
+
+            let gis = window['w-gis']
+            // console.log(gis)
+
+            let ks=[
+                'TWD67',
+                'TWD67TM2',
+                'TWD97',
+                'TWD97TM2',
+                'WGS84',
+            ]
+            
+            function gd(text){
+                if(!w.isestr(text)){
+                    return []
+                }
+                if(text.indexOf(',')>=0){
+                    text=w.replace(text,',',' ')
+                }
+                let ls=w.sep(text,'\n')
+                let rs=_.map(ls,(l)=>{
+                    let vs=w.sep(l,' ')
+                    vs=_.map(vs,(v)=>{
+                        return w.cdbl(v)
+                    })
+                    return vs
+                })
+                return rs
+            }
+
+            function cd(src,p){
+                let t={}
+                t[src]=p
+                if(src!=='TWD67'){
+                    let r=gis.convertCoordinate(src, 'TWD67', p)
+                    t['TWD67']=r
+                }
+                if(src!=='TWD67TM2'){
+                    let r=gis.convertCoordinate(src, 'TWD67TM2', p)
+                    t['TWD67TM2']=r
+                }
+                if(src!=='TWD97'){
+                    let r=gis.convertCoordinate(src, 'TWD97', p)
+                    t['TWD97']=r
+                }
+                if(src!=='TWD97TM2'){
+                    let r=gis.convertCoordinate(src, 'TWD97TM2', p)
+                    t['TWD97TM2']=r
+                }
+                if(src!=='WGS84'){
+                    let r=gis.convertCoordinate(src, 'WGS84', p)
+                    t['WGS84']=r
+                }
+                return t
+            }
+
+            function cds(src,ps){
+                let rs=_.map(ps,(p)=>{
+                    let r=[0,0]
+                    try{
+                        r=cd(src,p)
+                    }
+                    catch(err){}
+                    return r
+                })
+                let ts={}
+                _.each(ks,(k)=>{
+                    ts[k]=_.map(rs,(r)=>{
+                        return _.get(r,k,0)
+                    })
+                })
+                return ts
+            }
+
+            function sd(tar,ps){
+                let c=''
+                _.each(ps,(p)=>{
+                    let v0=_.get(p,0,'')
+                    let v1=_.get(p,1,'')
+                    let t=`${v0} , ${v1}`
+                    c+=t+'\n'
+                })
+                document.querySelector(`#${tar}`).value=c
+            }
+
+            function sds(data){
+                _.each(ks,(k)=>{
+                    let ps=_.get(data,k,[])
+                    sd(k,ps)
+                })
+            }
+                              
+            function calc(src){
+                // console.log('calc',src)
+
+                let tsrc=document.querySelector(`#${src}`).value
+                // console.log('tsrc',tsrc)
+
+                let ps=gd(tsrc)
+                // console.log('ps',ps)
+
+                let rs=cds(src,ps)
+                console.log('rs',rs)
+
+                sds(rs)
+
+            }
+
+        </script>
+
+    </body>
+
+</html>

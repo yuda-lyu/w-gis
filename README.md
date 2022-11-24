@@ -11,6 +11,14 @@ A tool for geotech analysis.
 ## Documentation
 To view documentation or get support, visit [docs](https://yuda-lyu.github.io/w-gis/w-gis.html).
 
+## Example
+To view some examples for more understanding, visit examples:
+> **convertCoordinate:** [ex-convertCoordinate.html](https://yuda-lyu.github.io/w-gis/examples/ex-convertCoordinate.html) [[source code](https://github.com/yuda-lyu/w-gis/blob/master/docs/examples/ex-convertCoordinate.html)]
+
+> **getCentroidMultiPolygon:** [ex-getCentroidMultiPolygon.html](https://yuda-lyu.github.io/w-gis/examples/ex-getCentroidMultiPolygon.html) [[source code](https://github.com/yuda-lyu/w-gis/blob/master/docs/examples/ex-getCentroidMultiPolygon.html)]
+
+> **getCenterOfMassMultiPolygon:** [ex-getCenterOfMassMultiPolygon.html](https://yuda-lyu.github.io/w-gis/examples/ex-getCenterOfMassMultiPolygon.html) [[source code](https://github.com/yuda-lyu/w-gis/blob/master/docs/examples/ex-getCenterOfMassMultiPolygon.html)]
+
 ## Installation
 ### Using npm(ES6 module):
 > **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `d3-tricontour`, `d3-delaunay`, `polybooljs`, `lodash` and `wsemi`.
@@ -23,6 +31,6 @@ npm i w-gis
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.31/dist/w-gis.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.32/dist/w-gis.umd.js"></script>
 
 ```
