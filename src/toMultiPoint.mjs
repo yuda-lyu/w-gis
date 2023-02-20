@@ -108,13 +108,13 @@ function toMultiPoint(v) {
     if (d === 3) {
         v = flatten(flatten(v))
     }
-    if (d === 2) {
+    else if (d === 2) {
         v = flatten(v)
     }
-    if (d === 1) {
+    else if (d === 1) {
         // v = v
     }
-    if (d === 0) {
+    else if (d === 0) {
         v = []
     }
 

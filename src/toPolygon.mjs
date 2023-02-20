@@ -103,13 +103,13 @@ function toPolygon(v) {
     if (d === 3) {
         return flatten(v)
     }
-    if (d === 2) {
+    else if (d === 2) {
         return v
     }
-    if (d === 1) {
+    else if (d === 1) {
         return [v]
     }
-    if (d === 0) {
+    else if (d === 0) {
         return []
     }
     return v

@@ -133,7 +133,7 @@ function toMultiPolygon(v, opt = {}) {
     if (d === 3) {
         return v
     }
-    if (d === 2) {
+    else if (d === 2) {
         if (supposeType === 'polygons') {
             return map(v, (vv) => {
                 return [vv] //預設輸入為polygon的陣列, 故採用此法, 但若是polygon的多ringString(外包內剔除), 就會有問題
@@ -143,10 +143,10 @@ function toMultiPolygon(v, opt = {}) {
             return [v]
         }
     }
-    if (d === 1) {
+    else if (d === 1) {
         return [[v]]
     }
-    if (d === 0) {
+    else if (d === 0) {
         return []
     }
     return v
