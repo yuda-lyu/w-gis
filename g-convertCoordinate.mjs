@@ -77,12 +77,12 @@ console.log('TWD67', 'to', 'TWD97TM2', r)
 ps = [120.99185287062672, 24.001775588106103]
 r = convertCoordinate('TWD67', 'TWD67TM2', ps)
 console.log('TWD67', 'to', 'TWD67TM2', r)
-// => TWD67 to TWD67TM2 [ 249171.1063953548, 2655228.969012536 ]
+// => TWD67 to TWD67TM2 [ 249171.10333948207, 2655228.9697416592 ]
 
 ps = [120.99185287062672, 24.001775588106103]
 r = convertCoordinate('TWD67', 'UTMTM6', ps)
 console.log('TWD67', 'to', 'UTMTM6', r)
-// => TWD67 to UTMTM6 [ 295715.51731826895, 2655913.4976365822 ]
+// => TWD67 to UTMTM6 [ 295715.5142731895, 2655913.4984038025 ]
 
 //from TWD97TM2
 ps = [250000, 2655023.124957118]
@@ -124,7 +124,7 @@ console.log('TWD67TM2', 'to', 'TWD97', r)
 ps = [249171.1063953548, 2655228.969012536]
 r = convertCoordinate('TWD67TM2', 'TWD67', ps)
 console.log('TWD67TM2', 'to', 'TWD67', r)
-// => TWD67TM2 to TWD67 [ 120.99185287062672, 24.001775588106096 ]
+// => TWD67TM2 to TWD67 [ 120.99185284059037, 24.001775594688155 ]
 
 ps = [249171.1063953548, 2655228.969012536]
 r = convertCoordinate('TWD67TM2', 'TWD97TM2', ps)
@@ -134,7 +134,7 @@ console.log('TWD67TM2', 'to', 'TWD97TM2', r)
 ps = [249171.1063953548, 2655228.969012536]
 r = convertCoordinate('TWD67TM2', 'UTMTM6', ps)
 console.log('TWD67TM2', 'to', 'UTMTM6', r)
-// => TWD67TM2 to UTMTM6 [ 295715.51731826895, 2655913.4976365822 ]
+// => TWD67TM2 to UTMTM6 [ 295715.5142731895, 2655913.4984038025 ]
 
 //from UTMTM6
 ps = [295715.5173190569, 2655913.497631182]
@@ -150,18 +150,17 @@ console.log('UTMTM6', 'to', 'TWD97', r)
 ps = [295715.5173190569, 2655913.497631182]
 r = convertCoordinate('UTMTM6', 'TWD67', ps)
 console.log('UTMTM6', 'to', 'TWD67', r)
-// => UTMTM6 to TWD67 [ 120.99185287063509, 24.00177558805831 ]
+// => UTMTM6 to TWD67 [ 120.99185284112247, 24.001775594525597 ]
 
 ps = [295715.5173190569, 2655913.497631182]
 r = convertCoordinate('UTMTM6', 'TWD97TM2', ps)
 console.log('UTMTM6', 'to', 'TWD97TM2', r)
-// =>UTMTM6 to TWD97TM2 [ 249999.99699827324, 2655023.1256682333 ]
+// => UTMTM6 to TWD97TM2 [ 249999.99699827324, 2655023.1256682333 ]
 
 ps = [295715.5173190569, 2655913.497631182]
 r = convertCoordinate('UTMTM6', 'TWD67TM2', ps)
 console.log('UTMTM6', 'to', 'TWD67TM2', r)
-// => UTMTM6 to TWD67TM2 [ 249171.10639620616, 2655228.9690072443 ]
+// => UTMTM6 to TWD67TM2 [ 249171.1033936166, 2655228.969723653 ]
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g.mjs
-
+//node --experimental-modules --es-module-specifier-resolution=node g-convertCoordinate.mjs

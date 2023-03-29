@@ -195,7 +195,7 @@ describe(`convertCoordinate`, function() {
         to: 'TWD67TM2',
         ps: [120.99185287062672, 24.001775588106103],
     }
-    out[k] = [249171.1063953548, 2655228.969012536]
+    out[k] = [249171.10333948207, 2655228.9697416592]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 13
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
@@ -209,7 +209,7 @@ describe(`convertCoordinate`, function() {
         to: 'UTMTM6',
         ps: [120.99185287062672, 24.001775588106103],
     }
-    out[k] = [295715.51731826895, 2655913.4976365822]
+    out[k] = [295715.5142731895, 2655913.4984038025]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 14
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
@@ -321,7 +321,7 @@ describe(`convertCoordinate`, function() {
         to: 'TWD67',
         ps: [249171.1063953548, 2655228.969012536],
     }
-    out[k] = [120.99185287062672, 24.001775588106096]
+    out[k] = [120.99185284059037, 24.001775594688155]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 22
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
@@ -349,7 +349,7 @@ describe(`convertCoordinate`, function() {
         to: 'UTMTM6',
         ps: [249171.1063953548, 2655228.969012536],
     }
-    out[k] = [295715.51731826895, 2655913.4976365822]
+    out[k] = [295715.5142731895, 2655913.4984038025]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 24
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
@@ -391,7 +391,7 @@ describe(`convertCoordinate`, function() {
         to: 'TWD67',
         ps: [295715.5173190569, 2655913.497631182],
     }
-    out[k] = [120.99185287063509, 24.00177558805831]
+    out[k] = [120.99185284112247, 24.001775594525597]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 27
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
@@ -419,7 +419,7 @@ describe(`convertCoordinate`, function() {
         to: 'TWD67TM2',
         ps: [295715.5173190569, 2655913.497631182],
     }
-    out[k] = [249171.10639620616, 2655228.9690072443]
+    out[k] = [249171.1033936166, 2655228.969723653]
     it(`should return ${JSON.stringify(out[k])} when convertCoordinate(${oin[k].from}, ${oin[k].to}, ${JSON.stringify(oin[k].ps)})`, function() {
         k = 29
         let r = convertCoordinate(oin[k].from, oin[k].to, oin[k].ps)
