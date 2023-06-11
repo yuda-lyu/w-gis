@@ -57,9 +57,15 @@ function ptsXYtoArr(ps, opt = {}) {
         keyY = 'y'
     }
 
+    //keyInd
+    let keyInd = get(opt, 'keyInd', '')
+    if (!isestr(keyInd)) {
+        keyInd = 'ind'
+    }
+
     //rs
     let rs = []
-    each(ps, (v) => {
+    each(ps, (v, k) => {
         let x = null
         let y = null
         if (isarr(v) && size(v) >= 2) {
@@ -76,6 +82,7 @@ function ptsXYtoArr(ps, opt = {}) {
             rs.push({
                 x,
                 y,
+                [keyInd]: k,
             })
         }
     })

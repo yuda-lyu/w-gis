@@ -274,9 +274,9 @@ let kriging_variogram_spherical = function(h, nugget, range, sill, A) {
 // Train using gaussian processes with bayesian priors
 kriging.train = function(t, x, y, model, sigma2, alpha) {
     let variogram = {
-        t: t,
-        x: x,
-        y: y,
+        t,
+        x,
+        y,
         nugget: 0.0,
         range: 0.0,
         sill: 0.0,

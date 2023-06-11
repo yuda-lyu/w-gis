@@ -55,6 +55,7 @@ import isestr from 'wsemi/src/isestr.mjs'
 import iseobj from 'wsemi/src/iseobj.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
+import isfun from 'wsemi/src/isfun.mjs'
 import cdbl from 'wsemi/src/cdbl.mjs'
 import haskey from 'wsemi/src/haskey.mjs'
 import ptsXYtoArr from './ptsXYtoArr.mjs'
@@ -244,8 +245,15 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     }
     scale = cdbl(scale)
 
+    //funInterpFragment
+    let funInterpFragment = get(opt, 'funInterpFragment')
+    let useFunInterpFragment = isfun(funInterpFragment)
+
+    //keyInd
+    let keyInd = 'ind'
+
     //ptsXYZtoArr
-    psSrc = ptsXYZtoArr(psSrc, opt)
+    psSrc = ptsXYZtoArr(psSrc, { keyX, keyY, keyZ, keyInd })
 
     //check psSrc
     if (size(psSrc) === 0) {
@@ -256,7 +264,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     // console.log('ptsXYZtoArr psSrc', psSrc)
 
     //ptsXYtoArr
-    psTar = ptsXYtoArr(psTar, opt)
+    psTar = ptsXYtoArr(psTar, { keyX, keyY, keyInd })
 
     //check psTar
     if (size(psTar) === 0) {
@@ -267,7 +275,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     // console.log('ptsXYtoArr psTar', psTar)
 
     //interp2Normalize
-    let itnm = interp2Normalize(psSrc, { scale })
+    let itnm = interp2Normalize(psSrc, { keyInd, scale })
     // console.log('itnm.st', itnm.st)
     // console.log('itnm.psMinMax', itnm.psMinMax)
     psSrc = itnm.ps //複寫正規化數據
@@ -284,12 +292,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     //kpKnown
     let kpKnown = {}
     each(psSrc, (v) => {
-        let k = `${v.x}-${v.y}` //已經被正規化至x,y
-        kpKnown[k] = v.z //已經被正規化至x,y,z
+        let k = `${v.x}-${v.y}` //x,y已經被正規化
+        kpKnown[k] = v.z //x,y,z已經被正規化
     })
 
     //intDny
-    let intDny = Delaunay.from(psSrcOri, d => d.x, d => d.y) //已經被正規化至x,y
+    let intDny = Delaunay.from(psSrcOri, d => d.x, d => d.y) //x,y已經被正規化
 
     // //hpg, 原始數據形成最外框邊界
     // let hpg = intDny.hullPolygon()
@@ -309,31 +317,31 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         let psSrcTemp = [...psSrc]
 
         //newItem
-        let newItem = { x, y, z: 0 } //已經被正規化至x,y,z
+        let newItem = { x, y, z: 0 } //x,y,z已經被正規化
 
         //push
         psSrcTemp.push(newItem)
         data.push(newItem)
 
         //postVor
-        let postVor = Delaunay.from(psSrcTemp, d => d.x, d => d.y).voronoi(vbox) //已經被正規化至x,y
+        let postVor = Delaunay.from(psSrcTemp, d => d.x, d => d.y).voronoi(vbox) //x,y已經被正規化
         // console.log('postVor', postVor)
 
         //newIdx
         let newIdx = psSrcTemp.length - 1
         // console.log('newIdx', newIdx)
 
-        //queryPoly
-        let queryPoly = postVor.cellPolygon(newIdx)
-        // console.log('queryPoly', queryPoly)
+        //pgsQuery
+        let pgsQuery = postVor.cellPolygon(newIdx)
+        // console.log('pgsQuery', pgsQuery)
 
-        //queryA
-        let queryA = getAreaPolygon(queryPoly)
-        // console.log('queryA', queryA)
+        //areaQuery
+        let areaQuery = getAreaPolygon(pgsQuery)
+        // console.log('areaQuery', areaQuery)
 
         //newPointVal
         let newPointVal = null
-        if (queryA > 0) {
+        if (areaQuery > 0) {
 
             //neighborIndices
             let neighborIndices = []
@@ -352,17 +360,18 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
             //subValues
             let subValues = map(neighborIndices, (idx) => {
+                // console.log('idx', idx)
 
                 //pgs1, pgs2
-                let pgs1 = [queryPoly]
+                let pgs1 = [pgsQuery]
                 let pgs2 = [iniVor.cellPolygon(idx)]
                 // console.log('pgs1', pgs1, 'pgs2', pgs2)
 
                 //intersect
-                let ints = []
+                let pgsInts = []
                 try {
-                    ints = intersectPolygon(pgs1, pgs2)
-                    // console.log('ints', ints)
+                    pgsInts = intersectPolygon(pgs1, pgs2)
+                    // console.log('pgsInts', pgsInts)
                 }
                 catch (err) {
                     console.log('pgs1', pgs1)
@@ -370,43 +379,55 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     console.log(err)
                 }
 
-                //intersectA
-                let intersectA = 0
-                if (size(ints) === 1) {
+                //areaInts
+                let areaInts = 0
+                if (size(pgsInts) === 1) {
                     try {
-                        intersectA = getAreaPolygon(ints[0])
+                        areaInts = getAreaPolygon(pgsInts[0])
                         //console.log('getAreaPolygon',d3.getAreaPolygon(is.regions[0]),getAreaPolygon(is.regions[0]))
                     }
                     catch (err) {
-                        console.log('ints', ints)
+                        console.log('pgsInts', pgsInts)
                         console.log(err)
                     }
                 }
 
                 return {
-                    ia: intersectA,
-                    idx: idx,
+                    ia: areaInts,
+                    idx,
                 }
             })
             // console.log('subValues', subValues)
 
             //newPointVal
             newPointVal = map(subValues, (o) => {
-                let rA = (o.ia / queryA)
-                let z = data[o.idx].z //已經被正規化至x,y,z
-                // console.log('subValue', 'rA', rA, 'o.idx', o.idx, 'z', z)
-                return rA * z
+                let rA = (o.ia / areaQuery)
+                let z = data[o.idx].z //x,y,z已經被正規化
+                let v = rA * z
+                // console.log('subValue', 'rA', rA, 'o.idx', o.idx, 'z', z, 'v', v)
+                if (useFunInterpFragment) {
+                    z = funInterpFragment({
+                        v,
+                        area: o.ia,
+                        areaTotal: areaQuery,
+                        areaRatio: rA,
+                        z,
+                        ind: o.idx,
+                        // data,
+                    })
+                }
+                return v
             })
             newPointVal = sum(newPointVal)
             // if (isNaN(newPointVal)) {
-            //     console.log('isNaN(newPointVal)', subValues, 'queryA', queryA)
+            //     console.log('isNaN(newPointVal)', subValues, 'areaQuery', areaQuery)
             // }
-            // console.log(`queryA[${queryA}] > 0`, 'newPointVal', newPointVal)
+            // console.log(`areaQuery[${areaQuery}] > 0`, 'newPointVal', newPointVal)
 
         }
 
         //update newPointVal
-        data[data.length - 1].z = newPointVal //已經被正規化至x,y,z
+        data[data.length - 1].z = newPointVal //x,y,z已經被正規化
 
         return newPointVal
     }
@@ -428,11 +449,11 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         return r
     }
 
-    //kpdt
-    let kpdt = (nx, ny) => {
+    //getNz
+    let getNz = (nx, ny) => {
 
         //check
-        let k = `${nx}-${ny}` //已經被正規化至x,y
+        let k = `${nx}-${ny}` //x,y已經被正規化
         if (haskey(kpKnown, k)) {
             return kpKnown[k]
         }
@@ -458,22 +479,22 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     let itv = (p) => {
 
         //x, nx
-        let x = p.x //已經被正規化至x,y
-        let nx = nv(x, 0)
+        let x = p.x //x,y已經被正規化
+        let nx = nv(x, 0) //還原
         if (!isNumber(nx)) {
             throw new Error(`invalid nx[${nx}]`) //x,y預期都是有值
         }
 
         //y, ny
-        let y = p.y //已經被正規化至x,y
-        let ny = nv(y, 1)
+        let y = p.y //x,y已經被正規化
+        let ny = nv(y, 1) //還原
         if (!isNumber(ny)) {
             throw new Error(`invalid ny[${ny}]`) //x,y預期都是有值
         }
 
         //nz, z
-        let nz = kpdt(nx, ny)
-        let z = inv(nz, 2)
+        let nz = getNz(nx, ny)
+        let z = inv(nz, 2) //還原
         if (!isNumber(z)) {
             z = null //z須支援可能無法內插
         }
@@ -523,7 +544,7 @@ export default interp2NaturalNeighbor
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Thu Mar 30 2023 20:36:55 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sun Jun 11 2023 13:37:49 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

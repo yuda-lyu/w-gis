@@ -76,9 +76,15 @@ function ptsXYZtoArr(ps, opt = {}) {
         keyZ = 'z'
     }
 
+    //keyInd
+    let keyInd = get(opt, 'keyInd', '')
+    if (!isestr(keyInd)) {
+        keyInd = 'ind'
+    }
+
     //rs
     let rs = []
-    each(ps, (v) => {
+    each(ps, (v, k) => {
         let x = null
         let y = null
         let z = null
@@ -100,6 +106,7 @@ function ptsXYZtoArr(ps, opt = {}) {
                 x,
                 y,
                 z,
+                [keyInd]: k,
             })
         }
     })

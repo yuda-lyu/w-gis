@@ -4,11 +4,36 @@ import min from 'lodash/min'
 import max from 'lodash/max'
 import isNumber from 'lodash/isNumber'
 import isnum from 'wsemi/src/isnum.mjs'
+import isestr from 'wsemi/src/isestr.mjs'
 import cdbl from 'wsemi/src/cdbl.mjs'
 import normalizeArray from './normalizeArray.mjs'
 
 
 function interp2Normalize(ps, opt = {}) {
+
+    //keyX
+    let keyX = get(opt, 'keyX')
+    if (!isestr(keyX)) {
+        keyX = 'x'
+    }
+
+    //keyY
+    let keyY = get(opt, 'keyY')
+    if (!isestr(keyY)) {
+        keyY = 'y'
+    }
+
+    //keyZ
+    let keyZ = get(opt, 'keyZ', '')
+    if (!isestr(keyZ)) {
+        keyZ = 'z'
+    }
+
+    //keyInd
+    let keyInd = get(opt, 'keyInd', '')
+    if (!isestr(keyInd)) {
+        keyInd = 'ind'
+    }
 
     //scale
     let scale = get(opt, 'scale')
@@ -19,9 +44,9 @@ function interp2Normalize(ps, opt = {}) {
     // console.log('scale', scale)
 
     //nx, ny, nz
-    let nx = normalizeArray(map(ps, 'x'))
-    let ny = normalizeArray(map(ps, 'y'))
-    let nz = normalizeArray(map(ps, 'z'))
+    let nx = normalizeArray(map(ps, keyX))
+    let ny = normalizeArray(map(ps, keyY))
+    let nz = normalizeArray(map(ps, keyZ))
     // console.log('nx', nx)
     // console.log('ny', ny)
     // console.log('nz', nz)
@@ -76,21 +101,27 @@ function interp2Normalize(ps, opt = {}) {
 
     //normalize ps
     ps = map(ps, (v) => {
-        let x = nv(v.x, 0)
-        let y = nv(v.y, 1)
-        let z = nv(v.z, 2)
-        return { x, y, z }
+        let x = nv(v[keyX], 0)
+        let y = nv(v[keyY], 1)
+        let z = nv(v[keyZ], 2)
+        let ind = v[keyInd]
+        return {
+            [keyX]: x,
+            [keyY]: y,
+            [keyZ]: z,
+            [keyInd]: ind,
+        }
     })
     // console.log('normalize ps', ps)
 
     //psMinMax
-    let psx = map(ps, 'x')
+    let psx = map(ps, keyX)
     let psxMin = min(psx)
     let psxMax = max(psx)
-    let psy = map(ps, 'y')
+    let psy = map(ps, keyY)
     let psyMin = min(psy)
     let psyMax = max(psy)
-    let psz = map(ps, 'z')
+    let psz = map(ps, keyZ)
     let pszMin = min(psz)
     let pszMax = max(psz)
     let psMinMax = {
