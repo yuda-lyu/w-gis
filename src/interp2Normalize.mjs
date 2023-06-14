@@ -41,6 +41,9 @@ function interp2Normalize(ps, opt = {}) {
         scale = 1
     }
     scale = cdbl(scale)
+    if (scale <= 0) {
+        throw new Error(`scale need >= 0`)
+    }
     // console.log('scale', scale)
 
     //nx, ny, nz
@@ -85,6 +88,9 @@ function interp2Normalize(ps, opt = {}) {
         if (!isNumber(v)) {
             return null
         }
+        if (st[i].range <= 0) {
+            return v
+        }
         return (v - st[i].min) / st[i].range * scale
     }
 
@@ -95,6 +101,9 @@ function interp2Normalize(ps, opt = {}) {
         // }
         if (!isNumber(iv)) {
             return null
+        }
+        if (scale <= 0) {
+            return iv
         }
         return iv / scale * st[i].range + st[i].min
     }
