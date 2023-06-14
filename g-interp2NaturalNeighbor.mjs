@@ -49,6 +49,20 @@ r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
 console.log(r)
 // => { x: 1243, y: 1207, z: null }
 
+ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+p = {
+    x: 243,
+    y: 207,
+}
+let funInterpFragments = (msg) => {
+    console.log('funInterpFragments', msg)
+    // let v = ps[0].v + ps[1].v + ps[2].v
+    return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+}
+r = interp2NaturalNeighbor(ps, p, { funInterpFragments })
+console.log(r)
+// => { x: 243, y: 207, z: 97.29447682486813 }
+
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
     x: 283,

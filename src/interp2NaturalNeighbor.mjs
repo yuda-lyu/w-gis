@@ -122,6 +122,20 @@ import { Delaunay } from 'd3-delaunay'
  * console.log(r)
  * // => { x: 1243, y: 1207, z: null }
  *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * p = {
+ *     x: 243,
+ *     y: 207,
+ * }
+ * let funInterpFragments = (msg) => {
+ *     console.log('funInterpFragments', msg)
+ *     // let v = ps[0].v + ps[1].v + ps[2].v
+ *     return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+ * }
+ * r = interp2NaturalNeighbor(ps, p, { funInterpFragments })
+ * console.log(r)
+ * // => { x: 243, y: 207, z: 97.29447682486813 }
+ *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
  *     x: 283,
@@ -236,6 +250,10 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     //funInterpFragment
     let funInterpFragment = get(opt, 'funInterpFragment')
     let useFunInterpFragment = isfun(funInterpFragment)
+
+    //funInterpFragments
+    let funInterpFragments = get(opt, 'funInterpFragments')
+    let useFunInterpFragments = isfun(funInterpFragments)
 
     //keyInd
     let keyInd = 'ind'
@@ -387,12 +405,17 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
             })
             // console.log('subValues', subValues)
 
-            //newPointVal
-            newPointVal = map(subValues, (o) => {
+            //newPointVals
+            let newPointVals = []
+            each(subValues, (o) => {
+
+                //rA, z, v
                 let rA = (o.ia / areaQuery)
                 let z = data[o.idx].z //x,y,z已經被正規化
                 let v = rA * z
                 // console.log('subValue', 'rA', rA, 'o.idx', o.idx, 'z', z, 'v', v)
+
+                //useFunInterpFragment
                 if (useFunInterpFragment) {
                     z = funInterpFragment({
                         v,
@@ -404,9 +427,32 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                         // data,
                     })
                 }
-                return v
+
+                //p
+                let p = {
+                    v,
+                    area: o.ia,
+                    areaTotal: areaQuery,
+                    areaRatio: rA,
+                    z,
+                    ind: o.idx,
+                }
+
+                //push
+                newPointVals.push(p)
+
             })
-            newPointVal = sum(newPointVal)
+
+            //newPointVal
+            let vt = sum(map(newPointVals, 'v'))
+            if (useFunInterpFragments) {
+                vt = funInterpFragments({
+                    ps: newPointVals,
+                    v: vt,
+                })
+            }
+            newPointVal = vt
+
             // if (isNaN(newPointVal)) {
             //     console.log('isNaN(newPointVal)', subValues, 'areaQuery', areaQuery)
             // }
