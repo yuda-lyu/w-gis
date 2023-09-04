@@ -12,11 +12,12 @@ import isarr from 'wsemi/src/isarr.mjs'
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/ptsXYZtoArr.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} ps 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或[[x1,y1],[x2,y2],...]點座標陣列之陣列
+ * @param {Array} ps 輸入點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列，或[[x1,y1,z1],[x2,y2,z2],...]點座標陣列之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.keyX='x'] 輸入點物件x座標鍵字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件y座標鍵字串，預設'y'
  * @param {String} [opt.keyY='z'] 輸入點物件z座標鍵字串，預設'z'
+ * @param {String} [opt.keyInd='ind'] 輸入點物件指標鍵字串，預設'ind'
  * @returns {Array} 回傳點{x,y,z}陣列
  * @example
  *
@@ -27,27 +28,27 @@ import isarr from 'wsemi/src/isarr.mjs'
  * r = ptsXYZtoArr(ps)
  * console.log(r)
  * // => [
- * //   { x: 243, y: 206, z: 95 },
- * //   { x: 233, y: 225, z: 146 },
- * //   { x: 21, y: 325, z: 22 }
+ * //   { x: 243, y: 206, z: 95, ind: 0 },
+ * //   { x: 233, y: 225, z: 146, ind: 1 },
+ * //   { x: 21, y: 325, z: 22, ind: 2 }
  * // ]
  *
  * ps = [{ 'x': 243, 'y': 206, 'z': 95 }, { 'x': 233, 'y': 225, 'z': 146 }, { 'x': 21, 'y': 325, 'z': 22 }]
  * r = ptsXYZtoArr(ps)
  * console.log(r)
  * // => [
- * //   { x: 243, y: 206, z: 95 },
- * //   { x: 233, y: 225, z: 146 },
- * //   { x: 21, y: 325, z: 22 }
+ * //   { x: 243, y: 206, z: 95, ind: 0 },
+ * //   { x: 233, y: 225, z: 146, ind: 1 },
+ * //   { x: 21, y: 325, z: 22, ind: 2 }
  * // ]
  *
  * ps = [{ 'a': 243, 'b': 206, 'c': 95 }, { 'a': 233, 'b': 225, 'c': 146 }, { 'a': 21, 'b': 325, 'c': 22 }]
  * r = ptsXYZtoArr(ps, { keyX: 'a', keyY: 'b', keyZ: 'c' })
  * console.log(r)
  * // => [
- * //   { x: 243, y: 206, z: 95 },
- * //   { x: 233, y: 225, z: 146 },
- * //   { x: 21, y: 325, z: 22 }
+ * //   { x: 243, y: 206, z: 95, ind: 0 },
+ * //   { x: 233, y: 225, z: 146, ind: 1 },
+ * //   { x: 21, y: 325, z: 22, ind: 2 }
  * // ]
  *
  */

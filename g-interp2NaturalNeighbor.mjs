@@ -29,7 +29,7 @@ p = {
     y: 207,
 }
 let funInterpFragment = (msg) => {
-    console.log('funInterpFragment', msg)
+    // console.log('funInterpFragment', msg)
     return msg.v //預設回傳msg.v, 三角形三角點各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragment })
@@ -42,7 +42,7 @@ p = {
     y: 1207,
 }
 let funInterpFragmentNoUse = (msg) => {
-    console.log('funInterpFragmentNoUse', msg)
+    // console.log('funInterpFragmentNoUse', msg)
     return msg.v //預設回傳msg.v, 此處因內插點於原始點所形成最小凸多邊形之外, 故無法內插, 亦不會呼叫funInterpFragment
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
@@ -55,7 +55,7 @@ p = {
     y: 207,
 }
 let funInterpFragments = (msg) => {
-    console.log('funInterpFragments', msg)
+    // console.log('funInterpFragments', msg)
     // let v = ps[0].v + ps[1].v + ps[2].v
     return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
 }
@@ -108,14 +108,14 @@ console.log(r)
 //   { x: 283, y: 207, z: 114.43040421951906 }
 // ]
 
-ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.00021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.00028, z: 223 }, { x: 0.0001092, y: 0.000290, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.0003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.0001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
+ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
 p = {
     x: 0.000243,
     y: 0.000207,
 }
 r = interp2NaturalNeighbor(ps, p)
 console.log(r)
-// => { x: 0.000243, y: 0.000207, z: 97.29447682486834 }
+// => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {

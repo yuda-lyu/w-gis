@@ -6,7 +6,7 @@ import interp2Kriging from './interp2Kriging.mjs'
 
 
 /**
- * 基於不規則網格技術計算指定內插點數值
+ * 針對不規則二維數據進行指定內插點數值
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs Github}
  * @memberOf w-gis
@@ -24,9 +24,6 @@ import interp2Kriging from './interp2Kriging.mjs'
  * @param {Boolean} [opt.useSync=false] 輸入是否使用同步函數布林值，預設false
  * @returns {Promise|Array|Object} 回傳Promise或點物件陣列或點物件，若useSync=false則回傳Promise，resolve為回傳點物件陣列或點物件，reject為失敗訊息，若useSync=true則回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example
- *
- * import interp2 from 'w-gis/src/interp2.mjs'
- * // import interp2 from 'w-gis/dist/interp2.wk.umd.js'
  *
  * async function test() {
  *
@@ -97,14 +94,14 @@ import interp2Kriging from './interp2Kriging.mjs'
  *     console.log(r)
  *     // => { x: 243, y: 207, z: 97.4283695751981 }
  *
- *     ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.00021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.00028, z: 223 }, { x: 0.0001092, y: 0.000290, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.0003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.0001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
+ *     ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
  *     p = {
  *         x: 0.000243,
  *         y: 0.000207,
  *     }
  *     r = await interp2(ps, p)
  *     console.log(r)
- *     // => { x: 0.000243, y: 0.000207, z: 97.29447682486834 }
+ *     // => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }
  *
  *     ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  *     p = {
