@@ -183,7 +183,7 @@ async function interp3(psSrc, psTar, opt = {}) {
         'scipy',
     ]
     let imps = [
-        'from scipy.interpolate import griddata',
+        'from scipy.interpolate import griddata', //griddata是呼叫LinearNDInterpolator
     ]
 
     let _psLocs = []
