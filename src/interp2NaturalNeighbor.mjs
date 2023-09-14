@@ -318,7 +318,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     // console.log('iniVor', iniVor)
 
     //addPointCore
-    let addPointCore = (data, x, y) => {
+    let addPointCore = (data, x, y, indTar) => {
 
         //psSrcTemp
         let psSrcTemp = [...psSrc]
@@ -424,7 +424,8 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                         areaTotal: areaQuery,
                         areaRatio: rA,
                         z,
-                        ind: o.idx,
+                        indSrc: o.idx,
+                        indTar,
                         // data,
                     })
                 }
@@ -436,7 +437,8 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     areaTotal: areaQuery,
                     areaRatio: rA,
                     z,
-                    ind: o.idx,
+                    indSrc: o.idx,
+                    indTar,
                 }
 
                 //push
@@ -450,6 +452,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                 vt = funInterpFragments({
                     ps: newPointVals,
                     v: vt,
+                    indTar,
                 })
             }
             newPointVal = vt
@@ -468,12 +471,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     }
 
     //addPoint
-    let addPoint = (data, x, y) => {
+    let addPoint = (data, x, y, indTar) => {
 
         //r
         let r
         try {
-            r = addPointCore(data, x, y)
+            r = addPointCore(data, x, y, indTar)
         }
         catch (err) {
             console.log(err)
@@ -485,7 +488,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     }
 
     //getNz
-    let getNz = (nx, ny) => {
+    let getNz = (nx, ny, indTar) => {
 
         //check
         let k = `${nx}-${ny}` //x,y已經被正規化
@@ -502,7 +505,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         }
 
         //predict
-        let nz = addPoint(psSrcItr, nx, ny)
+        let nz = addPoint(psSrcItr, nx, ny, indTar)
 
         //save
         kpKnown[k] = nz
@@ -511,7 +514,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     }
 
     //itv
-    let itv = (p) => {
+    let itv = (p, indTar) => {
 
         //x, nx
         let x = p.x //x,y已經被正規化
@@ -528,7 +531,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         }
 
         //nz, z
-        let nz = getNz(nx, ny)
+        let nz = getNz(nx, ny, indTar)
         let z = inv(nz, 2) //還原
         if (!isNumber(z)) {
             z = null //z須支援可能無法內插
@@ -551,12 +554,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     let r
     if (isOne) {
         let p = psTar[0]
-        r = itv(p)
+        r = itv(p, 0)
     }
     else {
         r = []
-        each(psTar, (p) => {
-            r.push(itv(p))
+        each(psTar, (p, indTar) => {
+            r.push(itv(p, indTar))
         })
     }
 
