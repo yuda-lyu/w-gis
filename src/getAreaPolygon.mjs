@@ -1,3 +1,4 @@
+// import get from 'lodash/get'
 import each from 'lodash/each'
 // import map from 'lodash/map'
 import isearr from 'wsemi/src/isearr.mjs'
@@ -102,7 +103,10 @@ import getAreaRingString from './getAreaRingString.mjs'
  * // => 90, 實際為110
  *
  */
-function getAreaPolygon(pg) {
+function getAreaPolygon(pg, opt = {}) {
+
+    // //epsilon
+    // let epsilon = get(opt, 'epsilon', 0.000000000001)
 
     //check
     if (!isearr(pg)) {
@@ -120,6 +124,7 @@ function getAreaPolygon(pg) {
     // }
 
     // //通過polybooljs轉geojson, 不過重疊多層ringString無法自動計算剔除與合併
+    // polybooljs.epsilon(epsilon)
     // let gj = polybooljs.polygonToGeoJSON(ppg)
     // console.log('gj', gj.type, gj.coordinates)
 
