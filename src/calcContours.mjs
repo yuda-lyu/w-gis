@@ -613,6 +613,28 @@ function getContours(pts, thresholds) {
  * //   ]
  * // }
  *
+ * opt = {
+ *     withStyle: true,
+ *     returnGeojson: true,
+ *     inverseCoordinate: true,
+ * }
+ * pgs = calcContours(points, opt)
+ * fs.writeFileSync('./calcContours7.json', JSON.stringify(pgs), 'utf8')
+ * console.log(pgs)
+ * // => {
+ * //   type: 'FeatureCollection',
+ * //   features: [
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] },
+ * //     { type: 'Feature', properties: [Object], geometry: [Object] }
+ * //   ]
+ * // }
+ *
  */
 function calcContours(points, opt = {}) {
 
