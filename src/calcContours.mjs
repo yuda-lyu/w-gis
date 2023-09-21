@@ -1089,6 +1089,7 @@ function calcContours(points, opt = {}) {
             let o = {
                 type: 'Feature',
                 properties: {
+                    range: v.range.text,
                     style: v.style,
                 },
                 geometry: {
