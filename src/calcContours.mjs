@@ -105,6 +105,7 @@ function getContours(pts, thresholds) {
  * @param {Number} [opt.lineOpacity=1] 輸入線顏色透明度數字，預設1
  * @param {Number} [opt.lineWidth=1] 輸入線寬度數字，預設1
  * @param {Boolean} [opt.returnGeojson=false] 輸入是否回傳GeoJSON布林值，若為true會強制withStyle給予true，預設false
+ * @param {Boolean} [opt.inverseCoordinate=false] 輸入是否交換經緯度布林值，因GeoJSON之各點為經緯度，而Leaflet為緯經度，若座標來源與輸出須交換經緯度則使用此設定。預設false
  * @returns {Array|Object} 回傳點物件陣列或點物件，若使用returnWithVariogram=true則回傳物件資訊，若發生錯誤則回傳錯誤訊息物件
  * @example
  *
@@ -652,6 +653,12 @@ function calcContours(points, opt = {}) {
         returnGeojson = false
     }
 
+    //inverseCoordinate
+    let inverseCoordinate = get(opt, 'inverseCoordinate')
+    if (!isbol(inverseCoordinate)) {
+        inverseCoordinate = false
+    }
+
     //ptsXYZtoArr
     points = ptsXYZtoArr(points, { ...opt, returnObjArray: false })
 
@@ -1050,8 +1057,11 @@ function calcContours(points, opt = {}) {
     if (returnGeojson) {
         let features = map(polygonSets, (v) => {
 
-            //invCoordMultiPolygon, GeoJSON是先經後緯
-            let lngLats = invCoordMultiPolygon(v.latLngs)
+            //coordinates
+            let coordinates = v.latLngs
+            if (inverseCoordinate) {
+                coordinates = invCoordMultiPolygon(v.latLngs)
+            }
 
             //o
             let o = {
@@ -1060,8 +1070,8 @@ function calcContours(points, opt = {}) {
                     style: v.style,
                 },
                 geometry: {
-                    'type': 'MultiPolygon',
-                    'coordinates': lngLats,
+                    type: 'MultiPolygon',
+                    coordinates,
                 }
             }
 
