@@ -3,7 +3,7 @@ import map from 'lodash/map'
 
 
 function invCoordPolygon(pg) {
-    //因為turf的point是先經再緯跟leaflet相反, 故需相反座標
+    //因為turf的point是先經再緯, GeoJSON也是, 但跟leaflet相反, 故需相反座標
 
     //check
     if (!isearr(pg)) {

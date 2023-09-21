@@ -4,6 +4,7 @@ import invCoordPolygon from './invCoordPolygon.mjs'
 
 
 function invCoordMultiPolygon(pgs) {
+    //因為turf的point是先經再緯, GeoJSON也是, 但跟leaflet相反, 故需相反座標
 
     //check
     if (!isearr(pgs)) {

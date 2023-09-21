@@ -1,10 +1,12 @@
 import get from 'lodash/get'
 import each from 'lodash/each'
+import map from 'lodash/map'
 import size from 'lodash/size'
 import toNumber from 'lodash/toNumber'
 import isestr from 'wsemi/src/isestr.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
 import isarr from 'wsemi/src/isarr.mjs'
+import isbol from 'wsemi/src/isbol.mjs'
 
 
 /**
@@ -17,6 +19,7 @@ import isarr from 'wsemi/src/isarr.mjs'
  * @param {String} [opt.keyX='x'] 輸入點物件x座標鍵字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件y座標鍵字串，預設'y'
  * @param {String} [opt.keyInd='ind'] 輸入點物件指標鍵字串，預設'ind'
+ * @param {Boolean} [opt.returnObjArray=true] 輸入是否回傳物件陣列，若true代表回傳點為物件{x,y}之陣列，若false回傳點陣列[x,y]之陣列，預設true
  * @returns {Array} 回傳點{x,y}陣列
  * @example
  *
@@ -76,6 +79,12 @@ function ptsXYtoArr(ps, opt = {}) {
         keyInd = 'ind'
     }
 
+    //returnObjArray
+    let returnObjArray = get(opt, 'returnObjArray')
+    if (!isbol(returnObjArray)) {
+        returnObjArray = true
+    }
+
     //rs
     let rs = []
     each(ps, (v, k) => {
@@ -99,6 +108,13 @@ function ptsXYtoArr(ps, opt = {}) {
             })
         }
     })
+
+    //returnObjArray
+    if (!returnObjArray) {
+        rs = map(rs, (v) => {
+            return [v.x, v.y, v[keyInd]]
+        })
+    }
 
     return rs
 }

@@ -1,4 +1,51 @@
-import each from 'lodash/each'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>calcContours.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixNoCloseMultiPolygon">fixNoCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">calcContours.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import each from 'lodash/each'
 import map from 'lodash/map'
 import min from 'lodash/min'
 import max from 'lodash/max'
@@ -65,7 +112,7 @@ function getContours(pts, thresholds) {
         let nNow = size(coordinatesNow)
 
         //check
-        if (nPre > 0 && nNow === 0) {
+        if (nPre > 0 &amp;&amp; nNow === 0) {
             //找到從最末數來第一個無效多邊形
 
             //set sepZone=top
@@ -673,12 +720,12 @@ function calcContours(points, opt = {}) {
     //valueMin, valueMax
     let valueMin = points[0][2]
     let valueMax = points[0][2]
-    for (let i = 1; i < size(points); i++) {
+    for (let i = 1; i &lt; size(points); i++) {
         let value = points[i][2]
         if (valueMin > value) {
             valueMin = value
         }
-        if (valueMax < value) {
+        if (valueMax &lt; value) {
             valueMax = value
         }
     }
@@ -717,8 +764,8 @@ function calcContours(points, opt = {}) {
         // console.log('pmin', pmin, 'pmax', pmax)
 
         //實際數據有超出contours的最大值, 添加虛擬polyline
-        if (pmax < valueMax) {
-            console.log('非預期: pmax < valueMax', pmax < valueMax, pmax, valueMax)
+        if (pmax &lt; valueMax) {
+            console.log('非預期: pmax &lt; valueMax', pmax &lt; valueMax, pmax, valueMax)
             polylines.push({
                 mode: 'virtualEnd',
                 sepZone: '',
@@ -757,7 +804,7 @@ function calcContours(points, opt = {}) {
 
     //polygonSets, 剔除下1個多邊形區域, 為實際需繪製的等值區
     let polygonSets = []
-    for (let i = 0; i <= polylines.length - 2; i++) {
+    for (let i = 0; i &lt;= polylines.length - 2; i++) {
 
         //p0, p1
         let p0 = polylines[i]
@@ -904,7 +951,7 @@ function calcContours(points, opt = {}) {
         let areaInd = null
         let areaCentroid = null
         each(polygonSets, (polygonSet, k) => {
-            if (areaMax < polygonSet.effectArea) {
+            if (areaMax &lt; polygonSet.effectArea) {
                 areaInd = k
                 areaMax = polygonSet.effectArea
                 areaCentroid = polygonSet.effectAreaCentroid
@@ -1079,3 +1126,28 @@ function calcContours(points, opt = {}) {
 
 
 export default calcContours
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Thu Sep 21 2023 14:18:10 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
