@@ -6,6 +6,7 @@ import res3 from './calcContours3.json' assert { type: "json" }
 import res4 from './calcContours4.json' assert { type: "json" }
 import res5 from './calcContours5.json' assert { type: "json" }
 import res6 from './calcContours6.json' assert { type: "json" }
+import res7 from './calcContours7.json' assert { type: "json" }
 
 
 describe(`calcContours`, function() {
@@ -154,6 +155,25 @@ describe(`calcContours`, function() {
     }
     it(`should return ${kp[k].testName} when calcContours(points, {withStyle,returnGeojson})`, function() {
         k = 5
+        let r = calcContours(points, kp[k].opt)
+        let rr = kp[k].res
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    opt = {
+        withStyle: true,
+        returnGeojson: true,
+        inverseCoordinate: true,
+    }
+
+    k++
+    kp[k] = {
+        testName: 'res7',
+        opt: JSON.parse(JSON.stringify(opt)),
+        res: res7,
+    }
+    it(`should return ${kp[k].testName} when calcContours(points, {withStyle,returnGeojson,inverseCoordinate})`, function() {
+        k = 6
         let r = calcContours(points, kp[k].opt)
         let rr = kp[k].res
         assert.strict.deepStrictEqual(r, rr)
