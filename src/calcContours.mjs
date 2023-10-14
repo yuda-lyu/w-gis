@@ -719,8 +719,11 @@ function calcContours(points, opt = {}) {
 
     //check
     if (!isearr(contours)) {
-        // console.log('can not calculate contours', contours)
-        return []
+        console.log('points', points)
+        console.log('thresholds', thresholds)
+        return {
+            err: 'can not calculate contours'
+        }
     }
     // console.log('contours.length', contours.length)
 
@@ -940,8 +943,10 @@ function calcContours(points, opt = {}) {
             }
         })
         if (areaInd === null) {
-            // console.log('can not calculate centroid of contour', polygonSets)
-            return []
+            console.log('polygonSets', polygonSets)
+            return {
+                err: 'can not calculate centroid of contour'
+            }
         }
 
         //add center
