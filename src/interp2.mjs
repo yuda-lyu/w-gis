@@ -12,6 +12,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * @memberOf w-gis
  * @param {Array} psSrc 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列
  * @param {Array|Object} psTar 輸入點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件
+ * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
