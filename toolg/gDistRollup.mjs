@@ -14,7 +14,7 @@ async function core() {
         fdTar,
         nameDistType: 'kebabCase',
         globals: {
-            '@turf/turf': '@turf/turf', //編譯給前端用的@turf為官方打包後js檔(轉b64再於前端載入), 不使用node安裝的@turf故需剔除
+            '@turf/turf': '@turf/turf', //編譯給前端用的@turf為官方打包後js檔(轉b64再於前端載入), 不使用node版故需剔除
         },
         external: [
             '@turf/turf',

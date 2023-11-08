@@ -16,15 +16,15 @@ import kriging from './kriging.mjs'
 
 
 /**
- * 克利金(Kriging)內插點數值
+ * 克利金法(Kriging)內外插點數值
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Kriging.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} psSrc 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列
- * @param {Array|Object} psTar 輸入點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件
- * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
- * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
- * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
+ * @param {Array} psSrc 輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列
+ * @param {Array|Object} psTar 輸入二維座標點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件
+ * @param {String} [opt.keyX='x'] 輸入點物件之x欄位字串，為座標，預設'x'
+ * @param {String} [opt.keyY='y'] 輸入點物件之y欄位字串，為座標，預設'y'
+ * @param {String} [opt.keyZ='z'] 輸入點物件之z欄位字串，為觀測值，預設'z'
  * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @param {String} [opt.model='exponential'] 輸入擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
  * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，預設0
