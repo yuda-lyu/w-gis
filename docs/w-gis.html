@@ -4531,7 +4531,7 @@
 
     
 
-    <h4 class="name" id=".interp2"><span class="type-signature type-signature-static">(static) </span>interp2<span class="signature">(psSrc, psTar)</span><span class="type-signature"> &rarr; {Promise|Array|Object}</span></h4>
+    <h4 class="name" id=".interp2"><span class="type-signature type-signature-static">(static) </span>interp2<span class="signature">(psSrc, psTar, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise|Array|Object}</span></h4>
 
     
 
@@ -4548,7 +4548,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="interp2.mjs.html">interp2.mjs</a>, <a href="interp2.mjs.html#line131">line 131</a>
+        <a href="interp2.mjs.html">interp2.mjs</a>, <a href="interp2.mjs.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -4704,7 +4704,70 @@
 
         <tr>
             
-                <td class="name"><code>opt.keyX</code></td>
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyX</code></td>
             
 
             <td class="type">
@@ -4744,7 +4807,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.keyY</code></td>
+                <td class="name"><code>keyY</code></td>
             
 
             <td class="type">
@@ -4784,7 +4847,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.keyZ</code></td>
+                <td class="name"><code>keyZ</code></td>
             
 
             <td class="type">
@@ -4824,7 +4887,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.scale</code></td>
+                <td class="name"><code>scale</code></td>
             
 
             <td class="type">
@@ -4864,7 +4927,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.method</code></td>
+                <td class="name"><code>method</code></td>
             
 
             <td class="type">
@@ -4904,7 +4967,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.model</code></td>
+                <td class="name"><code>model</code></td>
             
 
             <td class="type">
@@ -4944,7 +5007,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.sigma2</code></td>
+                <td class="name"><code>sigma2</code></td>
             
 
             <td class="type">
@@ -4984,7 +5047,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.alpha</code></td>
+                <td class="name"><code>alpha</code></td>
             
 
             <td class="type">
@@ -5024,7 +5087,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.returnWithVariogram</code></td>
+                <td class="name"><code>returnWithVariogram</code></td>
             
 
             <td class="type">
@@ -5064,7 +5127,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.useSync</code></td>
+                <td class="name"><code>useSync</code></td>
             
 
             <td class="type">
@@ -5098,6 +5161,13 @@
             
 
             <td class="description last"><p>輸入是否使用同步函數布林值，預設false</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -5156,7 +5226,7 @@
 
     
 
-    <h4 class="name" id=".interp2Kriging"><span class="type-signature type-signature-static">(static) </span>interp2Kriging<span class="signature">(psSrc, psTar)</span><span class="type-signature"> &rarr; {Array|Object}</span></h4>
+    <h4 class="name" id=".interp2Kriging"><span class="type-signature type-signature-static">(static) </span>interp2Kriging<span class="signature">(psSrc, psTar, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array|Object}</span></h4>
 
     
 
@@ -5166,14 +5236,14 @@
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>克利金(Kriging)內插點數值</p>
+    <dd class="tag-description"><ul class="dummy"><li><p>克利金法(Kriging)內外插點數值</p>
 <p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Kriging.test.mjs">Github</a></p></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="interp2Kriging.mjs.html">interp2Kriging.mjs</a>, <a href="interp2Kriging.mjs.html#line226">line 226</a>
+        <a href="interp2Kriging.mjs.html">interp2Kriging.mjs</a>, <a href="interp2Kriging.mjs.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -5283,7 +5353,7 @@
                 </td>
             
 
-            <td class="description last"><p>輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列</p></td>
+            <td class="description last"><p>輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列</p></td>
         </tr>
 
     
@@ -5322,14 +5392,77 @@
                 </td>
             
 
-            <td class="description last"><p>輸入點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件</p></td>
+            <td class="description last"><p>輸入二維座標點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyX</code></td>
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyX</code></td>
             
 
             <td class="type">
@@ -5362,14 +5495,14 @@
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之x座標欄位字串，預設'x'</p></td>
+            <td class="description last"><p>輸入點物件之x欄位字串，為座標，預設'x'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyY</code></td>
+                <td class="name"><code>keyY</code></td>
             
 
             <td class="type">
@@ -5402,14 +5535,14 @@
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之y座標欄位字串，預設'y'</p></td>
+            <td class="description last"><p>輸入點物件之y欄位字串，為座標，預設'y'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyZ</code></td>
+                <td class="name"><code>keyZ</code></td>
             
 
             <td class="type">
@@ -5442,14 +5575,14 @@
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之z座標或值欄位字串，預設'z'</p></td>
+            <td class="description last"><p>輸入點物件之z欄位字串，為觀測值，預設'z'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.scale</code></td>
+                <td class="name"><code>scale</code></td>
             
 
             <td class="type">
@@ -5489,7 +5622,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.model</code></td>
+                <td class="name"><code>model</code></td>
             
 
             <td class="type">
@@ -5529,7 +5662,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.sigma2</code></td>
+                <td class="name"><code>sigma2</code></td>
             
 
             <td class="type">
@@ -5569,7 +5702,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.alpha</code></td>
+                <td class="name"><code>alpha</code></td>
             
 
             <td class="type">
@@ -5609,7 +5742,7 @@
 
         <tr>
             
-                <td class="name"><code>opt.returnWithVariogram</code></td>
+                <td class="name"><code>returnWithVariogram</code></td>
             
 
             <td class="type">
@@ -5643,6 +5776,13 @@
             
 
             <td class="description last"><p>輸入是否回傳擬合半變異數結果布林值，預設false</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -5698,7 +5838,7 @@
 
     
 
-    <h4 class="name" id=".interp2NaturalNeighbor"><span class="type-signature type-signature-static">(static) </span>interp2NaturalNeighbor<span class="signature">(psSrc, psTar)</span><span class="type-signature"> &rarr; {Array|Object}</span></h4>
+    <h4 class="name" id=".interp2NaturalNeighbor"><span class="type-signature type-signature-static">(static) </span>interp2NaturalNeighbor<span class="signature">(psSrc, psTar, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array|Object}</span></h4>
 
     
 
@@ -5727,7 +5867,7 @@ https://github.com/mapbox/delaunator</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="interp2NaturalNeighbor.mjs.html">interp2NaturalNeighbor.mjs</a>, <a href="interp2NaturalNeighbor.mjs.html#line204">line 204</a>
+        <a href="interp2NaturalNeighbor.mjs.html">interp2NaturalNeighbor.mjs</a>, <a href="interp2NaturalNeighbor.mjs.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -5837,7 +5977,7 @@ https://github.com/mapbox/delaunator</p>
                 </td>
             
 
-            <td class="description last"><p>輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列</p></td>
+            <td class="description last"><p>輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列</p></td>
         </tr>
 
     
@@ -5876,14 +6016,77 @@ https://github.com/mapbox/delaunator</p>
                 </td>
             
 
-            <td class="description last"><p>輸入點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件</p></td>
+            <td class="description last"><p>輸入二維座標點陣列或點物件，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列，或{x:x1,y:y1}點物件</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyX</code></td>
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入設定物件，預設{}</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keyX</code></td>
             
 
             <td class="type">
@@ -5916,14 +6119,14 @@ https://github.com/mapbox/delaunator</p>
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之x座標欄位字串，預設'x'</p></td>
+            <td class="description last"><p>輸入點物件之x欄位字串，為座標，預設'x'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyY</code></td>
+                <td class="name"><code>keyY</code></td>
             
 
             <td class="type">
@@ -5956,14 +6159,14 @@ https://github.com/mapbox/delaunator</p>
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之y座標欄位字串，預設'y'</p></td>
+            <td class="description last"><p>輸入點物件之y欄位字串，為座標，預設'y'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.keyZ</code></td>
+                <td class="name"><code>keyZ</code></td>
             
 
             <td class="type">
@@ -5996,14 +6199,14 @@ https://github.com/mapbox/delaunator</p>
                 </td>
             
 
-            <td class="description last"><p>輸入點物件之z座標或值欄位字串，預設'z'</p></td>
+            <td class="description last"><p>輸入點物件之z欄位字串，為觀測值，預設'z'</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>opt.scale</code></td>
+                <td class="name"><code>scale</code></td>
             
 
             <td class="type">
@@ -6037,6 +6240,13 @@ https://github.com/mapbox/delaunator</p>
             
 
             <td class="description last"><p>輸入正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -8957,7 +9167,7 @@ https://github.com/mapbox/delaunator</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sat Oct 14 2023 22:31:08 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Mar 19 2024 20:48:11 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
