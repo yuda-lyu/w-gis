@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash-es'
 import w from 'wsemi'
 import convertCoordinate from './src/convertCoordinate.mjs'
 

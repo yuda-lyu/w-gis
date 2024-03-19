@@ -1,5 +1,5 @@
 import isearr from 'wsemi/src/isearr.mjs'
-import map from 'lodash/map'
+import map from 'lodash-es/map'
 import invCoordPolygon from './invCoordPolygon.mjs'
 
 

@@ -1,4 +1,4 @@
-import get from 'lodash/get'
+import get from 'lodash-es/get'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'

@@ -1,6 +1,6 @@
-import map from 'lodash/map'
-import get from 'lodash/get'
-import cloneDeep from 'lodash/cloneDeep'
+import map from 'lodash-es/map'
+import get from 'lodash-es/get'
+import cloneDeep from 'lodash-es/cloneDeep'
 import turf from './importTurf.mjs'
 
 

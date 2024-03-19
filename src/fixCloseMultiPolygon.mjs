@@ -1,6 +1,6 @@
-import map from 'lodash/map'
-import size from 'lodash/size'
-import isEqual from 'lodash/isEqual'
+import map from 'lodash-es/map'
+import size from 'lodash-es/size'
+import isEqual from 'lodash-es/isEqual'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 
