@@ -1,4 +1,4 @@
-import size from 'lodash-es/size'
+import size from 'lodash-es/size.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import haskey from 'wsemi/src/haskey.mjs'
 import proj4 from 'proj4'

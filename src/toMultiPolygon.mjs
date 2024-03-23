@@ -1,5 +1,5 @@
-import get from 'lodash-es/get'
-import map from 'lodash-es/map'
+import get from 'lodash-es/get.js'
+import map from 'lodash-es/map.js'
 import getPointDepth from './getPointDepth.mjs'
 
 

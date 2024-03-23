@@ -1,4 +1,4 @@
-import get from 'lodash-es/get'
+import get from 'lodash-es/get.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'

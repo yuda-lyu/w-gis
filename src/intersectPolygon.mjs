@@ -1,4 +1,4 @@
-import get from 'lodash-es/get'
+import get from 'lodash-es/get.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import polybooljs from 'polybooljs'
 import toPolygon from './toPolygon.mjs'

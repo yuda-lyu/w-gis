@@ -1,4 +1,4 @@
-import each from 'lodash-es/each'
+import each from 'lodash-es/each.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 import getAreaPolygon from './getAreaPolygon.mjs'

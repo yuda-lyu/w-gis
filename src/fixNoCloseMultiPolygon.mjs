@@ -1,7 +1,7 @@
-import map from 'lodash-es/map'
-import size from 'lodash-es/size'
-import isEqual from 'lodash-es/isEqual'
-import dropRight from 'lodash-es/dropRight'
+import map from 'lodash-es/map.js'
+import size from 'lodash-es/size.js'
+import isEqual from 'lodash-es/isEqual.js'
+import dropRight from 'lodash-es/dropRight.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 

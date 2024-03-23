@@ -1,4 +1,4 @@
-import flatten from 'lodash-es/flatten'
+import flatten from 'lodash-es/flatten.js'
 import turf from './importTurf.mjs'
 import getPointDepth from './getPointDepth.mjs'
 
