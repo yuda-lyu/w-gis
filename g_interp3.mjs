@@ -82,4 +82,4 @@ test()
         console.log(err)
     })
 
-//node --experimental-modules g-interp3.mjs
+//node --experimental-modules g_interp3.mjs

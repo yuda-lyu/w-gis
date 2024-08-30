@@ -107,14 +107,14 @@ function interp1(psSrc, psTar, opt = {}) {
     //check psSrc
     if (!isearr(psSrc)) {
         return {
-            err: 'psSrc is not an array'
+            err: 'psSrc is not an effective array'
         }
     }
 
     //check psTar
     if (!isnum(psTar) && !iseobj(psTar) && !isearr(psTar)) {
         return {
-            err: 'psTar is not a number or an object or an array'
+            err: 'psTar is not a number or an effective object or array'
         }
     }
 

@@ -17,30 +17,6 @@ import interp2Normalize from './interp2Normalize.mjs'
 import getAreaPolygon from './getAreaPolygon.mjs'
 import intersectPolygon from './intersectPolygon.mjs'
 import { Delaunay } from 'd3-delaunay'
-// import Delaunator from 'delaunator'
-
-
-// function isPointInPolygon(polygon, point) {
-//     let n = polygon.length
-//     let p = polygon[n - 1]
-//     let x = point[0]
-//     let y = point[1]
-//     let x0 = p[0]; let y0 = p[1]
-//     let x1
-//     let y1
-//     let inside = false
-//     for (let i = 0; i < n; ++i) {
-//         p = polygon[i]
-//         x1 = p[0]
-//         y1 = p[1]
-//         if (((y1 > y) !== (y0 > y)) && (x < (x0 - x1) * (y - y1) / (y0 - y1) + x1)) {
-//             inside = !inside
-//         }
-//         x0 = x1
-//         y0 = y1
-//     }
-//     return inside
-// }
 
 
 /**
@@ -60,9 +36,6 @@ import { Delaunay } from 'd3-delaunay'
  *
  * d3-delaunay
  * https://github.com/d3/d3-delaunay
- *
- * Delaunator
- * https://github.com/mapbox/delaunator
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2NaturalNeighbor.test.mjs Github}
  * @memberOf w-gis
@@ -207,14 +180,14 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     //check psSrc
     if (!isearr(psSrc)) {
         return {
-            err: 'psSrc is not an array'
+            err: 'psSrc is not an effective array'
         }
     }
 
     //check psTar
     if (!iseobj(psTar) && !isearr(psTar)) {
         return {
-            err: 'psTar is not an object or array'
+            err: 'psTar is not an effective object or array'
         }
     }
 

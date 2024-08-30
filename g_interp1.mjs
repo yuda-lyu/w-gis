@@ -75,4 +75,4 @@ test()
     })
 
 
-//node --experimental-modules g-interp1.mjs
+//node --experimental-modules g_interp1.mjs

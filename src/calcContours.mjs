@@ -641,7 +641,7 @@ function calcContours(points, opt = {}) {
     //check psSrc
     if (!isearr(points)) {
         return {
-            err: 'points is not an array'
+            err: 'points is not an effective array'
         }
     }
 
@@ -809,7 +809,14 @@ function calcContours(points, opt = {}) {
 
         //clipMultiPolygon
         let latLngs = []
-        latLngs = clipMultiPolygon(latLngs0, latLngs1)
+        try {
+            latLngs = clipMultiPolygon(latLngs0, latLngs1) //bbb
+        }
+        catch (err) {
+            console.log('latLngs0', latLngs0)
+            console.log('latLngs1', latLngs1)
+            console.log(err)
+        }
         if (p0.mode === 'virtualStart') { //若為virtualStart, 則代表直接使用下1個polylines成為等值區域, 方能代表凹陷區
             latLngs = latLngs1 //因為既有屬性都是取前者, 故若virtualStart係使用後者p1, 就代表全部polygonSet都會有真實effectArea
         }

@@ -1,5 +1,7 @@
 export { default as bufferMultiPolygon } from './bufferMultiPolygon.mjs'
 export { default as calcContours } from './calcContours.mjs'
+export { default as calcDelaunay } from './calcDelaunay.mjs'
+export { default as calcVoronoi } from './calcVoronoi.mjs'
 export { default as clipMultiPolygon } from './clipMultiPolygon.mjs'
 export { default as clipPolygon } from './clipPolygon.mjs'
 export { default as convertCoordinate } from './convertCoordinate.mjs'

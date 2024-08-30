@@ -26,7 +26,7 @@ function clipMultiPolygon(pgs1, pgs2, opt = {}) {
     pgs2 = turf.helpers.multiPolygon(pgs2)
 
     //difference
-    let r = turf.difference(pgs1, pgs2)
+    let r = turf.difference(pgs1, pgs2) //須使用turf 6.5.0版, 7.0.0以上會出現要求最小須2個元素才能計算錯誤, 待turf修正
 
     return distilMultiPolygon(r)
 }

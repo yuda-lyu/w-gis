@@ -127,4 +127,4 @@ console.log(r)
 // => { x: 243, y: 207, z: 97.29447682486855 }
 
 
-//node --experimental-modules g-interp2NaturalNeighbor.mjs
+//node --experimental-modules g_interp2NaturalNeighbor.mjs

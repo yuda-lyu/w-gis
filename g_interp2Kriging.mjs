@@ -191,4 +191,4 @@ console.log(r)
 // }
 
 
-//node --experimental-modules g-interp2Kriging.mjs
+//node --experimental-modules g_interp2Kriging.mjs

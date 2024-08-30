@@ -112,14 +112,14 @@ async function interp3(psSrc, psTar, opt = {}) {
     //check psSrc
     if (!isearr(psSrc)) {
         return {
-            err: 'psSrc is not an array'
+            err: 'psSrc is not an effective array'
         }
     }
 
     //check psTar
     if (!iseobj(psTar) && !isearr(psTar)) {
         return {
-            err: 'psTar is not an object or array'
+            err: 'psTar is not an effective object or array'
         }
     }
 
