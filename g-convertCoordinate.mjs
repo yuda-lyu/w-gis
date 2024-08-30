@@ -163,4 +163,4 @@ console.log('UTMTM6', 'to', 'TWD67TM2', r)
 // => UTMTM6 to TWD67TM2 [ 249171.1033936166, 2655228.969723653 ]
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-convertCoordinate.mjs
+//node --experimental-modules g-convertCoordinate.mjs

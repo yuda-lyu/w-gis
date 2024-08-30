@@ -104,4 +104,4 @@ test()
     })
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-interp2.mjs
+//node --experimental-modules g-interp2.mjs

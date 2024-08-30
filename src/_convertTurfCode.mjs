@@ -18,4 +18,4 @@ fs.writeFileSync('./src/_turfCoreBrowser.mjs', j, 'utf8')
 // fs.writeFileSync('./src/_importTurfBrowser.mjs', t, 'utf8')
 
 
-//node --experimental-modules --es-module-specifier-resolution=node src/_convertTurfCode.mjs
+//node --experimental-modules src/_convertTurfCode.mjs

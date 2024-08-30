@@ -191,4 +191,4 @@ console.log(r)
 // }
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-interp2Kriging.mjs
+//node --experimental-modules g-interp2Kriging.mjs

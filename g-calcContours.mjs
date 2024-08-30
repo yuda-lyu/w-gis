@@ -529,4 +529,4 @@ console.log(pgs)
 // }
 
 
-//node --experimental-modules --es-module-specifier-resolution=node g-calcContours.mjs
+//node --experimental-modules g-calcContours.mjs
