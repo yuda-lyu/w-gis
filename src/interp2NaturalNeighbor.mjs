@@ -470,10 +470,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
             return kpKnown[k]
         }
 
-        //isPointInPolygon
-        // if (!isPointInPolygon(hpg, [nx, ny])) {
-        //     return null
-        // }
+        //check
         if (nx < vbox[0] || nx > vbox[2] || ny < vbox[1] || ny > vbox[3]) {
             return null
         }
