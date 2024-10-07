@@ -2,7 +2,7 @@ import findPointInKpPolygons from './findPointInKpPolygons.mjs'
 
 
 /**
- * 判斷點陣列[x,y]或點物件{x,y}是否位於某一多邊形內之字典物件，若有則回傳該特徵之鍵名，若無則回傳def值
+ * 判斷點陣列[x,y]或點物件{x,y}是否位於某一多邊形內之字典物件，若有則回傳該多邊形之鍵名，若無則回傳def值
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/buildFindPointInKpPolygons.test.mjs Github}
  * @memberOf w-gis
@@ -55,12 +55,12 @@ import findPointInKpPolygons from './findPointInKpPolygons.mjs'
  */
 function Build() {
     let bInit = false
-    let _kp = null
+    let kp = null
 
     async function init(kpPgs, opt = {}) {
 
         //save
-        _kp = kpPgs
+        kp = kpPgs
 
         //bInit
         bInit = true
@@ -79,7 +79,7 @@ function Build() {
         }
 
         //findPointInKpPolygons
-        let value = findPointInKpPolygons(p, _kp, opt)
+        let value = findPointInKpPolygons(p, kp, opt)
 
         return value
     }
@@ -89,7 +89,6 @@ function Build() {
         isInit,
         getPoint,
     }
-
 }
 
 

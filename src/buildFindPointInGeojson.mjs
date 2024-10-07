@@ -89,12 +89,12 @@ import findPointInKpFeature from './findPointInKpFeature.mjs'
  */
 function Build() {
     let bInit = false
-    let _kp = null
+    let kp = null
 
     async function init(geojson, opt = {}) {
 
         //getKpFeatureFromGeojson
-        _kp = getKpFeatureFromGeojson(geojson, opt)
+        kp = getKpFeatureFromGeojson(geojson, opt)
 
         //bInit
         bInit = true
@@ -113,7 +113,7 @@ function Build() {
         }
 
         //findPointInKpFeature
-        let r = findPointInKpFeature(p, _kp, opt)
+        let r = findPointInKpFeature(p, kp, opt)
 
         return r
     }
@@ -123,7 +123,6 @@ function Build() {
         isInit,
         getPoint,
     }
-
 }
 
 

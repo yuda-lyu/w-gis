@@ -14,7 +14,7 @@ import ptXYtoObj from './ptXYtoObj.mjs'
 /**
  * 判斷點陣列[x,y]或點物件{x,y}是否位於某一多邊形內之字典物件，若有則回傳該物件之鍵名，若無則回傳def值
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/findPointInKpPolygons.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/findPointInKpBoxPolygons.test.mjs Github}
  * @memberOf w-gis
  * @param {Array|Object} p 輸入點陣列或點物件，為[x,y]或{x,y}
  * @param {Object} kpPgs 輸入多邊形字典物件，為{key1:pgs1,key2:pgs2,...keyn:pgsn}
@@ -40,22 +40,22 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * let b
  *
  * p = [0.5, 0.5]
- * b = findPointInKpPolygons(p, kpPgs)
+ * b = findPointInKpBoxPolygons(p, kpPgs)
  * console.log(b)
  * // => 'pgs1'
  *
  * p = [1.5, 0.5]
- * b = findPointInKpPolygons(p, kpPgs)
+ * b = findPointInKpBoxPolygons(p, kpPgs)
  * console.log(b)
  * // => 'unknow'
  *
  * p = [1.5, 0.5]
- * b = findPointInKpPolygons(p, kpPgs, { def: '未知' })
+ * b = findPointInKpBoxPolygons(p, kpPgs, { def: '未知' })
  * console.log(b)
  * // => '未知'
  *
  */
-function findPointInKpPolygons(p, kpPgs, opt = {}) {
+function findPointInKpBoxPolygons(p, kpPgs, opt = {}) {
 
     //pt
     let pt = ptXYtoObj(p, opt)
@@ -102,12 +102,24 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
 
     //booleanPointInPolygon
     let name = ''
-    each(kpPgs, (pgs, kpgs) => {
-        // console.log(kpgs, pgs)
+    each(kpPgs, (v, kpgs) => {
+        // console.log(kpgs, v)
+
+        //box
+        let box = get(v, 'box', {})
+
+        //check
+        if (!iseobj(box)) {
+            // throw new Error(`kpPgs['${kpgs}'].box is not an effective object`)
+            return true //跳出換下一個
+        }
+
+        //pgs
+        let pgs = get(v, 'pgs', [])
 
         //check
         if (!isearr(pgs) && !iseobj(pgs)) { //有可能為加速由外部先轉Turf的Feature或MultiPolygon, 此為物件
-            // throw new Error(`kpPgs['${kpgs}'] is not an effective array`)
+            // throw new Error(`kpPgs['${kpgs}'].pgs is not an effective array`)
             return true //跳出換下一個
         }
 
@@ -122,6 +134,11 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
             //multiPolygon
             pgs = turf.helpers.multiPolygon(pgs)
 
+        }
+
+        //check
+        if (x < box.xmin || x > box.xmax || y < box.ymin || y > box.ymax) {
+            return true //跳出換下一個
         }
 
         //booleanPointInPolygon
@@ -147,4 +164,4 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
 }
 
 
-export default findPointInKpPolygons
+export default findPointInKpBoxPolygons
