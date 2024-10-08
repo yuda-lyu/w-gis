@@ -13,7 +13,8 @@ import turf from './importTurf.mjs'
  * @memberOf w-gis
  * @param {String|Object} geojson 輸入geojson字串或物件
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.key=''] 輸入字串，預設''
+ * @param {String} [opt.keyFeatures='geometry.coordinates.features'] 輸入geojson轉換至Turf的MultiPolygon物件時，取得Features數據之鍵路徑字串，預設'geometry.coordinates.features'
+ * @param {String} [opt.keyPick=''] 輸入字串，預設''
  * @param {String} [opt.def='unknow'] 輸入回傳預設鍵名字串，代表features內找不到opt.key則使用opt.def做鍵名，而若有多個找不到情形則複寫處理，也就是取最末者。預設'unknow'
  * @returns {Object} 回傳字典物件
  * @example
@@ -70,7 +71,7 @@ import turf from './importTurf.mjs'
  * }
  * `
  *
- * kp = getKpFeatureFromGeojson(geojson, { key: 'properties.name' })
+ * kp = getKpFeatureFromGeojson(geojson, { keyPick: 'properties.name' })
  * console.log(kp)
  * // => {
  * //   pgs1: {
@@ -88,10 +89,16 @@ import turf from './importTurf.mjs'
  */
 function getKpFeatureFromGeojson(geojson, opt = {}) {
 
-    //key
-    let key = get(opt, 'key', '')
-    if (!isestr(key)) {
-        key = ''
+    //keyFeatures
+    let keyFeatures = get(opt, 'keyFeatures', '')
+    if (!isestr(keyFeatures)) {
+        keyFeatures = 'geometry.coordinates.features'
+    }
+
+    //keyPick
+    let keyPick = get(opt, 'keyPick', '')
+    if (!isestr(keyPick)) {
+        keyPick = ''
     }
 
     //def
@@ -114,7 +121,7 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
     // console.log('pgs', pgs)
 
     //features
-    let features = get(pgs, 'geometry.coordinates.features', [])
+    let features = get(pgs, keyFeatures, [])
     // console.log('features', features)
 
     //check
@@ -129,8 +136,8 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
 
         //k
         let k = ''
-        if (isestr(key)) {
-            k = get(v, key, '')
+        if (isestr(keyPick)) {
+            k = get(v, keyPick, '')
         }
 
         //kp
@@ -142,9 +149,9 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
         }
         else {
             console.log('feature', v)
-            console.log('key', key)
+            console.log('keyPick', keyPick)
             console.log('def', def)
-            console.log(`can not get key[${key}] in the feature, or invalid opt.key or invalid opt.def`)
+            console.log(`can not get keyPick[${keyPick}] in the feature, or invalid opt.keyPick or invalid opt.def`)
         }
 
     })
