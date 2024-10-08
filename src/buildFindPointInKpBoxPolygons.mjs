@@ -1,5 +1,6 @@
 import get from 'lodash-es/get.js'
 import isestr from 'wsemi/src/isestr.mjs'
+import isearr from 'wsemi/src/isearr.mjs'
 import isbol from 'wsemi/src/isbol.mjs'
 import haskey from 'wsemi/src/haskey.mjs'
 import turf from './importTurf.mjs'
@@ -85,8 +86,9 @@ function Build() {
         if (toTurfMultiPolygon) {
 
             //toMultiPolygon
-            pgs = toMultiPolygon(pgs, opt)
-            // console.log('pgs(toMultiPolygon)', pgs)
+            if (isearr(pgs)) {
+                pgs = toMultiPolygon(pgs, opt)
+            }
 
             //multiPolygon
             pgs = turf.helpers.multiPolygon(pgs)
