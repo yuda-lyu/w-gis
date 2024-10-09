@@ -5,6 +5,7 @@ import isbol from 'wsemi/src/isbol.mjs'
 import haskey from 'wsemi/src/haskey.mjs'
 import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
+import getBoxFromGeojson from './getBoxFromGeojson.mjs'
 import findPointInKpBoxPolygons from './findPointInKpBoxPolygons.mjs'
 
 
@@ -96,18 +97,13 @@ function Build() {
 
         }
 
-        //bbox, [minX, minY, maxX, maxY]
-        let bbox = turf.bbox(pgs)
-        // console.log('bbox', bbox)
+        //bx
+        let bx = getBoxFromGeojson(pgs, { toTurfMultiPolygon: false })
+        // console.log('bx', bx)
 
         //save
         kp[name] = {
-            box: {
-                xmin: bbox[0],
-                xmax: bbox[2],
-                ymin: bbox[1],
-                ymax: bbox[3],
-            },
+            box: bx,
             pgs,
         }
 
