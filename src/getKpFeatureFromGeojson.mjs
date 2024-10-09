@@ -1,5 +1,6 @@
 import get from 'lodash-es/get.js'
 import each from 'lodash-es/each.js'
+import join from 'lodash-es/join.js'
 import isestr from 'wsemi/src/isestr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import JSON5 from 'json5'
@@ -13,8 +14,9 @@ import turf from './importTurf.mjs'
  * @memberOf w-gis
  * @param {String|Object} geojson 輸入geojson字串或物件
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.keyFeatures='geometry.coordinates.features'] 輸入geojson轉換至Turf的MultiPolygon物件時，取得Features數據之鍵路徑字串，預設'geometry.coordinates.features'
- * @param {String} [opt.keyPick=''] 輸入字串，預設''
+ * @param {String} [opt.keyFeatures='geometry.coordinates.features'] 輸入geojson轉換至Turf的MultiPolygon物件時，取得Features數據之鍵名路徑字串，預設'geometry.coordinates.features'
+ * @param {Array|String} [opt.keysPick=[]] 輸入由特徵取得做為鍵名之路徑字串，預設[]
+ * @param {String} [opt.sepKeysPick='|'] 輸入由keysPick取得多鍵名之組裝用分隔字串，預設'|'
  * @param {String} [opt.def='unknow'] 輸入回傳預設鍵名字串，代表features內找不到opt.key則使用opt.def做鍵名，而若有多個找不到情形則複寫處理，也就是取最末者。預設'unknow'
  * @returns {Object} 回傳字典物件
  * @example
@@ -71,7 +73,7 @@ import turf from './importTurf.mjs'
  * }
  * `
  *
- * kp = getKpFeatureFromGeojson(geojson, { keyPick: 'properties.name' })
+ * kp = getKpFeatureFromGeojson(geojson, { keysPick: 'properties.name' })
  * console.log(kp)
  * // => {
  * //   pgs1: {
@@ -95,10 +97,19 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
         keyFeatures = 'geometry.coordinates.features'
     }
 
-    //keyPick
-    let keyPick = get(opt, 'keyPick', '')
-    if (!isestr(keyPick)) {
-        keyPick = ''
+    //keysPick
+    let keysPick = get(opt, 'keysPick', '')
+    if (isestr(keysPick)) {
+        keysPick = [keysPick]
+    }
+    if (!isearr(keysPick)) {
+        keysPick = []
+    }
+
+    //sepKeysPick
+    let sepKeysPick = get(opt, 'sepKeysPick', '')
+    if (!isestr(sepKeysPick)) {
+        sepKeysPick = '|'
     }
 
     //def
@@ -136,8 +147,15 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
 
         //k
         let k = ''
-        if (isestr(keyPick)) {
-            k = get(v, keyPick, '')
+        if (isearr(keysPick)) {
+            let _ks = []
+            each(keysPick, (keyPick) => {
+                let _k = get(v, keyPick, '')
+                if (isestr(_k)) {
+                    _ks.push(_k)
+                }
+            })
+            k = join(_ks, sepKeysPick)
         }
 
         //kp
@@ -149,9 +167,9 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
         }
         else {
             console.log('feature', v)
-            console.log('keyPick', keyPick)
+            console.log('keysPick', keysPick)
             console.log('def', def)
-            console.log(`can not get keyPick[${keyPick}] in the feature, or invalid opt.keyPick or invalid opt.def`)
+            console.log(`can not get keysPick[${keysPick}] in the feature, or invalid opt.keysPick or invalid opt.def`)
         }
 
     })

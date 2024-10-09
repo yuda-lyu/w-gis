@@ -1,13 +1,14 @@
-import getBox from './getBox.mjs'
+import turf from './importTurf.mjs'
+import toMultiPoint from './toMultiPoint.mjs'
 
 
 /**
- * 計算點、線、面陣列之外接矩形並轉出polygon陣列
+ * 計算點、線、面陣列之外接矩形範圍
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getBoxPolygon.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getBox.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} fts 輸入資料陣列，為多點(multiPoint)、線(line)、多線(multiLine)、面(polygon)、多面(multiPolygon)數據陣列
- * @returns {Array} 回傳polygon陣列
+ * @returns {Object} 回傳外接矩形範圍物件
  * @example
  *
  * let pgs
@@ -20,9 +21,9 @@ import getBox from './getBox.mjs'
  *     [0, 1],
  *     [0, 0], //閉合
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ 0, 0 ], [ 100, 0 ], [ 100, 1 ], [ 0, 1 ], [ 0, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":0,"ymin":0,"xmax":100,"ymax":1}
  *
  * pgs = [ //ringString
  *     [0, 0],
@@ -30,9 +31,9 @@ import getBox from './getBox.mjs'
  *     [100, 1],
  *     [0, 1],
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ 0, 0 ], [ 100, 0 ], [ 100, 1 ], [ 0, 1 ], [ 0, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":0,"ymin":0,"xmax":100,"ymax":1}
  *
  * pgs = [ //polygon
  *     [
@@ -42,9 +43,9 @@ import getBox from './getBox.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ 0, 0 ], [ 100, 0 ], [ 100, 1 ], [ 0, 1 ], [ 0, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":0,"ymin":0,"xmax":100,"ymax":1}
  *
  * pgs = [ //polygon
  *     [
@@ -54,9 +55,9 @@ import getBox from './getBox.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ 0, 0 ], [ 10, 0 ], [ 10, 1 ], [ 0, 1 ], [ 0, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":0,"ymin":0,"xmax":10,"ymax":1}
  *
  * pgs = [ //polygon
  *     [
@@ -72,9 +73,9 @@ import getBox from './getBox.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ 0, 0 ], [ 100, 0 ], [ 100, 1 ], [ 0, 1 ], [ 0, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":0,"ymin":0,"xmax":100,"ymax":1}
  *
  * pgs = [ //multiPolygon
  *     [
@@ -98,33 +99,34 @@ import getBox from './getBox.mjs'
  *         ]
  *     ]
  * ]
- * r = getBoxPolygon(pgs)
- * console.log(r)
- * // => [ [ -10, 0 ], [ 100, 0 ], [ 100, 123 ], [ -10, 123 ], [ -10, 0 ] ]
+ * r = getBox(pgs)
+ * console.log(JSON.stringify(r))
+ * // => {"xmin":-10,"ymin":0,"xmax":100,"ymax":123}
  *
  */
-function getBoxPolygon(fts) {
+function getBox(fts) {
 
-    //bx
-    let bx = getBox(fts)
+    //toMultiPoint
+    let pts = toMultiPoint(fts)
+    // console.log('multiPoint', JSON.stringify(pts))
 
-    //xmin, ymin, xmax, ymax
-    let xmin = bx.xmin
-    let ymin = bx.ymin
-    let xmax = bx.xmax
-    let ymax = bx.ymax
+    //bx, [minX, minY, maxX, maxY]
+    let bx = turf.bbox(pts)
+    // console.log('bx', bx)
 
-    //pg
-    let pg = [
-        [xmin, ymin],
-        [xmax, ymin],
-        [xmax, ymax],
-        [xmin, ymax],
-        [xmin, ymin],
-    ]
+    //minX, minY, maxX, maxY
+    let xmin = bx[0]
+    let ymin = bx[1]
+    let xmax = bx[2]
+    let ymax = bx[3]
 
-    return pg
+    return {
+        xmin,
+        ymin,
+        xmax,
+        ymax,
+    }
 }
 
 
-export default getBoxPolygon
+export default getBox
