@@ -153,7 +153,7 @@ function bufferMultiPolygon(pgs, w, opt = {}) {
     // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
 
     //buffer
     let r = turf.buffer(pgs, w, { units })

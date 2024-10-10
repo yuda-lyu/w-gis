@@ -132,7 +132,7 @@ function getAreaMultiPolygonSm(pgs, opt = {}) {
     // console.log('pgs[0]', pgs[0])
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
     // console.log('pgs', pgs.geometry.type, pgs.geometry.coordinates) //JSON.stringify(pgs.geometry.coordinates, null, 2)
     // console.log('pgs.geometry.coordinates[0]', pgs.geometry.coordinates[0])
 

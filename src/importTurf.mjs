@@ -34,7 +34,7 @@ else {
 
 
 // //turf function
-// let helpers = turf.helpers
+// let helpers = turf
 // let { polygon, multiPolygon, lineString } = helpers
 // let area = turf.area
 // let centroid = turf.centroid

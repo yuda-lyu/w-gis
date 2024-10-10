@@ -120,7 +120,7 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
             }
 
             //multiPolygon
-            pgs = turf.helpers.multiPolygon(pgs)
+            pgs = turf.multiPolygon(pgs)
 
         }
 

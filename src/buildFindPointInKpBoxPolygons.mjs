@@ -92,7 +92,7 @@ function Build() {
             }
 
             //multiPolygon
-            pgs = turf.helpers.multiPolygon(pgs)
+            pgs = turf.multiPolygon(pgs)
             // console.log('pgs(multiPolygon)', pgs)
 
         }

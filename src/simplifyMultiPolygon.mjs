@@ -31,7 +31,7 @@ function simplifyMultiPolygon(pgs, opt = {}) {
     pgs = toMultiPolygon(pgs, opt)
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
 
     //simplify
     let r = turf.simplify(pgs, { tolerance, highQuality })

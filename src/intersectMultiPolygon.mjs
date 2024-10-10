@@ -22,8 +22,8 @@ function intersectMultiPolygon(pgs1, pgs2, opt = {}) {
     pgs2 = toMultiPolygon(pgs2, opt)
 
     //multiPolygon
-    pgs1 = turf.helpers.multiPolygon(pgs1)
-    pgs2 = turf.helpers.multiPolygon(pgs2)
+    pgs1 = turf.multiPolygon(pgs1)
+    pgs2 = turf.multiPolygon(pgs2)
 
     //intersect, turf版引用
     let r = turf.intersect(pgs1, pgs2)

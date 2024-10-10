@@ -22,8 +22,8 @@ function unionMultiPolygon(pgs1, pgs2, opt = {}) {
     pgs2 = toMultiPolygon(pgs2, opt)
 
     //multiPolygon
-    pgs1 = turf.helpers.multiPolygon(pgs1)
-    pgs2 = turf.helpers.multiPolygon(pgs2)
+    pgs1 = turf.multiPolygon(pgs1)
+    pgs2 = turf.multiPolygon(pgs2)
 
     //union
     let r = turf.union(pgs1, pgs2)

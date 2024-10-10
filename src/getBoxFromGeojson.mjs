@@ -7,6 +7,7 @@ import cloneDeep from 'lodash-es/cloneDeep.js'
 import isbol from 'wsemi/src/isbol.mjs'
 import isestr from 'wsemi/src/isestr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
+import iseobj from 'wsemi/src/iseobj.mjs'
 import treeObj from 'wsemi/src/treeObj.mjs'
 import JSON5 from 'json5'
 import turf from './importTurf.mjs'
@@ -111,16 +112,21 @@ import toMultiPoint from './toMultiPoint.mjs'
  */
 function getBoxFromGeojson(geojson, opt = {}) {
 
-    //toTurfMultiPolygon
-    let toTurfMultiPolygon = get(opt, 'toTurfMultiPolygon')
-    if (!isbol(toTurfMultiPolygon)) {
-        toTurfMultiPolygon = true
-    }
-
     //check
     if (isestr(geojson)) {
         geojson = JSON5.parse(geojson)
         // console.log('geojson', geojson)
+    }
+
+    //check
+    if (!iseobj(geojson)) {
+        throw new Error(`geojson is not an effective object or string from geojson`)
+    }
+
+    //toTurfMultiPolygon
+    let toTurfMultiPolygon = get(opt, 'toTurfMultiPolygon')
+    if (!isbol(toTurfMultiPolygon)) {
+        toTurfMultiPolygon = true
     }
 
     //multiPolygon
@@ -132,6 +138,7 @@ function getBoxFromGeojson(geojson, opt = {}) {
 
     }
 
+    //cds
     let cds = []
     treeObj(geojson, (value, key, nk) => {
         // console.log('=>', value, key, nk)

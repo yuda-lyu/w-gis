@@ -3,6 +3,7 @@ import each from 'lodash-es/each.js'
 import join from 'lodash-es/join.js'
 import isestr from 'wsemi/src/isestr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
+import iseobj from 'wsemi/src/iseobj.mjs'
 import JSON5 from 'json5'
 import turf from './importTurf.mjs'
 
@@ -91,10 +92,21 @@ import turf from './importTurf.mjs'
  */
 function getKpFeatureFromGeojson(geojson, opt = {}) {
 
+    //check
+    if (isestr(geojson)) {
+        geojson = JSON5.parse(geojson)
+        // console.log('geojson', geojson)
+    }
+
+    //check
+    if (!iseobj(geojson)) {
+        throw new Error(`geojson is not an effective object or string from geojson`)
+    }
+
     //keyFeatures
     let keyFeatures = get(opt, 'keyFeatures', '')
     if (!isestr(keyFeatures)) {
-        keyFeatures = 'geometry.coordinates.features'
+        keyFeatures = 'geometry.coordinates.features' //預設是基於QGIS轉出的geojson, 會使用多特徵(features)進行儲存, 但通常只用到1個特徵(feature)
     }
 
     //keysPick
@@ -118,21 +130,12 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
         def = 'unknow'
     }
 
-    //pgs
-    let pgs
-    if (isestr(geojson)) {
-        pgs = JSON5.parse(geojson)
-    }
-    else {
-        pgs = geojson
-    }
-
     //multiPolygon
-    pgs = turf.multiPolygon(pgs)
-    // console.log('pgs', pgs)
+    geojson = turf.multiPolygon(geojson)
+    // console.log('geojson', geojson)
 
     //features
-    let features = get(pgs, keyFeatures, [])
+    let features = get(geojson, keyFeatures, [])
     // console.log('features', features)
 
     //check

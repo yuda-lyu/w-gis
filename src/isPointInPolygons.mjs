@@ -105,7 +105,7 @@ function isPointInPolygons(p, pgs, opt = {}) {
         pgs = toMultiPolygon(pgs, opt)
 
         //multiPolygon
-        pgs = turf.helpers.multiPolygon(pgs)
+        pgs = turf.multiPolygon(pgs)
 
     }
 

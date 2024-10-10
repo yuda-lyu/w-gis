@@ -14,7 +14,7 @@ function splineMultiPolygon(pgs, opt = {}) {
 
         //pgNew
         let pgNew = map(pg, (ps, k) => {
-            let line = turf.helpers.lineString(ps)
+            let line = turf.lineString(ps)
             let r = turf.bezierSpline(line, opt)
             let psNew = get(r, 'geometry.coordinates')
             return psNew

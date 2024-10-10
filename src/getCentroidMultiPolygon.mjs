@@ -136,7 +136,7 @@ function getCentroidMultiPolygon(pgs, opt = {}) {
     pgs = fixCloseMultiPolygon(pgs, opt)
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
 
     //centroid
     let r = turf.centroid(pgs)

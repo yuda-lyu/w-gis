@@ -131,7 +131,7 @@ function getCenterOfMassMultiPolygon(pgs, opt = {}) {
     pgs = toMultiPolygon(pgs, opt)
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
 
     //centerOfMass
     let r = turf.centerOfMass(pgs)

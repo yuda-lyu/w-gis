@@ -1,3 +1,4 @@
+import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 import toMultiPoint from './toMultiPoint.mjs'
 
@@ -105,6 +106,11 @@ import toMultiPoint from './toMultiPoint.mjs'
  *
  */
 function getBox(fts) {
+
+    //check
+    if (!isearr(fts)) {
+        throw new Error(`fts is not an effective array`)
+    }
 
     //toMultiPoint
     let pts = toMultiPoint(fts)

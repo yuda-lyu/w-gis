@@ -15,7 +15,7 @@ function maskMultiPolygon(pgs, opt = {}) {
     pgs = toMultiPolygon(pgs, opt)
 
     //multiPolygon
-    pgs = turf.helpers.multiPolygon(pgs)
+    pgs = turf.multiPolygon(pgs)
 
     //mask
     let r = turf.mask(pgs)
