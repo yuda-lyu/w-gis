@@ -1,3 +1,5 @@
+import get from 'lodash-es/get.js'
+import isNumber from 'lodash-es/isNumber.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 import toMultiPoint from './toMultiPoint.mjs'
@@ -120,11 +122,25 @@ function getBox(fts) {
     let bx = turf.bbox(pts)
     // console.log('bx', bx)
 
-    //minX, minY, maxX, maxY
-    let xmin = bx[0]
-    let ymin = bx[1]
-    let xmax = bx[2]
-    let ymax = bx[3]
+    //xmin, ymin, xmax, ymax
+    let xmin = get(bx, 0, '')
+    let ymin = get(bx, 1, '')
+    let xmax = get(bx, 2, '')
+    let ymax = get(bx, 3, '')
+
+    //check
+    if (!isNumber(xmin)) {
+        xmin = null
+    }
+    if (!isNumber(ymin)) {
+        ymin = null
+    }
+    if (!isNumber(xmax)) {
+        xmax = null
+    }
+    if (!isNumber(ymax)) {
+        ymax = null
+    }
 
     return {
         xmin,

@@ -2,6 +2,7 @@ import get from 'lodash-es/get.js'
 import map from 'lodash-es/map.js'
 import min from 'lodash-es/min.js'
 import max from 'lodash-es/max.js'
+import isNumber from 'lodash-es/isNumber.js'
 import flatten from 'lodash-es/flatten.js'
 import cloneDeep from 'lodash-es/cloneDeep.js'
 import isbol from 'wsemi/src/isbol.mjs'
@@ -166,25 +167,34 @@ function getBoxFromGeojson(geojson, opt = {}) {
     // console.log('cds', cds)
 
     //bx
-    let bx = null
-    if (true) {
-        let rs
-        rs = map(cds, 0)
-        let xmin = min(rs)
-        let xmax = max(rs)
-        rs = map(cds, 1)
-        let ymin = min(rs)
-        let ymax = max(rs)
-        bx = {
-            xmin,
-            xmax,
-            ymin,
-            ymax,
-        }
-    }
-    // console.log('bx', bx)
+    let rs
+    rs = map(cds, 0)
+    let xmin = min(rs)
+    let xmax = max(rs)
+    rs = map(cds, 1)
+    let ymin = min(rs)
+    let ymax = max(rs)
 
-    return bx
+    //check
+    if (!isNumber(xmin)) {
+        xmin = null
+    }
+    if (!isNumber(ymin)) {
+        ymin = null
+    }
+    if (!isNumber(xmax)) {
+        xmax = null
+    }
+    if (!isNumber(ymax)) {
+        ymax = null
+    }
+
+    return {
+        xmin,
+        ymin,
+        xmax,
+        ymax,
+    }
 }
 
 
