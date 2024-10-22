@@ -392,8 +392,9 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                 //r
                 let r = sum(ias)
 
-                //check, ia總和有時會不等於areaQuery
+                //check
                 if (r !== areaQuery) {
+                    //ia總和有時會不等於areaQuery
 
                     if (areaQuery > 0 && r > 0) {
                         //若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery
@@ -415,9 +416,28 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                             return sv
                         })
                     }
-                    else if (areaQuery === 0 && r === 0) {
-                        //若areaQuery=0且ia總和=0, 則假設areaQuery為n, 而各ia為平分n
-                        areaQuery = n
+                    else {
+                        console.log('areaQuery', areaQuery)
+                        console.log('sum(ias)', r)
+                        throw new Error('areaQuery!==sum(ias) && (areaQuery<0 or sum(ias)<0)')
+                    }
+
+                }
+                else {
+                    //ia總和等於areaQuery
+
+                    if (areaQuery > 0) { //areaQuery > 0 && r > 0
+                        //若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1
+                        areaQuery = 1
+                        let s = 1 / n
+                        subValues = map(subValues, (sv) => {
+                            sv.ia = s
+                            return sv
+                        })
+                    }
+                    else if (areaQuery === 0) { //areaQuery === 0 && r === 0
+                        //若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1
+                        areaQuery = 1
                         let s = 1 / n
                         subValues = map(subValues, (sv) => {
                             sv.ia = s
@@ -425,7 +445,9 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                         })
                     }
                     else {
-                        throw new Error('unexpected case')
+                        console.log('areaQuery', areaQuery)
+                        console.log('sum(ias)', r)
+                        throw new Error('areaQuery<0 && sum(ias)<0')
                     }
 
                 }
