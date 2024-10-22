@@ -322,7 +322,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
         //newPointVal
         let newPointVal = null
-        if (areaQuery > 0) {
+        if (true) {
 
             //neighborIndices
             let neighborIndices = []
@@ -355,9 +355,9 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     // console.log('pgsInts', pgsInts)
                 }
                 catch (err) {
-                    console.log('pgs1', pgs1)
-                    console.log('pgs2', pgs2)
-                    console.log(err)
+                    //console.log('pgs1', pgs1)
+                    //console.log('pgs2', pgs2)
+                    //console.log(err)
                 }
 
                 //areaInts
@@ -379,6 +379,58 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                 }
             })
             // console.log('subValues', subValues)
+
+            //check
+            if (true) {
+
+                //n
+                let n = size(subValues)
+
+                //ias
+                let ias = map(subValues, 'ia')
+
+                //r
+                let r = sum(ias)
+
+                //check, ia總和有時會不等於areaQuery
+                if (r !== areaQuery) {
+
+                    if (areaQuery > 0 && r > 0) {
+                        //若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery
+                        let s = areaQuery / r
+                        subValues = map(subValues, (sv) => {
+                            sv.ia *= s
+                            return sv
+                        })
+                    }
+                    else if (areaQuery === 0 && r > 0) {
+                        //若areaQuery為0且ia總和>0, 則使用ia總和為areaQuery
+                        areaQuery = r
+                    }
+                    else if (areaQuery > 0 && r === 0) {
+                        //若areaQuery>0且ia總和=0, 則假設各ia為平分areaQuery
+                        let s = areaQuery / n
+                        subValues = map(subValues, (sv) => {
+                            sv.ia = s
+                            return sv
+                        })
+                    }
+                    else if (areaQuery === 0 && r === 0) {
+                        //若areaQuery=0且ia總和=0, 則假設areaQuery為n, 而各ia為平分n
+                        areaQuery = n
+                        let s = 1 / n
+                        subValues = map(subValues, (sv) => {
+                            sv.ia = s
+                            return sv
+                        })
+                    }
+                    else {
+                        throw new Error('unexpected case')
+                    }
+
+                }
+
+            }
 
             //newPointVals
             let newPointVals = []
