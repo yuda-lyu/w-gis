@@ -394,9 +394,11 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
                 //check
                 if (r !== areaQuery) {
+                    // console.log(`ia總和有時會不等於areaQuery`)
                     //ia總和有時會不等於areaQuery
 
                     if (areaQuery > 0 && r > 0) {
+                        // console.log(`若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery`)
                         //若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery
                         let s = areaQuery / r
                         subValues = map(subValues, (sv) => {
@@ -405,10 +407,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                         })
                     }
                     else if (areaQuery === 0 && r > 0) {
+                        // console.log(`若areaQuery為0且ia總和>0, 則使用ia總和為areaQuery`)
                         //若areaQuery為0且ia總和>0, 則使用ia總和為areaQuery
                         areaQuery = r
                     }
                     else if (areaQuery > 0 && r === 0) {
+                        // console.log(`若areaQuery>0且ia總和=0, 則假設各ia為平分areaQuery`)
                         //若areaQuery>0且ia總和=0, 則假設各ia為平分areaQuery
                         let s = areaQuery / n
                         subValues = map(subValues, (sv) => {
@@ -423,33 +427,22 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     }
 
                 }
-                else {
-                    //ia總和等於areaQuery
-
-                    if (areaQuery > 0) { //areaQuery > 0 && r > 0
-                        //若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1
-                        areaQuery = 1
-                        let s = 1 / n
-                        subValues = map(subValues, (sv) => {
-                            sv.ia = s
-                            return sv
-                        })
-                    }
-                    else if (areaQuery === 0) { //areaQuery === 0 && r === 0
-                        //若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1
-                        areaQuery = 1
-                        let s = 1 / n
-                        subValues = map(subValues, (sv) => {
-                            sv.ia = s
-                            return sv
-                        })
-                    }
-                    else {
-                        console.log('areaQuery', areaQuery)
-                        console.log('sum(ias)', r)
-                        throw new Error('areaQuery<0 && sum(ias)<0')
-                    }
-
+                else if (areaQuery === 0) {
+                    // console.log(`若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1`)
+                    //若areaQuery=ia總和=0, 則假設areaQuery為1, 而各ia為平分1
+                    areaQuery = 1
+                    let s = 1 / n
+                    subValues = map(subValues, (sv) => {
+                        sv.ia = s
+                        return sv
+                    })
+                }
+                else if (areaQuery < 0) {
+                    // console.log(`若areaQuery=ia總和<0, 則報錯`)
+                    //若areaQuery=ia總和<0, 則報錯
+                    console.log('areaQuery', areaQuery)
+                    console.log('sum(ias)', r)
+                    throw new Error('areaQuery<0 && sum(ias)<0')
                 }
 
             }
@@ -466,7 +459,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
                 //useFunInterpFragment
                 if (useFunInterpFragment) {
-                    z = funInterpFragment({
+                    v = funInterpFragment({
                         v,
                         area: o.ia,
                         areaTotal: areaQuery,
