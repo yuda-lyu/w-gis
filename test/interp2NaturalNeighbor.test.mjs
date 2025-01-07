@@ -114,7 +114,11 @@ describe(`interp2NaturalNeighbor`, function() {
     }
     let funInterpFragments = (msg) => {
         // console.log('funInterpFragments', msg)
-        // let v = ps[0].v + ps[1].v + ps[2].v
+        // let vt = msg.ps[0].v + msg.ps[1].v + msg.ps[2].v
+        // console.log('vt', vt)
+        // let vv = msg.funInv(msg.v)
+        // console.log('vv', vv)
+        // console.log('msg.v', msg.v)
         return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
     }
     // r = interp2NaturalNeighbor(ps, p, { funInterpFragments })

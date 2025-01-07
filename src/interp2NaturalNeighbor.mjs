@@ -494,6 +494,9 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     ps: newPointVals,
                     v: vt,
                     indTar,
+                    funInv: (vv) => {
+                        return inv(vv, 2)
+                    },
                 })
             }
             newPointVal = vt

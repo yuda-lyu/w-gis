@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.0.64",
+  "version": "1.0.65",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
