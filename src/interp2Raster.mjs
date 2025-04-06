@@ -117,6 +117,9 @@ async function interp2Raster(ops, opt = {}) {
     // console.log('rg[keyX]num', rg[keyX]num, 'rg[keyY]num', rg[keyY]num)
     // console.log('rg.grds', rg.grds[0])
 
+    //save
+    rg.pts = pts
+
     return rg
 }
 
