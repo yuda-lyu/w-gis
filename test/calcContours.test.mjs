@@ -1,15 +1,17 @@
 import assert from 'assert'
+import fs from 'fs'
 import calcContours from '../src/calcContours.mjs'
-import res1 from './calcContours1.json' assert { type: "json" }
-import res2 from './calcContours2.json' assert { type: "json" }
-import res3 from './calcContours3.json' assert { type: "json" }
-import res4 from './calcContours4.json' assert { type: "json" }
-import res5 from './calcContours5.json' assert { type: "json" }
-import res6 from './calcContours6.json' assert { type: "json" }
-import res7 from './calcContours7.json' assert { type: "json" }
 
 
 describe(`calcContours`, function() {
+    let res1 = JSON.parse(fs.readFileSync('./test/calcContours1.json', 'utf8'))
+    let res2 = JSON.parse(fs.readFileSync('./test/calcContours2.json', 'utf8'))
+    let res3 = JSON.parse(fs.readFileSync('./test/calcContours3.json', 'utf8'))
+    let res4 = JSON.parse(fs.readFileSync('./test/calcContours4.json', 'utf8'))
+    let res5 = JSON.parse(fs.readFileSync('./test/calcContours5.json', 'utf8'))
+    let res6 = JSON.parse(fs.readFileSync('./test/calcContours6.json', 'utf8'))
+    let res7 = JSON.parse(fs.readFileSync('./test/calcContours7.json', 'utf8'))
+
     let k = -1
     let kp = {}
     let opt

@@ -1,4 +1,51 @@
-import get from 'lodash-es/get.js'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>buildFindPointInTiff.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixNoCloseMultiPolygon">fixNoCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">buildFindPointInTiff.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import get from 'lodash-es/get.js'
 import floor from 'lodash-es/floor.js'
 import cdbl from 'wsemi/src/cdbl.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
@@ -14,13 +61,13 @@ import ptXYtoObj from './ptXYtoObj.mjs'
 /**
  * 查詢點陣列[x,y]或點物件{x,y}於指定Tiff點陣圖內數值，若無則回傳def值
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/buildFindPointInTif.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/buildFindPointInTiff.test.mjs Github}
  * @memberOf w-gis
  * @returns {Object} 回傳函數物件，包含init、isInit、getPoint函數。init為初始化，輸入inp與opt，無輸出，isInit為回傳是否初始化布林值，無輸入。getPoint為查詢點位於點陣圖內數值，輸入p與opt。
  * @example
  *
  * import b642u8arr from 'wsemi/src/b642u8arr.mjs'
- * import buildFindPointInTif from 'wsemi/src/buildFindPointInTif.mjs'
+ * import buildFindPointInTiff from 'wsemi/src/buildFindPointInTiff.mjs'
  *
  * let p
  * let r
@@ -30,7 +77,7 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * // lon 121.51338 121.51847
  * // lat 25.046 25.05
  *
- * let BD = buildFindPointInTif
+ * let BD = buildFindPointInTiff
  * let bd = new BD()
  * await bd.init(u8a)
  *
@@ -205,7 +252,7 @@ function Build() {
         // console.log('ix', ix, 'iy', iy)
 
         //check
-        if (ix < 0 || iy < 0 || ix > (width - 1) || iy > (height - 1)) {
+        if (ix &lt; 0 || iy &lt; 0 || ix > (width - 1) || iy > (height - 1)) {
             return def
         }
 
@@ -232,3 +279,28 @@ function Build() {
 
 
 export default Build
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Sun Apr 06 2025 16:22:05 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

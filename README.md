@@ -21,7 +21,6 @@ To view some examples for more understanding, visit examples:
 
 ## Installation
 ### Using npm(ES6 module):
-> **Note:** w-gis is mainly dependent on `@turf`, `proj4`, `d3-tricontour`, `d3-delaunay`, `polybooljs`, `lodash-es` and `wsemi`.
 ```alias
 npm i w-gis
 ```
@@ -31,6 +30,6 @@ npm i w-gis
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.65/dist/w-gis.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-gis@1.0.66/dist/w-gis.umd.js"></script>
 
 ```
