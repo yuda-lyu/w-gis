@@ -260,6 +260,8 @@ async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
     }
     else {
         let grds = []
+        let zmin = 1e20
+        let zmax = -1e20
         for (let iy = 0; iy < ynum; iy++) {
             grds[iy] = []
             let _iy = iy
@@ -269,6 +271,8 @@ async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
             for (let ix = 0; ix < xnum; ix++) {
                 let k = kpInx[`${ix}:${_iy}`]
                 grds[iy][ix] = ipts[k][keyZ]
+                zmin = Math.min(zmin, ipts[k][keyZ])
+                zmax = Math.max(zmax, ipts[k][keyZ])
             }
         }
         rs = {
@@ -282,6 +286,9 @@ async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
             ymin,
             ymax,
             dy,
+
+            zmin,
+            zmax,
 
             grds,
 

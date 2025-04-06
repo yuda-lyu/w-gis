@@ -106,18 +106,18 @@ async function interp2Raster(ops, opt = {}) {
     })
     // console.log('pts', take(pts, 5), size(pts))
 
-    //rst
-    let rst = await interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, {
+    //rg
+    let rg = await interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, {
         funKriging,
         funValid,
         funAdjust,
         returnGrid: true,
         inverseKeyY: true,
     })
-    // console.log('rst[keyX]num', rst[keyX]num, 'rst[keyY]num', rst[keyY]num)
-    // console.log('rst.grds', rst.grds[0])
+    // console.log('rg[keyX]num', rg[keyX]num, 'rg[keyY]num', rg[keyY]num)
+    // console.log('rg.grds', rg.grds[0])
 
-    return rst
+    return rg
 }
 
 
