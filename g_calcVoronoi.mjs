@@ -120,4 +120,4 @@ r = o.funFindIn({ x: 1061, y: 371 })
 console.log(r)
 // => 4
 
-//node --experimental-modules g_calcVoronoi.mjs
+//node g_calcVoronoi.mjs

@@ -8,6 +8,16 @@ A tool for geotech analysis.
 [![npm download](https://img.shields.io/npm/dm/w-gis.svg)](https://npmjs.org/package/w-gis) 
 [![jsdelivr download](https://img.shields.io/jsdelivr/npm/hm/w-gis.svg)](https://www.jsdelivr.com/package/npm/w-gis)
 
+## Statement
+
+This project is forked and adapted from the following open-source project:
+
+- Forked from [kriging.js](https://github.com/oeo4b/kriging.js) by oeo4b
+
+The original project is licensed under the MIT License, and this project is also distributed under the MIT License.
+
+Special thanks to the original author for their valuable contribution, which made this project possible. 🙏
+
 ## Documentation
 To view documentation or get support, visit [docs](https://yuda-lyu.github.io/w-gis/w-gis.html).
 

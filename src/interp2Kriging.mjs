@@ -15,11 +15,10 @@ import interp2Normalize from './interp2Normalize.mjs'
 import kriging from './kriging.mjs'
 
 
-//https://github.com/lvisei/web-developer-resources/blob/master/webassembly/kriging.md
-
-
 /**
  * 克利金法(Kriging)內外插點數值
+ *
+ * 克利金法計算與實際運算瓶頸問題可詳見: https://github.com/lvisei/web-developer-resources/blob/master/webassembly/kriging.md
  *
  * 若是Node.js端使用須更高計算速度，可使用w-kriging: https://github.com/yuda-lyu/w-kriging
  *

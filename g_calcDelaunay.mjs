@@ -35,4 +35,4 @@ r = o.funFindIn({ x: 1061, y: 371 })
 console.log(r)
 // => 4
 
-//node --experimental-modules g_calcDelaunay.mjs
+//node g_calcDelaunay.mjs

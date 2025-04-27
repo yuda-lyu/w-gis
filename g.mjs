@@ -86,4 +86,4 @@ r = getBoxFromGeojson(geojson)
 console.log(r)
 // => { xmin: -0.2, xmax: 1, ymin: 0, ymax: 1.1 }
 
-//node --experimental-modules g.mjs
+//node g.mjs

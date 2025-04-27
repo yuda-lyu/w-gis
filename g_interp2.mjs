@@ -104,4 +104,4 @@ test()
     })
 
 
-//node --experimental-modules g_interp2.mjs
+//node g_interp2.mjs
