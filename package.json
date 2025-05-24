@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.0.69",
+  "version": "1.0.70",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^6.5.0",
@@ -11,10 +11,10 @@
     "lodash-es": "^4.17.21",
     "polybooljs": "^1.2.2",
     "proj4": "^2.15.0",
-    "wsemi": "^1.7.74"
+    "wsemi": "^1.7.90"
   },
   "devDependencies": {
-    "w-package-tools": "^1.0.87"
+    "w-package-tools": "^1.1.2"
   },
   "scripts": {
     "test": "mocha --parallel --timeout 60000",

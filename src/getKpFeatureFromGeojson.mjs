@@ -4,6 +4,8 @@ import join from 'lodash-es/join.js'
 import isestr from 'wsemi/src/isestr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import iseobj from 'wsemi/src/iseobj.mjs'
+import isnum from 'wsemi/src/isnum.mjs'
+import cstr from 'wsemi/src/cstr.mjs'
 import JSON5 from 'json5'
 import turf from './importTurf.mjs'
 
@@ -154,8 +156,8 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
             let _ks = []
             each(keysPick, (keyPick) => {
                 let _k = get(v, keyPick, '')
-                if (isestr(_k)) {
-                    _ks.push(_k)
+                if (isestr(_k) || isnum(_k)) {
+                    _ks.push(cstr(_k))
                 }
             })
             k = join(_ks, sepKeysPick)
