@@ -6,6 +6,7 @@ import isearr from 'wsemi/src/isearr.mjs'
 import iseobj from 'wsemi/src/iseobj.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
 import cstr from 'wsemi/src/cstr.mjs'
+import haskey from 'wsemi/src/haskey.mjs'
 import JSON5 from 'json5'
 import turf from './importTurf.mjs'
 
@@ -147,7 +148,7 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
 
     //kp
     let kp = {}
-    each(features, (v) => {
+    each(features, (v, ind) => {
         // console.log('v', v) //v可視為Turf的Feature, 於Turf內函數亦會自動轉MultiPolygon
 
         //k
@@ -165,7 +166,13 @@ function getKpFeatureFromGeojson(geojson, opt = {}) {
 
         //kp
         if (isestr(k)) {
-            kp[k] = v
+            if (haskey(kp, k)) {
+                console.log(`duplicate key[${k}], set to '${k}_${ind}'`)
+                kp[`${k}_${ind}`] = v
+            }
+            else {
+                kp[k] = v
+            }
         }
         else if (isestr(def)) {
             kp[def] = v
