@@ -8,7 +8,7 @@ let fdTar = './dist'
 
 async function core() {
 
-    await rollupFiles({ //rollupFiles預設會clean folder
+    await rollupFiles({ //rollupFiles預設會clean folder故得要放第1個
         fns: 'WGis.mjs',
         fdSrc,
         fdTar,
@@ -31,6 +31,7 @@ async function core() {
         fpSrc: path.resolve(fdSrc, 'interp2.mjs'), //原始檔案路徑
         fpTar: path.resolve(fdTar, 'interp2.wk.umd.js'), //檔案輸出路徑
         formatOut: 'umd',
+        bMinify: false, //因目前壓縮會導致編譯worker無法接收與回應, 故暫時關閉
     })
         .catch((err) => {
             console.log(err)
