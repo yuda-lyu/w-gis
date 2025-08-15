@@ -30,7 +30,7 @@ async function core() {
         // execFunctionByInstance: true, //default, 原模組為計算函數回傳結果
         fpSrc: path.resolve(fdSrc, 'interp2.mjs'), //原始檔案路徑
         fpTar: path.resolve(fdTar, 'interp2.wk.umd.js'), //檔案輸出路徑
-        formatOut: 'umd', //umd, es
+        formatOut: 'umd', //會提供w-leaflet-vue於html直接引用, 用es會有問題得使用umd
         bMinify: false, //因目前壓縮會導致編譯worker無法接收與回應, 故暫時關閉
     })
         .catch((err) => {
