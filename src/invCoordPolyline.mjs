@@ -1,9 +1,9 @@
 import invCoordPolygonOrPolyline from './invCoordPolygonOrPolyline.mjs'
 
 
-function invCoordPolygon(pg) {
+function invCoordPolyline(pg) {
     return invCoordPolygonOrPolyline(pg)
 }
 
 
-export default invCoordPolygon
+export default invCoordPolyline
