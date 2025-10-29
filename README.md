@@ -30,13 +30,13 @@ To view some examples for more understanding, visit examples:
 > **getCenterOfMassMultiPolygon:** [ex-getCenterOfMassMultiPolygon.html](https://yuda-lyu.github.io/w-gis/examples/ex-getCenterOfMassMultiPolygon.html) [[source code](https://github.com/yuda-lyu/w-gis/blob/master/docs/examples/ex-getCenterOfMassMultiPolygon.html)]
 
 ## Installation
+
 ### Using npm(ES6 module):
 ```alias
 npm i w-gis
 ```
 
 ### In a browser(UMD module):
-> **Note:** w-gis does not dependent on any package.
 
 Add script for w-gis.
 ```alias

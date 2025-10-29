@@ -36,6 +36,9 @@ import { Delaunay } from 'd3-delaunay'
  *
  * d3-delaunay
  * https://github.com/d3/d3-delaunay
+ * 
+ * online test
+ * https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voronoi-diagram/
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2NaturalNeighbor.test.mjs Github}
  * @memberOf w-gis
