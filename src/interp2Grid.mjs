@@ -1,5 +1,6 @@
 import get from 'lodash-es/get.js'
 import size from 'lodash-es/size.js'
+import isearr from 'wsemi/src/isearr.mjs'
 import isestr from 'wsemi/src/isestr.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
 import ispint from 'wsemi/src/ispint.mjs'
@@ -10,21 +11,42 @@ import cdbl from 'wsemi/src/cdbl.mjs'
 import cint from 'wsemi/src/cint.mjs'
 import pmSeries from 'wsemi/src/pmSeries.mjs'
 import _kriging from './interp2Kriging.mjs'
-// import _kriging from 'w-kriging/src/WKriging.mjs'
 
 
+/**
+ * 不規則點內插至規則網格
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Grid.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Array} pts 輸入點物件陣列
+ * @param {Number} xmin 輸入網格x向最小座標數字
+ * @param {Number} xmax 輸入網格x向最大座標數字
+ * @param {Number} dx 輸入網格x向間距數字
+ * @param {Number} ymin 輸入網格y向最小座標數字
+ * @param {Number} ymax 輸入網格y向最大座標數字
+ * @param {Number} dy 輸入網格y向間距數字
+ * @param {Object} [opt={}] 輸入設定物件，預設{}
+ * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
+ * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
+ * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
+ * @param {String} [opt.modePick='min'] 輸入挑選方式字串，可選'min'、'max'，預設'min'
+ * @param {Function} [opt.funValid=(x,y)=>{return true}] 輸入確認點座標(x,y)是否有效函數，回傳布林值，可使用Promise回傳，預設(x,y)=>{return true}
+ * @param {Function} [opt.funKriging=interp2Kriging] 輸入克利金處理函數，預設使用內建interp2Kriging
+ * @param {String} [opt.variogram_model='spherical'] 輸入內建interp2Kriging之變異函數模型字串，預設'spherical'
+ * @param {Number} [opt.nlags=9] 輸入內建interp2Kriging之分箱數量整數，預設9
+ * @param {Function} [opt.funAdjust=(x,y,z)=>{return z}] 輸入內插後值調整函數，用於修正不合理值或做後處理，回傳布林值，可使用Promise回傳，預設(x,y,z)=>{return z}
+ * @param {Boolean} [opt.returnGrid=true] 輸入是否回傳規則網格物件布林值，若false則回傳內插後點物件陣列，預設true
+ * @param {Boolean} [opt.inverseKeyY=false] 輸入是否反轉y方向索引布林值，用於輸出grds之y向(列)順序，預設false
+ * @returns {Object} 回傳規則網格物件，物件內grds為規則網格之二維陣列
+ *
+
+ *
+ */
 async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
 
     //check
-    if (size(pts) === 0) {
-        console.log(pts)
+    if (!isearr(pts)) {
         throw new Error(`no pts`)
-    }
-
-    //funKriging
-    let funKriging = get(opt, 'funKriging')
-    if (!isfun(funKriging)) {
-        funKriging = _kriging
     }
 
     //check xmin
@@ -91,32 +113,19 @@ async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
         keyZ = 'z'
     }
 
-    // //scale
-    // let scale = get(opt, 'scale')
-    // if (!isnum(scale)) {
-    //     scale = 1
-    // }
-    // scale = cdbl(scale)
+    //funValid
+    let funValid = get(opt, 'funValid')
+    if (!isfun(funValid)) {
+        funValid = () => {
+            return true
+        }
+    }
 
-    // //model
-    // let model = get(opt, 'model')
-    // if (model !== 'exponential' && model !== 'gaussian' && model !== 'spherical') {
-    //     model = 'exponential'
-    // }
-
-    // //sigma2
-    // let sigma2 = get(opt, 'sigma2')
-    // if (!isnum(sigma2)) {
-    //     sigma2 = 0
-    // }
-    // sigma2 = cdbl(sigma2)
-
-    // //alpha
-    // let alpha = get(opt, 'alpha')
-    // if (!isnum(alpha)) {
-    //     alpha = 100
-    // }
-    // alpha = cdbl(alpha)
+    //funKriging
+    let funKriging = get(opt, 'funKriging')
+    if (!isfun(funKriging)) {
+        funKriging = _kriging
+    }
 
     //variogram_model
     let variogram_model = get(opt, 'variogram_model')
@@ -130,14 +139,6 @@ async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
         nlags = 9
     }
     nlags = cint(nlags)
-
-    //funValid
-    let funValid = get(opt, 'funValid')
-    if (!isfun(funValid)) {
-        funValid = () => {
-            return true
-        }
-    }
 
     //funAdjust
     let funAdjust = get(opt, 'funAdjust')
