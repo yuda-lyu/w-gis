@@ -5,6 +5,31 @@ import toMultiPolygon from './toMultiPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
 
+/**
+ * MultiPolygon做差集(clip)，代表 `pgs1 - pgs2`
+ *
+ * 目前採用 turf 的 `difference` 計算，再透過 `distilMultiPolygon` 統一輸出為 MultiPolygon 座標陣列。
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/clipMultiPolygon.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Array} pgs1 輸入被裁切之 RingString、Polygon 或 MultiPolygon 座標陣列
+ * @param {Array} pgs2 輸入裁切用之 RingString、Polygon 或 MultiPolygon 座標陣列
+ * @param {Object} [opt={}] 輸入設定物件，會傳入 `toMultiPolygon`
+ * @param {String} [opt.supposeType='polygons'] 輸入深度為2時之判定模式，可選 `polygons` 或 `ringStrings`
+ * @returns {Array|null} 回傳差集後之 MultiPolygon 座標陣列；當 `pgs1` 或 `pgs2` 非陣列時回傳 `null`
+ * @example
+ *
+ * let pgs1
+ * let pgs2
+ * let r
+ *
+ * pgs1 = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+ * pgs2 = [[[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]]]
+ * r = clipMultiPolygon(pgs1, pgs2)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[2,0],[2,4],[0,4],[0,0]]]]
+ *
+ */
 function clipMultiPolygon(pgs1, pgs2, opt = {}) {
     //尚未使用polybooljs處理MultiPolygon, 故持續使用turf進行difference
     //代表pgs1減去pgs2
