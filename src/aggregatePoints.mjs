@@ -25,6 +25,7 @@ import haskey from 'wsemi/src/haskey.mjs'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
  * @param {String} [opt.modePick='min'] 輸入挑選方式字串，可選'min'、'max'，預設'min'
  * @returns {Array} 回傳點物件陣列
+ * @example
  *
  * let ops
  * let r
