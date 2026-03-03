@@ -24,6 +24,8 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * @example
  *
  * let p
+ * let b
+ *
  * let kpFt = {
  *     ft1: {
  *         'type': 'Feature',
@@ -66,14 +68,23 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  *         }
  *     },
  * }
- * let b
  *
  * p = [0.5, 0.5]
  * b = findPointInKpFeature(p, kpFt)
  * console.log(b)
  * // => 'ft1'
  *
- * p = [1.5, 0.5]
+ * p = [1.5, 1.5]
+ * b = findPointInKpFeature(p, kpFt)
+ * console.log(b)
+ * // => 'ft2'
+ *
+ * p = [2.5, 2.5]
+ * b = findPointInKpFeature(p, kpFt)
+ * console.log(b)
+ * // => 'unknow'
+ *
+ * p = [0.5, 0.5]
  * kpFt = {
  *     'ft1': [
  *         [0, 0],
@@ -87,7 +98,7 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * console.log(b)
  * // => 'unknow'
  *
- * p = [1.5, 0.5]
+ * p = [0.5, 0.5]
  * kpFt = {
  *     'ft1': [
  *         [0, 0],

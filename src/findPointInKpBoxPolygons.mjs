@@ -12,16 +12,15 @@ import ptXYtoObj from './ptXYtoObj.mjs'
 
 
 /**
- * 判斷點陣列[x,y]或點物件{x,y}是否位於某一多邊形內之字典物件，若有則回傳該物件之鍵名，若無則回傳def值
+ * 判斷點陣列[x,y]或點物件{x,y}是否位於某一多邊形與範圍之字典物件，若有則回傳該物件之鍵名，若無則回傳def值
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/findPointInKpBoxPolygons.test.mjs Github}
  * @memberOf w-gis
  * @param {Array|Object} p 輸入點陣列或點物件，為[x,y]或{x,y}
- * @param {Object} kpPgs 輸入多邊形字典物件，為{key1:pgs1,key2:pgs2,...keyn:pgsn}
+ * @param {Object} kpPgs 輸入多邊形與範圍字典物件，為{key1:{box:{xmin:xmin1,ymin:ymin1,xmax:xmax1,ymax:ymax1},pgs:pgs1},key2:{box:{xmin:xmin2,ymin:ymin2,xmax:xmax2,ymax:ymax2},pgs:pgs2},...keyn:{box:{xmin:xminn,ymin:yminn,xmax:xmaxn,ymax:ymaxn},pgs:pgsn}}
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.keyX='x'] 輸入點物件x座標鍵字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件y座標鍵字串，預設'y'
- * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
  * @param {Boolean} [opt.toTurfMultiPolygon=true] 輸入是否轉換多邊形為Turf的MultiPolygon，若須加速可於外部先轉好就不用於函數內再轉，預設true
  * @param {String} [opt.def='unknow'] 輸入若點未位於任一多邊形時，回傳指定名稱字串，預設'unknow'
  * @returns {String} 回傳名稱字串
@@ -29,13 +28,16 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  *
  * let p
  * let kpPgs = {
- *     'pgs1': [
- *         [0, 0],
- *         [0, 1],
- *         [1, 1],
- *         [1, 0],
- *         [0, 0],
- *     ],
+ *     'pgs1': {
+ *         box: { xmin: 0, ymin: 0, xmax: 1, ymax: 1 },
+ *         pgs: [
+ *             [0, 0],
+ *             [0, 1],
+ *             [1, 1],
+ *             [1, 0],
+ *             [0, 0],
+ *         ],
+ *     }
  * }
  * let b
  *
