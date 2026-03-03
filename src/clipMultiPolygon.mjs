@@ -1,6 +1,7 @@
+import size from 'lodash-es/size.js'
+import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
-// import clipPolygon from './clipPolygon.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
@@ -23,23 +24,66 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  * let pgs2
  * let r
  *
- * pgs1 = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+ * pgs1 = 'not array'
  * pgs2 = [[[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]]]
- * r = clipMultiPolygon(pgs1, pgs2)
+ * try {
+ *     r = clipMultiPolygon(pgs1, pgs2, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => no pgs1
+ *
+ * pgs1 = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+ * pgs2 = 'not array'
+ * try {
+ *     r = clipMultiPolygon(pgs1, pgs2, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => invalid pgs2
+ *
+ * pgs1 = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+ * pgs2 = []
+ * try {
+ *     r = clipMultiPolygon(pgs1, pgs2, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[4,0],[4,4],[0,4],[0,0]]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]] // polygon(depth=2)
+ * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]] // polygon(depth=2)
+ * r = clipMultiPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
  * // => [[[[0,0],[2,0],[2,4],[0,4],[0,0]]]]
  *
+ * pgs1 = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+ * pgs2 = [[[[5, 0], [6, 0], [6, 1], [5, 1], [5, 0]]]]
+ * r = clipMultiPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[4,0],[4,4],[0,4],[0,0]]]]
+ *
  */
 function clipMultiPolygon(pgs1, pgs2, opt = {}) {
-    //尚未使用polybooljs處理MultiPolygon, 故持續使用turf進行difference
     //代表pgs1減去pgs2
 
-    //check
+    //check pgs1
     if (!isearr(pgs1)) {
-        return null
+        throw new Error(`no pgs1`)
     }
-    if (!isearr(pgs2)) {
-        return null
+
+    //check pgs2
+    if (isarr(pgs2) && size(pgs2) === 0) {
+        return pgs1
+    }
+    if (!isarr(pgs2)) {
+        throw new Error(`invalid pgs2`)
     }
 
     //toMultiPolygon
@@ -55,39 +99,6 @@ function clipMultiPolygon(pgs1, pgs2, opt = {}) {
 
     return distilMultiPolygon(r)
 }
-
-
-// function clipMultiPolygon(pgs1, pgs2) {
-//     //代表pgs1減去pgs2
-
-//     //check
-//     if (!isearr(pgs1)) {
-//         return null
-//     }
-//     if (!isearr(pgs2)) {
-//         return null
-//     }
-
-//     //toMultiPolygon
-//     let pgs1Temp = toMultiPolygon(pgs1, opt)
-//     let pgs2Temp = toMultiPolygon(pgs2, opt)
-
-//     //pgs
-//     let pgs = []
-//     each(pgs1Temp, (v1) => {
-//         each(pgs2Temp, (v2) => {
-//             let r = clipPolygon(v1, v2)
-//             if (size(r) > 0) {
-//                 pgs.push(r)
-//             }
-//         })
-//     })
-
-//     //toMultiPolygon
-//     pgs = toMultiPolygon(pgs, opt)
-
-//     return pgs
-// }
 
 
 export default clipMultiPolygon

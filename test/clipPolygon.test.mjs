@@ -7,22 +7,18 @@ describe(`clipPolygon`, function() {
     let oin = {}
     let out = {}
 
-    // ----------------
-    // invalid inputs
-    // ----------------
-
     k++
     oin[k] = {
         pgs1: 'not array',
         pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]],
         opt: {},
     }
-    out[k] = null
-    it(`should return null when clipPolygon(pgs1, pgs2, opt) with pgs1 not array`, function() {
+    out[k] = { err: /no pgs1/ }
+    it(`should throw error when clipPolygon(pgs1 not array)`, function() {
         k = 0
-        let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
-        let rr = out[k]
-        assert.strictEqual(r, rr)
+        assert.throws(() => {
+            clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        }, out[k].err)
     })
 
     k++
@@ -31,21 +27,30 @@ describe(`clipPolygon`, function() {
         pgs2: 'not array',
         opt: {},
     }
-    out[k] = null
-    it(`should return null when clipPolygon(pgs1, pgs2, opt) with pgs2 not array`, function() {
+    out[k] = { err: /invalid pgs2/ }
+    it(`should throw error when clipPolygon(pgs2 not array)`, function() {
         k = 1
-        let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
-        let rr = out[k]
-        assert.strictEqual(r, rr)
+        assert.throws(() => {
+            clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        }, out[k].err)
     })
-
-    // ----------------
-    // basic difference
-    // ----------------
 
     k++
     oin[k] = {
-        // 以 ringString(depth=1) 輸入，函數內會轉為 Polygon
+        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]],
+        pgs2: [],
+        opt: {},
+    }
+    out[k] = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]
+    it(`should return pgs1 when clipPolygon(pgs2 empty array)`, function() {
+        k = 2
+        let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
         pgs1: [[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]],
         pgs2: [[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]],
         opt: {},
@@ -53,8 +58,8 @@ describe(`clipPolygon`, function() {
     out[k] = [
         [[2, 4], [2, 0], [0, 0], [0, 4]],
     ]
-    it(`should return expected Polygon when clipPolygon(ringString - ringString)`, function() {
-        k = 2
+    it(`should return clipped polygon when clipPolygon(ringString-depth1 - ringString-depth1)`, function() {
+        k = 3
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -70,7 +75,7 @@ describe(`clipPolygon`, function() {
         [[2, 2], [2, 0], [0, 0], [0, 2]],
     ]
     it(`should return original Polygon when clipPolygon(no overlap + custom epsilon)`, function() {
-        k = 3
+        k = 4
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)

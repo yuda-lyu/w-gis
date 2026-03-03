@@ -64,7 +64,7 @@ import findPointInKpFeature from './findPointInKpFeature.mjs'
  * `
  * let BD = buildFindPointInGeojson
  * let bd = new BD()
- * await bd.init(geojson, { key: 'properties.name' })
+ * await bd.init(geojson, { keysPick: 'properties.name' })
  *
  * p = [0.5, 0.5]
  * r = await bd.getPoint(p)

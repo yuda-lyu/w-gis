@@ -7,22 +7,18 @@ describe(`clipMultiPolygon`, function() {
     let oin = {}
     let out = {}
 
-    // ----------------
-    // invalid inputs
-    // ----------------
-
     k++
     oin[k] = {
         pgs1: 'not array',
         pgs2: [[[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]]],
         opt: {},
     }
-    out[k] = null
-    it(`should return null when clipMultiPolygon(pgs1, pgs2, opt) with pgs1 not array`, function() {
+    out[k] = { err: /no pgs1/ }
+    it(`should throw error when clipMultiPolygon(pgs1 not array)`, function() {
         k = 0
-        let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
-        let rr = out[k]
-        assert.strictEqual(r, rr)
+        assert.throws(() => {
+            clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        }, out[k].err)
     })
 
     k++
@@ -31,21 +27,30 @@ describe(`clipMultiPolygon`, function() {
         pgs2: 'not array',
         opt: {},
     }
-    out[k] = null
-    it(`should return null when clipMultiPolygon(pgs1, pgs2, opt) with pgs2 not array`, function() {
+    out[k] = { err: /invalid pgs2/ }
+    it(`should throw error when clipMultiPolygon(pgs2 not array)`, function() {
         k = 1
-        let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
-        let rr = out[k]
-        assert.strictEqual(r, rr)
+        assert.throws(() => {
+            clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        }, out[k].err)
     })
-
-    // ----------------
-    // basic difference
-    // ----------------
 
     k++
     oin[k] = {
-        // 以 polygon(depth=2) 輸入，函數內會轉為 MultiPolygon
+        pgs1: [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]],
+        pgs2: [],
+        opt: {},
+    }
+    out[k] = [[[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]]
+    it(`should return pgs1 when clipMultiPolygon(pgs2 empty array)`, function() {
+        k = 2
+        let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
         pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]],
         pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]],
         opt: {},
@@ -55,8 +60,8 @@ describe(`clipMultiPolygon`, function() {
             [[0, 0], [2, 0], [2, 4], [0, 4], [0, 0]],
         ],
     ]
-    it(`should return expected MultiPolygon when clipMultiPolygon(polygon - polygon)`, function() {
-        k = 2
+    it(`should return clipped MultiPolygon when clipMultiPolygon(polygon-depth2 - polygon-depth2)`, function() {
+        k = 3
         let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)
@@ -74,7 +79,7 @@ describe(`clipMultiPolygon`, function() {
         ],
     ]
     it(`should return original MultiPolygon when clipMultiPolygon(no overlap)`, function() {
-        k = 3
+        k = 4
         let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)

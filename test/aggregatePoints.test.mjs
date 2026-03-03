@@ -16,12 +16,12 @@ describe(`aggregatePoints`, function() {
         dy: 10,
         opt: {},
     }
-    out[k] = /no ops/
+    out[k] = { err: /no ops/ }
     it(`should throw error when aggregatePoints(ops, xmin, dx, ymin, dy, opt) with ops not array`, async function() {
         k = 0
         await assert.rejects(async () => {
             aggregatePoints(oin[k].ops, oin[k].xmin, oin[k].dx, oin[k].ymin, oin[k].dy, oin[k].opt)
-        }, out[k])
+        }, out[k].err)
     })
 
     k++
