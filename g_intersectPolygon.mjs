@@ -1,4 +1,4 @@
-import clipPolygon from './src/clipPolygon.mjs'
+import intersectPolygon from './src/intersectPolygon.mjs'
 
 
 let pgs1
@@ -8,7 +8,7 @@ let r
 pgs1 = 'not array'
 pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
 try {
-    r = clipPolygon(pgs1, pgs2, {})
+    r = intersectPolygon(pgs1, pgs2, {})
 }
 catch (err) {
     r = err.message
@@ -19,7 +19,7 @@ console.log(r)
 pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
 pgs2 = 'not array'
 try {
-    r = clipPolygon(pgs1, pgs2, {})
+    r = intersectPolygon(pgs1, pgs2, {})
 }
 catch (err) {
     r = err.message
@@ -29,27 +29,33 @@ console.log(r)
 
 pgs1 = [[[0, 0], [1, 0], [1, 1], [0, 1]]] //polygon
 pgs2 = []
-r = clipPolygon(pgs1, pgs2, {})
+r = intersectPolygon(pgs1, pgs2, {})
 console.log(JSON.stringify(r))
 // => [[[0,0],[1,0],[1,1],[0,1]]]
 
 pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
 pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
-r = clipPolygon(pgs1, pgs2, {})
+r = intersectPolygon(pgs1, pgs2, {})
 console.log(JSON.stringify(r))
-// => [[[2,4],[2,0],[0,0],[0,4]]]
+// => [[[4,4],[4,0],[2,0],[2,4]]]
 
 pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
 pgs2 = [[[0, 0], [2, 0], [2, 2], [0, 2]]] //polygon
-r = clipPolygon(pgs1, pgs2, {})
+r = intersectPolygon(pgs1, pgs2, {})
 console.log(JSON.stringify(r))
-// => [[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]
+// => [[[2,2],[2,0],[0,0],[0,2]]]
 
 pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
 pgs2 = [[[0, 0], [2, 2], [0, 4]]] //polygon
-r = clipPolygon(pgs1, pgs2, {})
+r = intersectPolygon(pgs1, pgs2, {})
 console.log(JSON.stringify(r))
-// => [[[4,4],[4,0],[0,0],[2,2],[0,4]]]
+// => [[[2,2],[0,0],[0,4]]]
+
+pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+pgs2 = [[[-1, 0], [2, 1], [-1, 4]]] //polygon
+r = intersectPolygon(pgs1, pgs2, {})
+console.log(JSON.stringify(r))
+// => [[[2,1],[0,0.3333333333333333],[0,3]]]
 
 
-//node g_clipPolygon.mjs
+//node g_intersectPolygon.mjs

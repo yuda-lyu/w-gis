@@ -2,7 +2,6 @@
 import each from 'lodash-es/each.js'
 // import map from 'lodash-es/map.js'
 import isearr from 'wsemi/src/isearr.mjs'
-// import polybooljs from 'polybooljs'
 import toPolygon from './toPolygon.mjs'
 // import intersectPolygon from './intersectPolygon.mjs'
 import getAreaRingString from './getAreaRingString.mjs'
@@ -116,17 +115,6 @@ function getAreaPolygon(pg, opt = {}) {
     //toPolygon
     pg = toPolygon(pg)
     // console.log('toPolygon pg', pg)
-
-    // //ppg, 轉成polybooljs所需polygon
-    // let ppg = {
-    //     regions: pg,
-    //     inverted: false, // is this polygon inverted?
-    // }
-
-    // //通過polybooljs轉geojson, 不過重疊多層ringString無法自動計算剔除與合併
-    // polybooljs.epsilon(epsilon)
-    // let gj = polybooljs.polygonToGeoJSON(ppg)
-    // console.log('gj', gj.type, gj.coordinates)
 
     //r
     let r = 0

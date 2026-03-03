@@ -23,14 +23,11 @@
 
 請依照[./test/bufferMultiPolygon.test.mjs]的撰寫風格, 並基於人工執行程序[./g_bbb.mjs]內的測試數據, 撰寫測試檔案[./test/bbb.test.mjs], 注意測試的結果數據請勿自行縮減, 因用於數值分析須保留完整數值之浮點數, 使微小誤差能被偵測與避免誤差累積
 
-fixCloseMultiPolygon
-fixGeometryMultiPolygon
-interp1
-interp2
-interp2Grid
-interp2Kriging
-interp2Normalize
-interp2Raster
-
+clipMultiPolygon
+clipPolygon
+intersectMultiPolygon
+intersectPolygon
+unionMultiPolygon
+unionPolygon
 
 ----

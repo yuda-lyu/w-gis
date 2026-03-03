@@ -7,17 +7,15 @@ import toPolygon from './toPolygon.mjs'
 
 
 /**
- * Polygon做差集(clip)，代表 `pgs1 - pgs2`
- *
- * 使用 polybooljs 做平面布林運算，較 turf 在 Polygon 布林計算有較佳穩定性。
+ * 針對Polygon進行差集(clip)處理
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/clipPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pgs1 輸入被裁切之 RingString、Polygon 或 MultiPolygon 座標陣列
- * @param {Array} pgs2 輸入裁切用之 RingString、Polygon 或 MultiPolygon 座標陣列
+ * @param {Array} pgs1 輸入被裁切之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs2 輸入裁切用之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {Number} [opt.epsilon=0.000000000001] 輸入 polybooljs 計算容許誤差
- * @returns {Array|null} 回傳差集後之 Polygon 座標陣列；當 `pgs1` 或 `pgs2` 非陣列時回傳 `null`
+ * @returns {Array} 回傳Polygon陣列
  * @example
  *
  * let pgs1
@@ -25,7 +23,7 @@ import toPolygon from './toPolygon.mjs'
  * let r
  *
  * pgs1 = 'not array'
- * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]]
+ * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
  * try {
  *     r = clipPolygon(pgs1, pgs2, {})
  * }
@@ -35,7 +33,7 @@ import toPolygon from './toPolygon.mjs'
  * console.log(r)
  * // => no pgs1
  *
- * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
  * pgs2 = 'not array'
  * try {
  *     r = clipPolygon(pgs1, pgs2, {})
@@ -46,28 +44,29 @@ import toPolygon from './toPolygon.mjs'
  * console.log(r)
  * // => invalid pgs2
  *
- * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]
+ * pgs1 = [[[0, 0], [1, 0], [1, 1], [0, 1]]] //polygon
  * pgs2 = []
- * try {
- *     r = clipPolygon(pgs1, pgs2, {})
- * }
- * catch (err) {
- *     r = err.message
- * }
+ * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[0,0],[4,0],[4,4],[0,4],[0,0]]]
+ * // => [[[0,0],[1,0],[1,1],[0,1]]]
  *
- * pgs1 = [[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]] // ringString(depth=1)
- * pgs2 = [[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]] // ringString(depth=1)
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
  * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
  * // => [[[2,4],[2,0],[0,0],[0,4]]]
  *
- * pgs1 = [[[0, 0], [2, 0], [2, 2], [0, 2], [0, 0]]]
- * pgs2 = [[[3, 0], [4, 0], [4, 1], [3, 1], [3, 0]]]
- * r = clipPolygon(pgs1, pgs2, { epsilon: 0.00000001 })
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[0, 0], [2, 0], [2, 2], [0, 2]]] //polygon
+ * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[2,2],[2,0],[0,0],[0,2]]]
+ * // => [[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[0, 0], [2, 2], [0, 4]]] //polygon
+ * r = clipPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[4,4],[4,0],[0,0],[2,2],[0,4]]]
  *
  */
 function clipPolygon(pgs1, pgs2, opt = {}) {
@@ -99,6 +98,7 @@ function clipPolygon(pgs1, pgs2, opt = {}) {
         { regions: pgs1 },
         { regions: pgs2 }
     )
+    // console.log('ints', ints)
 
     //pgs
     let pgs = get(ints, 'regions', [])

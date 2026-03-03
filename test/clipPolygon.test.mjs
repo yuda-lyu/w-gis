@@ -10,7 +10,7 @@ describe(`clipPolygon`, function() {
     k++
     oin[k] = {
         pgs1: 'not array',
-        pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]]],
+        pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4]]],
         opt: {},
     }
     out[k] = { err: /no pgs1/ }
@@ -23,7 +23,7 @@ describe(`clipPolygon`, function() {
 
     k++
     oin[k] = {
-        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]],
+        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4]]],
         pgs2: 'not array',
         opt: {},
     }
@@ -37,12 +37,12 @@ describe(`clipPolygon`, function() {
 
     k++
     oin[k] = {
-        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]],
+        pgs1: [[[0, 0], [1, 0], [1, 1], [0, 1]]],
         pgs2: [],
         opt: {},
     }
-    out[k] = [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]]
-    it(`should return pgs1 when clipPolygon(pgs2 empty array)`, function() {
+    out[k] = [[[0, 0], [1, 0], [1, 1], [0, 1]]]
+    it(`should return pgs1 when clipPolygon(pgs2 empty)`, function() {
         k = 2
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
@@ -51,14 +51,12 @@ describe(`clipPolygon`, function() {
 
     k++
     oin[k] = {
-        pgs1: [[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]],
-        pgs2: [[2, 0], [4, 0], [4, 4], [2, 4], [2, 0]],
+        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4]]],
+        pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4]]],
         opt: {},
     }
-    out[k] = [
-        [[2, 4], [2, 0], [0, 0], [0, 4]],
-    ]
-    it(`should return clipped polygon when clipPolygon(ringString-depth1 - ringString-depth1)`, function() {
+    out[k] = [[[2, 4], [2, 0], [0, 0], [0, 4]]]
+    it(`should clip polygon case1 when clipPolygon(polygon)`, function() {
         k = 3
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
@@ -67,15 +65,27 @@ describe(`clipPolygon`, function() {
 
     k++
     oin[k] = {
-        pgs1: [[[0, 0], [2, 0], [2, 2], [0, 2], [0, 0]]],
-        pgs2: [[[3, 0], [4, 0], [4, 1], [3, 1], [3, 0]]],
-        opt: { epsilon: 0.00000001 },
+        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4]]],
+        pgs2: [[[0, 0], [2, 0], [2, 2], [0, 2]]],
+        opt: {},
     }
-    out[k] = [
-        [[2, 2], [2, 0], [0, 0], [0, 2]],
-    ]
-    it(`should return original Polygon when clipPolygon(no overlap + custom epsilon)`, function() {
+    out[k] = [[[4, 4], [4, 0], [2, 0], [2, 2], [0, 2], [0, 4]]]
+    it(`should clip polygon case2 when clipPolygon(polygon)`, function() {
         k = 4
+        let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
+    k++
+    oin[k] = {
+        pgs1: [[[0, 0], [4, 0], [4, 4], [0, 4]]],
+        pgs2: [[[0, 0], [2, 2], [0, 4]]],
+        opt: {},
+    }
+    out[k] = [[[4, 4], [4, 0], [0, 0], [2, 2], [0, 4]]]
+    it(`should clip polygon case3 when clipPolygon(polygon)`, function() {
+        k = 5
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
         let rr = out[k]
         assert.strict.deepStrictEqual(r, rr)

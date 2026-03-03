@@ -20,7 +20,7 @@ import normalizeArray from './normalizeArray.mjs'
  * @param {String} [opt.keyY='y'] 輸入點物件之y欄位字串，為座標，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z欄位字串，為觀測值，預設'z'
  * @param {String} [opt.keyInd='ind'] 輸入點物件之ind欄位字串，正規化後可反查原始數據之指標，預設'ind'
- * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @returns {Object} 回傳正規化數據物件
  * @example
  *

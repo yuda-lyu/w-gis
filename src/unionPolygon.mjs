@@ -6,6 +6,75 @@ import polybooljs from 'polybooljs'
 import toPolygon from './toPolygon.mjs'
 
 
+/**
+ * 針對Polygon進行聯集(union)處理
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/unionPolygon.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Array} pgs1 輸入第1個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs2 輸入第2個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Object} [opt={}] 輸入設定物件，預設{}
+ * @param {Number} [opt.epsilon=0.000000000001] 輸入 polybooljs 計算容許誤差
+ * @returns {Array} 回傳Polygon陣列
+ * @example
+ *
+ * let pgs1
+ * let pgs2
+ * let r
+ *
+ * pgs1 = 'not array'
+ * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
+ * try {
+ *     r = unionPolygon(pgs1, pgs2, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => no pgs1
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = 'not array'
+ * try {
+ *     r = unionPolygon(pgs1, pgs2, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => invalid pgs2
+ *
+ * pgs1 = [[[0, 0], [1, 0], [1, 1], [0, 1]]] //polygon
+ * pgs2 = []
+ * r = unionPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[0,0],[1,0],[1,1],[0,1]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
+ * r = unionPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[4,4],[4,0],[0,0],[0,4]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[0, 0], [2, 0], [2, 2], [0, 2]]] //polygon
+ * r = unionPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[4,4],[4,0],[0,0],[0,4]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[0, 0], [2, 2], [0, 4]]] //polygon
+ * r = unionPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[4,4],[4,0],[0,0],[0,4]]]
+ *
+ * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
+ * pgs2 = [[[-1, 0], [2, 1], [-1, 4]]] //polygon
+ * r = unionPolygon(pgs1, pgs2, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[4,4],[4,0],[0,0],[0,0.3333333333333333],[-1,0],[-1,4],[0,3],[0,4]]]
+ *
+ */
 function unionPolygon(pgs1, pgs2, opt = {}) {
     //turf的union準確性與適用性比較差, 得使用polybooljs比較好
 
@@ -35,6 +104,7 @@ function unionPolygon(pgs1, pgs2, opt = {}) {
         { regions: pgs1 },
         { regions: pgs2 }
     )
+    // console.log('ints', ints)
 
     //pgs
     let pgs = get(ints, 'regions', [])

@@ -29,7 +29,7 @@ import interp2Grid from './interp2Grid.mjs'
  * @param {Function} [opt.funValid=(x,y)=>{return true}] 輸入確認點座標(x,y)是否有效函數，回傳布林值，可使用Promise回傳，預設(x,y)=>{return true}
  * @param {Function} [opt.funKriging=interp2Kriging] 輸入克利金處理函數，預設使用內建interp2Kriging
  * @param {Function} [opt.funAdjust=(x,y,z)=>{return z}] 輸入內插後值調整函數，用於修正不合理值或做後處理，回傳布林值，可使用Promise回傳，預設(x,y,z)=>{return z}
- * @param {Number} [opt.scale=1] 輸入當funKriging使用interp2Kriging時，正規化範圍數值，因polybooljs處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Number} [opt.scale=1] 輸入當funKriging使用interp2Kriging時，正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
  * @param {String} [opt.model='exponential'] 輸入當funKriging使用interp2Kriging時，擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
  * @param {Number} [opt.sigma2=0] 輸入當funKriging使用interp2Kriging時，自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] 輸入當funKriging使用interp2Kriging時，自動擬合參數alpha數值，預設100
