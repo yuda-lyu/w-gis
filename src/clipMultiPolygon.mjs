@@ -1,3 +1,4 @@
+import get from 'lodash-es/get.js'
 import size from 'lodash-es/size.js'
 import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
@@ -86,9 +87,15 @@ function clipMultiPolygon(pgs1, pgs2, opt = {}) {
         throw new Error(`invalid pgs2`)
     }
 
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
+    }
+
     //toMultiPolygon
-    pgs1 = toMultiPolygon(pgs1, opt)
-    pgs2 = toMultiPolygon(pgs2, opt)
+    pgs1 = toMultiPolygon(pgs1, { supposeType })
+    pgs2 = toMultiPolygon(pgs2, { supposeType })
 
     //multiPolygon
     pgs1 = turf.multiPolygon(pgs1)

@@ -78,6 +78,12 @@ function Build() {
             toTurfMultiPolygon = true
         }
 
+        //supposeType
+        let supposeType = get(opt, 'supposeType')
+        if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+            supposeType = 'polygons'
+        }
+
         //check
         if (haskey(kp, name)) {
             throw new Error(`name has existed`)
@@ -88,7 +94,7 @@ function Build() {
 
             //toMultiPolygon
             if (isearr(pgs)) {
-                pgs = toMultiPolygon(pgs, opt)
+                pgs = toMultiPolygon(pgs, { supposeType })
             }
 
             //multiPolygon

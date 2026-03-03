@@ -1,3 +1,4 @@
+import get from 'lodash-es/get.js'
 import each from 'lodash-es/each.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
@@ -125,11 +126,17 @@ function getAreaMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
+    }
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
     //toMultiPolygon
-    pgs = toMultiPolygon(pgs, opt)
+    pgs = toMultiPolygon(pgs, { supposeType })
     // console.log('pgs', pgs)
 
     let r = 0

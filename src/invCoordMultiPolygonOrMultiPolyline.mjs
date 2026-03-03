@@ -8,7 +8,7 @@ function invCoordMultiPolygonOrMultiPolyline(pgs) {
 
     //check
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
     }
 
     //invCoordPolygonOrPolyline

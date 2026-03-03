@@ -1,4 +1,6 @@
-// import each from 'lodash-es/each.js'
+import get from 'lodash-es/get.js'
+import size from 'lodash-es/size.js'
+import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
@@ -9,17 +11,28 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
 function intersectMultiPolygon(pgs1, pgs2, opt = {}) {
     //尚未使用polybooljs處理MultiPolygon, 故持續使用turf進行intersect
 
-    //check
+    //check pgs1
     if (!isearr(pgs1)) {
-        return null
+        throw new Error(`no pgs1`)
     }
-    if (!isearr(pgs2)) {
-        return null
+
+    //check pgs2
+    if (isarr(pgs2) && size(pgs2) === 0) {
+        return pgs1
+    }
+    if (!isarr(pgs2)) {
+        throw new Error(`invalid pgs2`)
+    }
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
     //toMultiPolygon
-    pgs1 = toMultiPolygon(pgs1, opt)
-    pgs2 = toMultiPolygon(pgs2, opt)
+    pgs1 = toMultiPolygon(pgs1, { supposeType })
+    pgs2 = toMultiPolygon(pgs2, { supposeType })
 
     //multiPolygon
     pgs1 = turf.multiPolygon(pgs1)
@@ -30,39 +43,6 @@ function intersectMultiPolygon(pgs1, pgs2, opt = {}) {
 
     return distilMultiPolygon(r)
 }
-
-
-// function intersectMultiPolygon(pgs1, pgs2) {
-
-//     //check
-//     if (!isearr(pgs1)) {
-//         return null
-//     }
-//     if (!isearr(pgs2)) {
-//         return null
-//     }
-
-//     //toMultiPolygon
-//     let pgs1Temp = toMultiPolygon(pgs1, opt)
-//     let pgs2Temp = toMultiPolygon(pgs2, opt)
-
-//     //pgsTemp, pgs1與pgs2的MultiPolygon轉成同一個Polygon
-//     let pgsTemp = [...pgs1Temp, ...pgs2Temp]
-
-//     //pgs
-//     let pgs = pgsTemp[0]
-//     each(pgsTemp, (v, k) => {
-//         if (k === 0) {
-//             return true //跳出換下一個
-//         }
-//         pgs = intersectPolygon(pgs, v)
-//     })
-
-//     //toMultiPolygon
-//     pgs = toMultiPolygon(pgs, opt)
-
-//     return pgs
-// }
 
 
 export default intersectMultiPolygon

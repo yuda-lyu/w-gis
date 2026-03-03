@@ -11,7 +11,13 @@ function simplifyMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
+    }
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
     //tolerance
@@ -28,7 +34,7 @@ function simplifyMultiPolygon(pgs, opt = {}) {
     }
 
     //toMultiPolygon
-    pgs = toMultiPolygon(pgs, opt)
+    pgs = toMultiPolygon(pgs, { supposeType })
 
     //multiPolygon
     pgs = turf.multiPolygon(pgs)

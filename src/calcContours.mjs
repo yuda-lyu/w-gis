@@ -729,12 +729,22 @@ function calcContours(points, opt = {}) {
 
     //polylines
     let polylines = map(contours, (v, k) => {
+        let effectArea = 0
+        try {
+            effectArea = getAreaMultiPolygonSm(v.coordinates)
+        }
+        catch (err) {}
+        let effectAreaCentroid = null //要先計算, 否則之後會被相減計算成真實等值區域, 就不是影響區域的中心了
+        try {
+            effectAreaCentroid = getCentroidMultiPolygon(v.coordinates)
+        }
+        catch (err) {}
         return {
             sepZone: get(v, 'sepZone', ''),
             latLngs: v.coordinates,
             level: v.value,
-            effectArea: getAreaMultiPolygonSm(v.coordinates),
-            effectAreaCentroid: getCentroidMultiPolygon(v.coordinates), //要先計算, 否則之後會被相減計算成真實等值區域, 就不是影響區域的中心了
+            effectArea,
+            effectAreaCentroid,
         }
     })
     // console.log('polylines from contours', cloneDeep(polylines))

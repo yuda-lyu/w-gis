@@ -1,3 +1,4 @@
+import get from 'lodash-es/get.js'
 import map from 'lodash-es/map.js'
 import size from 'lodash-es/size.js'
 import isEqual from 'lodash-es/isEqual.js'
@@ -123,13 +124,19 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  */
 function fixCloseMultiPolygon(pgs, opt = {}) {
 
-    //check
+    //check pgs
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
+    }
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
     //toMultiPolygon
-    pgs = toMultiPolygon(pgs, opt)
+    pgs = toMultiPolygon(pgs, { supposeType })
 
     //修復成為閉合, turf的centroid得要輸入閉合RingString
     pgs = map(pgs, (pg) => {

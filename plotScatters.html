@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plot Scatters</title>
+
+<script>
+let data =[
+ { x: 243, y: 206, z: 95 },
+ { x: 233, y: 225, z: 146 },
+ { x: 21,  y: 325, z: 22 },
+ { x: 953, y: 28,  z: 223 },
+ { x: 1092,y: 290, z: 39 },
+ { x: 744, y: 200, z: 191 },
+ { x: 174, y: 3,   z: 22 },
+ { x: 537, y: 368, z: 249 },
+ { x: 1151,y: 371, z: 86 },
+ { x: 814, y: 252, z: 125 }
+]
+</script>
+
+<!-- Plotly CDN -->
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#plot {
+    width: 100vw;
+    height: 100vh;
+}
+</style>
+</head>
+
+<body>
+<div id="plot"></div>
+
+<script>
+
+// 拆分座標
+const xs = data.map(p => p.x);
+const ys = data.map(p => p.y);
+const zs = data.map(p => p.z);
+
+// 3D Scatter
+const trace = {
+    x: xs,
+    y: ys,
+    z: zs,
+    mode: 'markers',
+    type: 'scatter3d',
+    marker: {
+        size: 6,
+        color: zs,              // 依 z 值上色
+        colorscale: 'Viridis',
+        colorbar: {
+            title: 'Z 值'
+        }
+    }
+};
+
+const layout = {
+    title: '3D Scatters',
+    scene: {
+        xaxis: { title: 'X' },
+        yaxis: { title: 'Y' },
+        zaxis: { title: 'Z' },
+        camera: {
+          projection: { type: 'orthographic' }
+        },
+        aspectmode: 'manual',
+        aspectratio: {
+            x: 1,
+            y: 1,
+            z: 0.5
+        },
+    },
+    margin: { l: 0, r: 0, b: 0, t: 40 }
+};
+
+Plotly.newPlot('plot', [trace], layout);
+</script>
+
+</body>
+</html>

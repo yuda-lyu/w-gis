@@ -89,6 +89,12 @@ function isPointInPolygons(p, pgs, opt = {}) {
         toTurfMultiPolygon = true
     }
 
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
+    }
+
     //point
     p = turf.point([x, y])
 
@@ -102,7 +108,7 @@ function isPointInPolygons(p, pgs, opt = {}) {
     if (toTurfMultiPolygon) {
 
         //toMultiPolygon
-        pgs = toMultiPolygon(pgs, opt)
+        pgs = toMultiPolygon(pgs, { supposeType })
 
         //multiPolygon
         pgs = turf.multiPolygon(pgs)

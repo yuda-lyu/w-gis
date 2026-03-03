@@ -96,6 +96,12 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
         toTurfMultiPolygon = true
     }
 
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
+    }
+
     //point
     p = turf.point([x, y])
     // console.log('p', p)
@@ -116,7 +122,7 @@ function findPointInKpPolygons(p, kpPgs, opt = {}) {
 
             //toMultiPolygon
             if (isearr(pgs)) {
-                pgs = toMultiPolygon(pgs, opt)
+                pgs = toMultiPolygon(pgs, { supposeType })
             }
 
             //multiPolygon

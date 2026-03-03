@@ -13,12 +13,12 @@ describe(`bufferMultiPolygon`, function() {
         w: 1,
         opt: {},
     }
-    out[k] = null
+    out[k] = { err: /no no pgs/ }
     it(`should return null when bufferMultiPolygon(pgs not array)`, function() {
         k = 0
-        let r = bufferMultiPolygon(oin[k].pgs, oin[k].w, oin[k].opt)
-        let rr = out[k]
-        assert.strict.deepStrictEqual(r, rr)
+        assert.rejects(() => {
+            bufferMultiPolygon(oin[k].pgs, oin[k].w, oin[k].opt)
+        }, out[k].err)
     })
 
     k++

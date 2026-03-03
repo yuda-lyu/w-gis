@@ -380,22 +380,22 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
     let itv = (p) => {
 
         //x, nx
-        let x = p.x //已經被正規化至x,y
-        let nx = nv(x, 0)
+        let x = p.x
+        let nx = nv(x, 'x')
         if (!isNumber(nx)) {
             throw new Error(`invalid nx[${nx}]`) //x,y預期都是有值
         }
 
         //y, ny
-        let y = p.y //已經被正規化至x,y
-        let ny = nv(y, 1)
+        let y = p.y
+        let ny = nv(y, 'y')
         if (!isNumber(ny)) {
             throw new Error(`invalid ny[${ny}]`) //x,y預期都是有值
         }
 
         //nz, z
         let nz = kpdt(nx, ny)
-        let z = inv(nz, 2)
+        let z = inv(nz, 'z')
         if (!isNumber(z)) {
             z = null //z須支援可能無法內插
         }

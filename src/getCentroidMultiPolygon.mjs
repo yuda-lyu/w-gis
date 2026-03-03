@@ -126,14 +126,19 @@ function getCentroidMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
     }
 
-    //toMultiPolygon
-    // psg = toMultiPolygon(pgs) //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
+    }
+
+    //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
 
     //fixCloseMultiPolygon, 因turf的centroid會受RingString未閉合影響得修正成為閉合
-    pgs = fixCloseMultiPolygon(pgs, opt)
+    pgs = fixCloseMultiPolygon(pgs, { supposeType })
 
     //multiPolygon
     pgs = turf.multiPolygon(pgs)

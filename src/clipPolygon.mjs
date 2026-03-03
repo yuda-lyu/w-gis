@@ -89,14 +89,6 @@ function clipPolygon(pgs1, pgs2, opt = {}) {
     //epsilon
     let epsilon = get(opt, 'epsilon', 0.000000000001)
 
-    //check
-    if (!isearr(pgs1)) {
-        return null
-    }
-    if (!isearr(pgs2)) {
-        return null
-    }
-
     //toPolygon
     pgs1 = toPolygon(pgs1)
     pgs2 = toPolygon(pgs2)

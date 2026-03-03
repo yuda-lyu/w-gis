@@ -1,8 +1,9 @@
 import get from 'lodash-es/get.js'
+import isnum from 'wsemi/src/isnum.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import isestr from 'wsemi/src/isestr.mjs'
+import cdbl from 'wsemi/src/cdbl.mjs'
 import turf from './importTurf.mjs'
-import toMultiPolygon from './toMultiPolygon.mjs'
 import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
@@ -15,8 +16,8 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  * @param {Array} pgs 輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
  * @param {Number} w 輸入Buffer寬度數字
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.units='degrees'] 輸入Buffer寬度單位，可選'degrees'、'radians'、'meters'、'kilometers'、'feet'、'miles'，預設'degrees'
  * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @param {String} [opt.units='degrees'] 輸入Buffer寬度單位，可選'degrees'、'radians'、'meters'、'kilometers'、'feet'、'miles'，預設'degrees'
  * @returns {Array} 回傳MultiPolygon陣列
  * @example
  *
@@ -133,9 +134,21 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  */
 function bufferMultiPolygon(pgs, w, opt = {}) {
 
-    //check
+    //check pgs
     if (!isearr(pgs)) {
-        return null
+        throw new Error(`no pgs`)
+    }
+
+    //check w
+    if (!isnum(w)) {
+        throw new Error(`invalid w[${w}]`)
+    }
+    w = cdbl(w)
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
     //units
@@ -144,12 +157,10 @@ function bufferMultiPolygon(pgs, w, opt = {}) {
         units = 'degrees'
     }
 
-    //toMultiPolygon
-    pgs = toMultiPolygon(pgs, opt)
-    // console.log('toMultiPolygon pgs', JSON.stringify(pgs))
+    //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
 
     //fixCloseMultiPolygon
-    pgs = fixCloseMultiPolygon(pgs)
+    pgs = fixCloseMultiPolygon(pgs, { supposeType })
     // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
     //multiPolygon

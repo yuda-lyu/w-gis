@@ -36,7 +36,7 @@ import { Delaunay } from 'd3-delaunay'
  *
  * d3-delaunay
  * https://github.com/d3/d3-delaunay
- * 
+ *
  * online test
  * https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voronoi-diagram/
  *
@@ -561,22 +561,22 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     let itv = (p, indTar) => {
 
         //x, nx
-        let x = p.x //x,y已經被正規化
-        let nx = nv(x, 0) //還原
+        let x = p.x
+        let nx = nv(x, 'x')
         if (!isNumber(nx)) {
             throw new Error(`invalid nx[${nx}]`) //x,y預期都是有值
         }
 
         //y, ny
-        let y = p.y //x,y已經被正規化
-        let ny = nv(y, 1) //還原
+        let y = p.y
+        let ny = nv(y, 'y')
         if (!isNumber(ny)) {
             throw new Error(`invalid ny[${ny}]`) //x,y預期都是有值
         }
 
         //nz, z
         let nz = getNz(nx, ny, indTar)
-        let z = inv(nz, 2) //還原
+        let z = inv(nz, 'z')
         if (!isNumber(z)) {
             z = null //z須支援可能無法內插
         }

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Plot Polygons</title>
+
+<script>
+let data = [[[[1.4989540741628964e-8,0.00000487660832360287],[4.445980153972291e-7,4.3957604300047684e-7],[0.00000493249512889141,1.499190468889596e-8],[29.999995067504866,1.499190468889596e-8],[29.99999955540198,4.395760435968308e-7],[29.99999998501047,0.00000487660832360287],[29.999999985088444,1.9999951517253007],[29.999999559715487,1.999999568953931],[29.999995093276812,2.000000029910003],[0.0000049067231897241515,2.000000029910003],[4.4028451215212683e-7,1.9999995689539314],[1.4911550360284796e-8,1.9999951517252896],[0.000292241140658187,1.8999745622923137],[9.998905073002051,1.0001012754219614],[9.998924441311676,1.0000975351680055],[9.998942699405676,1.0000900756747688],[9.998959138623462,1.000079186471205],[9.998973120901388,1.00006529020536],[9.998984103538245,1.0000489262399253],[9.998991660259435,1.0000307297176843],[9.998995497762147,1.0000114069093842],[9.998995467099508,0.9999917078008871],[9.998991569461714,0.9999723969835754],[9.998983956129816,0.9999542239778718],[9.998972922603977,0.999937894141716],[9.998958897134036,0.9999240412931487],[9.99894242409763,0.9999132031096166],[9.99892414287097,0.9999058002588356],[9.9989047630124,0.9999021200712185],[0.0002920830291337787,0.10002633650646778],[1.4989540741628964e-8,0.00000487660832360287]]]]
+</script>
+
+<style>
+body { margin:0; }
+.wrap{
+  width:min(600px,95vw);
+  height:min(600px,95vh);
+  margin:10px;
+  border:1px solid #ccc;
+}
+svg{width:100%;height:100%;display:block;}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+<svg id="svg" preserveAspectRatio="xMidYMid meet">
+  <g id="world">
+    <path id="p"
+      fill="rgba(0,120,255,.15)"
+      stroke="#0078ff"
+      fill-rule="evenodd"/>
+  </g>
+</svg>
+</div>
+
+<script>
+  const svg = document.getElementById('svg');
+  const world = document.getElementById('world');
+
+  // --- bbox: all polygons, all rings ---
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  data.forEach(poly => poly.forEach(ring => ring.forEach(([x,y]) => {
+    if(x<minX)minX=x; if(y<minY)minY=y;
+    if(x>maxX)maxX=x; if(y>maxY)maxY=y;
+  })));
+
+  const pad = Math.max(maxX-minX, maxY-minY) * 0.05;
+  const vb = [minX-pad, minY-pad, (maxX-minX)+pad*2, (maxY-minY)+pad*2];
+
+  svg.setAttribute('viewBox', vb.join(' '));
+  world.setAttribute('transform', `translate(0 ${vb[1]+vb[3]}) scale(1 -1)`);
+
+// --- draw: one <path> per polygon (supports holes via evenodd) ---
+data.forEach((poly) => {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('fill', 'rgba(0,120,255,.15)');
+  p.setAttribute('stroke', '#0078ff');
+  p.setAttribute('fill-rule', 'evenodd');
+  p.setAttribute('stroke-width', Math.max(vb[2], vb[3]) * 0.002);
+
+  let d = '';
+  poly.forEach(ring => {
+    if(!ring.length) return;
+
+    d += `M ${ring[0][0]} ${ring[0][1]}`;
+    for(let i=1;i<ring.length;i++){
+      d += ` L ${ring[i][0]} ${ring[i][1]}`;
+    }
+
+    d += ' Z';   // ← 關鍵：補 Z 封閉 ring
+  });
+
+  p.setAttribute('d', d);
+  world.appendChild(p);
+});
+
+</script>
+
+</body>
+</html>
