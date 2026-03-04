@@ -3,7 +3,7 @@ import size from 'lodash-es/size.js'
 import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
-import toMultiPolygon from './toMultiPolygon.mjs'
+import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
 
@@ -121,16 +121,21 @@ function intersectMultiPolygon(pgs1, pgs2, opt = {}) {
         supposeType = 'polygons'
     }
 
-    //toMultiPolygon
-    pgs1 = toMultiPolygon(pgs1, { supposeType })
-    pgs2 = toMultiPolygon(pgs2, { supposeType })
+    //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+
+    //fixCloseMultiPolygon
+    pgs1 = fixCloseMultiPolygon(pgs1, { supposeType })
+    pgs2 = fixCloseMultiPolygon(pgs2, { supposeType })
+    // console.log('fixCloseMultiPolygon pgs1', JSON.stringify(pgs1))
+    // console.log('fixCloseMultiPolygon pgs2', JSON.stringify(pgs2))
 
     //multiPolygon
     pgs1 = turf.multiPolygon(pgs1)
     pgs2 = turf.multiPolygon(pgs2)
 
     //intersect, turf版引用
-    let r = turf.intersect(pgs1, pgs2)
+    let fc = turf.featureCollection([pgs1, pgs2])
+    let r = turf.intersect(fc)
 
     return distilMultiPolygon(r)
 }

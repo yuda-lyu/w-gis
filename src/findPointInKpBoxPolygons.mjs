@@ -7,7 +7,7 @@ import iseobj from 'wsemi/src/iseobj.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import isbol from 'wsemi/src/isbol.mjs'
 import turf from './importTurf.mjs'
-import toMultiPolygon from './toMultiPolygon.mjs'
+import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 import ptXYtoObj from './ptXYtoObj.mjs'
 
 
@@ -134,10 +134,11 @@ function findPointInKpBoxPolygons(p, kpPgs, opt = {}) {
         //toTurfMultiPolygon
         if (toTurfMultiPolygon) {
 
-            //toMultiPolygon
-            if (isearr(pgs)) {
-                pgs = toMultiPolygon(pgs, { supposeType })
-            }
+            //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+
+            //fixCloseMultiPolygon
+            pgs = fixCloseMultiPolygon(pgs, { supposeType })
+            // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
             //multiPolygon
             pgs = turf.multiPolygon(pgs)

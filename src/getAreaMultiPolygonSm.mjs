@@ -1,7 +1,7 @@
 import get from 'lodash-es/get.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
-import toMultiPolygon from './toMultiPolygon.mjs'
+import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 
 
 /**
@@ -27,7 +27,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs)
  * console.log(r)
- * // => 11364090825.686134
+ * // => 11338704025.00093
  *
  * pgs = [ //ringString
  *     [121, 23],
@@ -37,7 +37,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs)
  * console.log(r)
- * // => 11364090825.686134
+ * // => 11338704025.00093
  *
  * pgs = [ //polygon
  *     [
@@ -49,7 +49,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs)
  * console.log(r)
- * // => 11364090825.686134
+ * // => 11338704025.00093
  *
  * pgs = [ //polygon
  *     [
@@ -61,7 +61,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs)
  * console.log(r)
- * // => 5682045412.843067
+ * // => 5669352012.500465
  *
  * pgs = [ //polygon
  *     [
@@ -79,7 +79,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons故面積直接加總
  * console.log(r)
- * // => 17046136238.529202
+ * // => 17008056037.501396
  *
  * pgs = [ //polygon
  *     [
@@ -97,7 +97,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings, 但turf計算時只取最後ringString計算面積
  * console.log(r)
- * // => 5682045412.843067
+ * // => 5669352012.500465
  *
  * pgs = [ //multiPolygon
  *     [
@@ -117,7 +117,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  * ]
  * r = getAreaMultiPolygonSm(pgs) //turf計算時只取最後ringString計算面積
  * console.log(r)
- * // => 5682045412.843067
+ * // => 5669352012.500465
  *
  */
 function getAreaMultiPolygonSm(pgs, opt = {}) {
@@ -134,9 +134,11 @@ function getAreaMultiPolygonSm(pgs, opt = {}) {
         supposeType = 'polygons'
     }
 
-    //toMultiPolygon
-    pgs = toMultiPolygon(pgs, { supposeType })
-    // console.log('pgs[0]', pgs[0])
+    //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+
+    //fixCloseMultiPolygon
+    pgs = fixCloseMultiPolygon(pgs, { supposeType })
+    // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
     //multiPolygon
     pgs = turf.multiPolygon(pgs)

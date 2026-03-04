@@ -13,7 +13,7 @@ pgs = [ //ringString
 ]
 r = getAreaMultiPolygonSm(pgs)
 console.log(r)
-// => 11364090825.686134
+// => 11338704025.00093
 
 pgs = [ //ringString
     [121, 23],
@@ -23,7 +23,7 @@ pgs = [ //ringString
 ]
 r = getAreaMultiPolygonSm(pgs)
 console.log(r)
-// => 11364090825.686134
+// => 11338704025.00093
 
 pgs = [ //polygon
     [
@@ -35,7 +35,7 @@ pgs = [ //polygon
 ]
 r = getAreaMultiPolygonSm(pgs)
 console.log(r)
-// => 11364090825.686134
+// => 11338704025.00093
 
 pgs = [ //polygon
     [
@@ -47,7 +47,7 @@ pgs = [ //polygon
 ]
 r = getAreaMultiPolygonSm(pgs)
 console.log(r)
-// => 5682045412.843067
+// => 5669352012.500465
 
 pgs = [ //polygon
     [
@@ -65,7 +65,7 @@ pgs = [ //polygon
 ]
 r = getAreaMultiPolygonSm(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons故面積直接加總
 console.log(r)
-// => 17046136238.529202
+// => 17008056037.501396
 
 pgs = [ //polygon
     [
@@ -83,7 +83,7 @@ pgs = [ //polygon
 ]
 r = getAreaMultiPolygonSm(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings, 但turf計算時只取最後ringString計算面積
 console.log(r)
-// => 5682045412.843067
+// => 5669352012.500465
 
 pgs = [ //multiPolygon
     [
@@ -103,7 +103,7 @@ pgs = [ //multiPolygon
 ]
 r = getAreaMultiPolygonSm(pgs) //turf計算時只取最後ringString計算面積
 console.log(r)
-// => 5682045412.843067
+// => 5669352012.500465
 
 
 //node g_getAreaMultiPolygonSm.mjs

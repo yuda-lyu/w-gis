@@ -7,6 +7,8 @@ node toolg/cleanFolder.mjs
 ./node_modules/.bin/jsdoc -c .jsdoc
 node toolg/gDocsExams.mjs
 
+node toolg/convertTurfCode.mjs
+
 node toolg/gDistRollup.mjs
 
 git add .  -A

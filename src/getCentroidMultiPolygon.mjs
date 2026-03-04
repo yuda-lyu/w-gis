@@ -137,8 +137,9 @@ function getCentroidMultiPolygon(pgs, opt = {}) {
 
     //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
 
-    //fixCloseMultiPolygon, 因turf的centroid會受RingString未閉合影響得修正成為閉合
+    //fixCloseMultiPolygon
     pgs = fixCloseMultiPolygon(pgs, { supposeType })
+    // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
     //multiPolygon
     pgs = turf.multiPolygon(pgs)

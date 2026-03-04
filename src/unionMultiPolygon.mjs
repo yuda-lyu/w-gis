@@ -1,8 +1,9 @@
+import get from 'lodash-es/get.js'
 import size from 'lodash-es/size.js'
 import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import turf from './importTurf.mjs'
-import toMultiPolygon from './toMultiPolygon.mjs'
+import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 // import unionPolygon from './unionPolygon.mjs'
 import distilMultiPolygon from './distilMultiPolygon.mjs'
 
@@ -115,16 +116,27 @@ function unionMultiPolygon(pgs1, pgs2, opt = {}) {
         throw new Error(`invalid pgs2`)
     }
 
-    //toMultiPolygon
-    pgs1 = toMultiPolygon(pgs1, opt)
-    pgs2 = toMultiPolygon(pgs2, opt)
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
+    }
+
+    //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
+
+    //fixCloseMultiPolygon
+    pgs1 = fixCloseMultiPolygon(pgs1, { supposeType })
+    pgs2 = fixCloseMultiPolygon(pgs2, { supposeType })
+    // console.log('fixCloseMultiPolygon pgs1', JSON.stringify(pgs1))
+    // console.log('fixCloseMultiPolygon pgs2', JSON.stringify(pgs2))
 
     //multiPolygon
     pgs1 = turf.multiPolygon(pgs1)
     pgs2 = turf.multiPolygon(pgs2)
 
     //union
-    let r = turf.union(pgs1, pgs2)
+    let fc = turf.featureCollection([pgs1, pgs2])
+    let r = turf.union(fc)
 
     return distilMultiPolygon(r)
 }
