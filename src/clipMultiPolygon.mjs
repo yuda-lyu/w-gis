@@ -8,12 +8,12 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
 
 
 /**
- * 針對MultiPolygon進行差集(clip)處理
+ * 針對MultiPolygon進行差集(clip)處理，代表pgs1減去pgs2
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/clipMultiPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pgs1 輸入被裁切之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
- * @param {Array} pgs2 輸入裁切用之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs1 輸入被裁切之MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
+ * @param {Array} pgs2 輸入裁切用之MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
  * @returns {Array} 回傳MultiPolygon陣列
@@ -89,7 +89,6 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  *
  */
 function clipMultiPolygon(pgs1, pgs2, opt = {}) {
-    //代表pgs1減去pgs2
 
     //check pgs1
     if (!isearr(pgs1)) {

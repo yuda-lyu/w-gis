@@ -24,12 +24,12 @@ import cdbl from 'wsemi/src/cdbl.mjs'
  * p = [1, 2]
  * r = ptXYtoObj(p)
  * console.log(r)
- * // => [ 1, 2 ]
+ * // => { x: 1, y: 2 }
  *
  * p = { x: 1, y: 2 }
  * r = ptXYtoObj(p)
  * console.log(r)
- * // => [ 1, 2 ]
+ * // => { x: 1, y: 2 }
  *
  */
 function ptXYtoObj(p, opt = {}) {

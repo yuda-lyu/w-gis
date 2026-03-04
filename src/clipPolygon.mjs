@@ -7,12 +7,12 @@ import toPolygon from './toPolygon.mjs'
 
 
 /**
- * 針對Polygon進行差集(clip)處理
+ * 針對Polygon進行差集(clip)處理，代表pgs1減去pgs2
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/clipPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pgs1 輸入被裁切之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
- * @param {Array} pgs2 輸入裁切用之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs1 輸入第1個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]構成之陣列
+ * @param {Array} pgs2 輸入第2個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {Number} [opt.epsilon=0.000000000001] 輸入 polybooljs 計算容許誤差
  * @returns {Array} 回傳Polygon陣列
@@ -70,7 +70,6 @@ import toPolygon from './toPolygon.mjs'
  *
  */
 function clipPolygon(pgs1, pgs2, opt = {}) {
-    //代表pgs1減去pgs2
 
     //check pgs1
     if (!isearr(pgs1)) {

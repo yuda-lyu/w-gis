@@ -21,20 +21,23 @@
 
 ----
 
-請依照[./test/bufferMultiPolygon.test.mjs]的撰寫風格, 並基於人工執行程序[./g_bbb.mjs]內的測試數據, 撰寫測試檔案[./test/bbb.test.mjs], 注意測試的結果數據請勿自行縮減, 因用於數值分析須保留完整數值之浮點數, 使微小誤差能被偵測與避免誤差累積
+請依照[./test/bufferMultiPolygon.test.mjs]的撰寫風格, 並基於人工執行程序[./g_bbb.mjs]內的測試數據, 撰寫測試檔案[./test/bbb.test.mjs]
 
-flattenMultiPolygon
-getAreaMultiPolygon
-getAreaMultiPolygonSm
-getAreaPolygon
-getAreaRingString
-getBox
-getBoxFromGeojson
-getBoxPolygon
-getCenterOfMassMultiPolygon
-getCentroidMultiPolygon
-getKpFeatureFromGeojson
-getPointDepth
+注意: 測試的結果數據請勿自行縮減, 因用於數值分析須保留完整數值之浮點數, 使微小誤差能被偵測與避免誤差累積
+
+注意: 考慮人工檢查速度與程式碼一致性, assert.strictEqual一律使用assert.strict.deepStrictEqual
+
+--
+
+invCoordMultiPolygonOrMultiPolyline
+invCoordPolygonOrPolyline
+isPointInPolygons
+normalizeArray
+ptsXtoArr
+ptsXYtoArr
+ptsXYZtoArr
+ptsXYZVtoArr
+ptXYtoObj
 
 
 ----

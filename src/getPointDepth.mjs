@@ -1,10 +1,10 @@
-import { isNumber } from '@turf/turf'
+import isNumber from 'lodash-es/isNumber.js'
 import get from 'lodash-es/get.js'
 import size from 'lodash-es/size.js'
 
 
 /**
- * 計算點物件深度
+ * 計算數據內點物件深度
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getPointDepth.test.mjs Github}
  * @memberOf w-gis

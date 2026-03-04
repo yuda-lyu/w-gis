@@ -12,7 +12,7 @@ import cdbl from 'wsemi/src/cdbl.mjs'
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaRingString.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} rs 輸入RingString資料陣列，為[x,y]點構成之陣列
+ * @param {Array} rs 輸入RingString資料陣列，為[[x1,y1],[x2,y2],...]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {Boolean} [opt.useAbs=true] 輸入面積是否取絕對值，預設true
  * @returns {Number} 回傳面積數字

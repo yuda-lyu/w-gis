@@ -12,7 +12,7 @@ import haskey from 'wsemi/src/haskey.mjs'
 import ptsXYtoArr from './ptsXYtoArr.mjs'
 import ptsXYZtoArr from './ptsXYZtoArr.mjs'
 import interp2Normalize from './interp2Normalize.mjs'
-import kriging from './kriging.mjs'
+import kriging from './_kriging.mjs'
 
 
 /**

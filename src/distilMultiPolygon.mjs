@@ -5,10 +5,12 @@ import each from 'lodash-es/each.js'
 /**
  * 萃取為MultiPolygon座標陣列
  *
+ * 因turf計算後可能產生多種幾何類型，例如Polygon、MultiPolygon、LineString、GeometryCollection等，故將全部轉成MultiPolygon後回傳
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/distilMultiPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Object} r 輸入 turf 幾何運算回傳之 GeoJSON Feature 物件
- * @returns {Array} 回傳 MultiPolygon 座標陣列，若無有效 Polygon 幾何則回傳空陣列
+ * @param {Object} r 輸入turf幾何運算回傳之Feature物件
+ * @returns {Array} 回傳MultiPolygon陣列
  * @example
  *
  * let data
@@ -74,7 +76,6 @@ import each from 'lodash-es/each.js'
  *
  */
 function distilMultiPolygon(r) {
-    //因turf計算後可能產生多種幾何類型, 例如Polygon,MultiPolygon,LineString,GeometryCollection, 故將全部轉成MultiPolygon後回傳
 
     let parseGeometryCollection = (data) => {
 

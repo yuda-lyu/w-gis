@@ -13,7 +13,7 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/fixGeometryMultiPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pgs 輸入Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs 輸入MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
  * @param {Number} [opt.w=0.0001] 輸入Buffer寬度數字，預設0.0001

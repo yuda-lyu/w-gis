@@ -13,7 +13,7 @@ import getAreaRingString from './getAreaRingString.mjs'
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pg 輸入Polygon資料陣列，為[[x1,y1],[x2,y2],...]RingString構成之陣列
+ * @param {Array} pg 輸入Polygon資料陣列，為[[[x1,y1],[x2,y2],...]]構成之陣列
  * @returns {Number} 回傳面積數字
  * @example
  *

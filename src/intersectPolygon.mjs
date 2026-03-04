@@ -11,8 +11,8 @@ import toPolygon from './toPolygon.mjs'
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/intersectPolygon.test.mjs Github}
  * @memberOf w-gis
- * @param {Array} pgs1 輸入第1個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
- * @param {Array} pgs2 輸入第2個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Array} pgs1 輸入第1個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]構成之陣列
+ * @param {Array} pgs2 輸入第2個Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {Number} [opt.epsilon=0.000000000001] 輸入 polybooljs 計算容許誤差
  * @returns {Array} 回傳Polygon陣列
