@@ -94,7 +94,7 @@ import getPointDepth from './getPointDepth.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = toMultiPolygon(rs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = toMultiPolygon(rs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
  * // => [[[[0,0],[100,0],[100,1],[0,1]],[[0,0],[10,0],[10,1],[0,1]]]]
  *

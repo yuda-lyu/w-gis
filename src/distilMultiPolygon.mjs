@@ -3,10 +3,7 @@ import each from 'lodash-es/each.js'
 
 
 /**
- * 解析 turf 計算結果並萃取為 MultiPolygon 座標陣列
- *
- * turf 的幾何布林運算可能回傳 `Polygon`、`MultiPolygon`、`GeometryCollection` 或其他型別，
- * 此函數會統一轉為 MultiPolygon 格式回傳。
+ * 萃取為MultiPolygon座標陣列
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/distilMultiPolygon.test.mjs Github}
  * @memberOf w-gis

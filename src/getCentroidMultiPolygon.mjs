@@ -97,7 +97,7 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getCentroidMultiPolygon(pgs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = getCentroidMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
  * // => [27.5,0.5] //非第1個ringString剔除第2個ringString的形心
  *

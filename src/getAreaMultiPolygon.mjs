@@ -97,7 +97,7 @@ import getAreaPolygon from './getAreaPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getAreaMultiPolygon(pgs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = getAreaMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(r)
  * // => 90
  *

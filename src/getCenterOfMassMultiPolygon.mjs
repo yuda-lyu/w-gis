@@ -95,7 +95,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  *         [0, 1],
  *     ]
  * ]
- * r = getCenterOfMassMultiPolygon(pgs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings
+ * r = getCenterOfMassMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
  * // => [50,0.5] //非第1個ringString剔除第2個ringString的質心, 僅計算第1個
  *

@@ -95,7 +95,7 @@ import toMultiPolygon from './toMultiPolygon.mjs'
  *         [121, 24],
  *     ]
  * ]
- * r = getAreaMultiPolygonSm(pgs, { supposeType: 'ringStrings' }) //polygon轉multiPolygon使用ringStrings, 但turf計算時只取最後ringString計算面積
+ * r = getAreaMultiPolygonSm(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings, 但turf計算時只取最後ringString計算面積
  * console.log(r)
  * // => 5682045412.843067
  *

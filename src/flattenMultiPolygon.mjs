@@ -1,120 +1,139 @@
 import get from 'lodash-es/get.js'
-import map from 'lodash-es/map.js'
-import isNumber from 'lodash-es/isNumber.js'
+import each from 'lodash-es/each.js'
 import isearr from 'wsemi/src/isearr.mjs'
-import isarr from 'wsemi/src/isarr.mjs'
-import isestr from 'wsemi/src/isestr.mjs'
-import turf from './importTurf.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
-import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
-import distilMultiPolygon from './distilMultiPolygon.mjs'
-// import polygonClipping from 'polygon-clipping'
-import * as polyclip from 'polyclip-ts'
+import polybooljs from 'polybooljs'
+// import * as polyclip from 'polyclip-ts'
 
 
-function flattenMultiPolygon(pgs) {
-    if (!isearr(pgs) || pgs.length === 0) return null
+/**
+ * 針對MultiPolygon進行扁平化處理，適配GeoJSON規範要求
+ *
+ * GeoJSON 規格(RFC 7946)對Polygon的定義是第1個LinearRing是exterior ring，後面的則是interior rings(holes)，把多層ring都塞在同一個Polygon內時，對於GeoJSON就變成除了第一個以外，其他ring都會被當成洞(interior rings)
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/clipMultiPolygon.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Array} pgs 輸入被裁切之Polygon資料陣列，為[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]Polygon構成之陣列
+ * @param {Object} [opt={}] 輸入設定物件，預設{}
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @returns {Array} 回傳MultiPolygon陣列
+ * @example
+ *
+ * let pgs
+ * let r
+ *
+ * pgs = 'not array'
+ * try {
+ *     r = flattenMultiPolygon(pgs, {})
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => no pgs
+ *
+ * pgs = [ //polygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[2, 0], [4, 0], [4, 4], [2, 4]],
+ * ]
+ * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
+ * console.log(JSON.stringify(r))
+ * // => [[[[2,4],[2,0],[0,0],[0,4]]]]
+ *
+ * pgs = [ //polygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[0, 0], [2, 0], [2, 2], [0, 2]],
+ * ]
+ * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
+ * console.log(JSON.stringify(r))
+ * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]]
+ *
+ * pgs = [ //polygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[0, 0], [2, 2], [0, 4]],
+ * ]
+ * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
+ * console.log(JSON.stringify(r))
+ * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[2, 0], [4, 0], [4, 4], [2, 4]],
+ * ]]
+ * r = flattenMultiPolygon(pgs, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[[2,4],[2,0],[0,0],[0,4]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[0, 0], [2, 0], [2, 2], [0, 2]],
+ * ]]
+ * r = flattenMultiPolygon(pgs, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[0, 0], [2, 2], [0, 4]],
+ * ]]
+ * r = flattenMultiPolygon(pgs, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4]]]]
+ *
+ */
+function flattenMultiPolygon(pgs, opt = {}) {
 
-    // -----------------------------
-    // 1) 收集 rings，並轉成 [lng,lat]
-    // -----------------------------
-    let isSimple = isarr(pgs[0]) && isNumber(pgs[0][0])
-    let ringsLngLat = []
-    if (isSimple) {
-        // 單環：[[lat,lng],...]
-        ringsLngLat = [map(pgs, (ll) => [ll[1], ll[0]])]
+    //check pgs
+    if (!isearr(pgs)) {
+        throw new Error(`no pgs`)
     }
-    else {
-        // 多環：[[[lat,lng],...], ...]
-        ringsLngLat = map(pgs, (ring) => map(ring, (ll) => [ll[1], ll[0]]))
+
+    //supposeType
+    let supposeType = get(opt, 'supposeType')
+    if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
+        supposeType = 'polygons'
     }
 
-    // -----------------------------
-    // 2) sanitize ring：過濾不合法點、去連續重複、閉合、點數/面積檢查
-    // -----------------------------
-    function ringSignedArea(ring) {
-        // ring 預期已閉合
-        let a = 0
-        for (let i = 0; i < ring.length - 1; i++) {
-            let x1 = ring[i][0]; let y1 = ring[i][1]
-            let x2 = ring[i + 1][0]; let y2 = ring[i + 1][1]
-            a += (x1 * y2 - x2 * y1)
+    //epsilon
+    let epsilon = get(opt, 'epsilon', 0.000000000001)
+
+    //toMultiPolygon
+    pgs = toMultiPolygon(pgs, { supposeType })
+    // console.log('pgs', pgs)
+
+    let funXOR = (pgs1, pgs2) => {
+
+        //xor
+        polybooljs.epsilon(epsilon)
+        let ints = polybooljs.xor(
+            { regions: pgs1 },
+            { regions: pgs2 }
+        )
+        // console.log('ints', ints)
+
+        //pgs
+        let pgs = get(ints, 'regions', [])
+
+        return pgs
+    }
+
+    //pgsNew
+    let pgsNew = []
+    each(pgs, (vs, k) => {
+        let vsNew = [vs[0]]
+        // console.log('vs[0]', vs[0])
+        for (let i = 1; i < vs.length; i++) {
+            // console.log('vsNew(before)', vsNew)
+            // vsNew = polyclip.xor(vsNew, [vs[i]])
+            vsNew = funXOR(vsNew, [vs[i]])
+            // console.log('vs[i]', vs[i])
+            // console.log('vsNew(xor)', vsNew)
         }
-        return a / 2
-    }
+        pgsNew.push(vsNew)
+    })
+    // console.log('pgsNew', pgsNew)
 
-    function sanitizeRing(ring) {
-        if (!Array.isArray(ring)) return null
-
-        // 只保留有限數字點
-        let pts = []
-        for (let i = 0; i < ring.length; i++) {
-            let p = ring[i]
-            if (!Array.isArray(p) || p.length < 2) continue
-            let x = Number(p[0])
-            let y = Number(p[1])
-            if (!Number.isFinite(x) || !Number.isFinite(y)) continue
-            pts.push([x, y])
-        }
-
-        // 移除連續重複點
-        let dedup = []
-        for (let i = 0; i < pts.length; i++) {
-            let p = pts[i]
-            let q = dedup[dedup.length - 1]
-            if (!q || p[0] !== q[0] || p[1] !== q[1]) dedup.push(p)
-        }
-        pts = dedup
-
-        // 閉合
-        if (pts.length >= 1) {
-            let a = pts[0]
-            let b = pts[pts.length - 1]
-            if (a[0] !== b[0] || a[1] !== b[1]) pts.push([a[0], a[1]])
-        }
-
-        // 合法 ring：閉合後至少 4 點
-        if (pts.length < 4) return null
-
-        // 避免退化面（面積 ~ 0）
-        let area = ringSignedArea(pts)
-        if (!Number.isFinite(area) || Math.abs(area) < 1e-14) return null
-
-        return pts
-    }
-
-    let cleanRings = []
-    for (let i = 0; i < ringsLngLat.length; i++) {
-        let r = sanitizeRing(ringsLngLat[i])
-        if (r) cleanRings.push(r)
-    }
-    if (cleanRings.length === 0) return null
-
-    // -----------------------------
-    // 3) even-odd = XOR reduce（polyclip-ts）
-    //    ⚠️ polyclip-ts 的「Polygon」座標結構是 [ring]（不是 [[[ring]]]）
-    // -----------------------------
-    function ringToPoly(ring) {
-        return [ring] // Polygon coords: [ outerRing ]
-    }
-
-    // 單 ring：直接 Polygon
-    if (cleanRings.length === 1) {
-        return { type: 'Polygon', coordinates: [cleanRings[0]] }
-    }
-
-    // 多 ring：XOR 疊加（等價 SVG/Leaflet even-odd）
-    let acc = ringToPoly(cleanRings[0]) // 一開始是 Polygon coords
-    for (let i = 1; i < cleanRings.length; i++) {
-        acc = polyclip.xor(acc, ringToPoly(cleanRings[i]))
-    }
-
-    // polyclip-ts xor 結果通常是 MultiPolygon coords: number[][][][]
-    if (!acc || acc.length === 0) return null
-    if (acc.length === 1) {
-        return { type: 'Polygon', coordinates: acc[0] }
-    }
-    return { type: 'MultiPolygon', coordinates: acc }
+    return pgsNew
 }
 
 
