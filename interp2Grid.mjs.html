@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>interp2Grid.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.aggregatePoints">aggregatePoints</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.clipMultiPolygon">clipMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.clipPolygon">clipPolygon</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.distilMultiPolygon">distilMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixGeometryMultiPolygon">fixGeometryMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.flattenMultiPolygon">flattenMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getPointDepth">getPointDepth</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Grid">interp2Grid</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp2Normalize">interp2Normalize</a></li><li data-type='method'><a href="w-gis.html#.interp2Raster">interp2Raster</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.intersectMultiPolygon">intersectMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.intersectPolygon">intersectPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygon">invCoordMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygonOrMultiPolyline">invCoordMultiPolygonOrMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolyline">invCoordMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygon">invCoordPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygonOrPolyline">invCoordPolygonOrPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolyline">invCoordPolyline</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.simplifyMultiPolygon">simplifyMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.splineMultiPolygon">splineMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionMultiPolygon">unionMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionPolygon">unionPolygon</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">interp2Grid.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import get from 'lodash-es/get.js'
+import size from 'lodash-es/size.js'
+import isearr from 'wsemi/src/isearr.mjs'
+import isestr from 'wsemi/src/isestr.mjs'
+import isnum from 'wsemi/src/isnum.mjs'
+import ispint from 'wsemi/src/ispint.mjs'
+import isbol from 'wsemi/src/isbol.mjs'
+import ispm from 'wsemi/src/ispm.mjs'
+import isfun from 'wsemi/src/isfun.mjs'
+import cdbl from 'wsemi/src/cdbl.mjs'
+import cint from 'wsemi/src/cint.mjs'
+import pmSeries from 'wsemi/src/pmSeries.mjs'
+import _kriging from './interp2Kriging.mjs'
+
+
+/**
+ * 不規則點內插至規則網格
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Grid.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Array} pts 輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列
+ * @param {Number} xmin 輸入網格x向最小座標數字
+ * @param {Number} xmax 輸入網格x向最大座標數字
+ * @param {Number} dx 輸入網格x向間距數字
+ * @param {Number} ymin 輸入網格y向最小座標數字
+ * @param {Number} ymax 輸入網格y向最大座標數字
+ * @param {Number} dy 輸入網格y向間距數字
+ * @param {Object} [opt={}] 輸入設定物件，預設{}
+ * @param {String} [opt.keyX='x'] 輸入點物件之x座標欄位字串，預設'x'
+ * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
+ * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
+ * @param {String} [opt.modePick='min'] 輸入挑選方式字串，可選'min'、'max'，預設'min'
+ * @param {Function} [opt.funValid=(x,y)=>{return true}] 輸入確認點座標(x,y)是否有效函數，回傳布林值，可使用Promise回傳，預設(x,y)=>{return true}
+ * @param {Function} [opt.funKriging=interp2Kriging] 輸入克利金處理函數，預設使用內建interp2Kriging
+ * @param {String} [opt.variogram_model='spherical'] 輸入內建interp2Kriging之變異函數模型字串，預設'spherical'
+ * @param {Number} [opt.nlags=9] 輸入內建interp2Kriging之分箱數量整數，預設9
+ * @param {Function} [opt.funAdjust=(x,y,z)=>{return z}] 輸入內插後值調整函數，用於修正不合理值或做後處理，回傳布林值，可使用Promise回傳，預設(x,y,z)=>{return z}
+ * @param {Boolean} [opt.returnGrid=true] 輸入是否回傳規則網格物件布林值，若false則回傳內插後點物件陣列，預設true
+ * @param {Boolean} [opt.inverseKeyY=false] 輸入是否反轉y方向索引布林值，用於輸出grds之y向(列)順序，預設false
+ * @returns {Object} 回傳規則網格物件，物件內grds為規則網格之二維陣列
+ * @example
+ *
+ * let ps
+ * let r
+ * let xmin = 0
+ * let xmax = 1200
+ * let dx = 100
+ * let ymin = 0
+ * let ymax = 400
+ * let dy = 50
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * r = await interp2Grid(ps, xmin, xmax, dx, ymin, ymax, dy)
+ * console.log(JSON.stringify(r))
+ * // => {"xnum":13,"xmin":0,"xmax":1200,"dx":100,"ynum":9,"ymin":0,"ymax":400,"dy":50,"zmin":27.716420638718002,"zmax":229.9346471582616,"grds":[[44.75150359539468,33.373113045618794,33.89828595915838,75.7547049098998,111.95710473149644,141.14982654621605,162.94590093717213,178.58593009365336,191.4829386115651,208.81802511395395,199.48735656973935,162.30106522787239,139.5822916387848],[43.27848738559962,36.56178372212405,43.70097267468331,81.3441145925311,118.98473675109194,149.02943152384705,170.11407784661236,183.17995238983585,190.7561365867844,203.31673250583682,190.93888531046233,152.18106412879206,131.13037328401273],[43.188448792811485,44.651404666899325,58.49967415560389,90.7364184599852,128.7782694260302,158.79276063034376,178.11277546086842,187.40687634934446,185.3791304293,183.41945619591084,166.72664102123193,135.5945265305882,119.75833215759124],[43.01723687928732,53.80526318172193,74.78037419059014,102.8093108917395,141.2308220822185,170.46799156406368,186.77594170674791,191.60033532320656,175.79675777808637,159.46469201580493,139.126174723786,114.04299018304454,106.38160257786299],[41.08480660653146,61.698862792555914,100.50549432728168,120.40751273285129,155.77538965247686,183.9818177781901,195.76812296601497,193.3040612514098,159.6797783607955,136.06558026941212,112.82889049769918,89.27300522673185,92.85373380938937],[35.96748845888605,65.74413088706496,124.5372066072104,142.93975356224172,170.6014830855453,199.17487480394007,205.0642462793919,187.868001472236,136.21583771497808,117.90972253067659,91.6262819436449,62.41761369022669,82.44922512861154],[27.716420638718002,66.37302553896835,123.09560307481105,153.9089017619669,182.78671416843497,215.58411971399806,214.7143054081681,183.4416893350021,136.16098981693074,109.45391646724518,80.86241021849614,45.287458404590105,79.54913115775582],[31.84799135435849,69.51355338700839,120.62450343623689,156.78399055536207,189.72044252659893,229.9346471582616,221.71844479339634,181.54689685389988,139.24108529554456,108.74457142842628,81.95639661703339,66.50915956750916,84.78931182091034],[48.714341720984095,77.18149833637362,120.04944872983206,156.36419684697117,190.18663173864468,226.80390649899172,218.0338522947777,179.1554914349331,141.35776216308057,111.63930150324168,88.90310614105951,81.63042177986947,90.77494563964606]]}
+ *
+ * ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]
+ * r = await interp2Grid(ps, xmin, xmax, dx, ymin, ymax, dy, { keyX: 'a', keyY: 'b', keyZ: 'c' })
+ * console.log(JSON.stringify(r))
+ * // => {"xnum":13,"xmin":0,"xmax":1200,"dx":100,"ynum":9,"ymin":0,"ymax":400,"dy":50,"zmin":27.716420638718002,"zmax":229.9346471582616,"grds":[[44.75150359539468,33.373113045618794,33.89828595915838,75.7547049098998,111.95710473149644,141.14982654621605,162.94590093717213,178.58593009365336,191.4829386115651,208.81802511395395,199.48735656973935,162.30106522787239,139.5822916387848],[43.27848738559962,36.56178372212405,43.70097267468331,81.3441145925311,118.98473675109194,149.02943152384705,170.11407784661236,183.17995238983585,190.7561365867844,203.31673250583682,190.93888531046233,152.18106412879206,131.13037328401273],[43.188448792811485,44.651404666899325,58.49967415560389,90.7364184599852,128.7782694260302,158.79276063034376,178.11277546086842,187.40687634934446,185.3791304293,183.41945619591084,166.72664102123193,135.5945265305882,119.75833215759124],[43.01723687928732,53.80526318172193,74.78037419059014,102.8093108917395,141.2308220822185,170.46799156406368,186.77594170674791,191.60033532320656,175.79675777808637,159.46469201580493,139.126174723786,114.04299018304454,106.38160257786299],[41.08480660653146,61.698862792555914,100.50549432728168,120.40751273285129,155.77538965247686,183.9818177781901,195.76812296601497,193.3040612514098,159.6797783607955,136.06558026941212,112.82889049769918,89.27300522673185,92.85373380938937],[35.96748845888605,65.74413088706496,124.5372066072104,142.93975356224172,170.6014830855453,199.17487480394007,205.0642462793919,187.868001472236,136.21583771497808,117.90972253067659,91.6262819436449,62.41761369022669,82.44922512861154],[27.716420638718002,66.37302553896835,123.09560307481105,153.9089017619669,182.78671416843497,215.58411971399806,214.7143054081681,183.4416893350021,136.16098981693074,109.45391646724518,80.86241021849614,45.287458404590105,79.54913115775582],[31.84799135435849,69.51355338700839,120.62450343623689,156.78399055536207,189.72044252659893,229.9346471582616,221.71844479339634,181.54689685389988,139.24108529554456,108.74457142842628,81.95639661703339,66.50915956750916,84.78931182091034],[48.714341720984095,77.18149833637362,120.04944872983206,156.36419684697117,190.18663173864468,226.80390649899172,218.0338522947777,179.1554914349331,141.35776216308057,111.63930150324168,88.90310614105951,81.63042177986947,90.77494563964606]]}
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * r = await interp2Grid(ps, xmin, xmax, dx, ymin, ymax, dy, { scale: 1000 })
+ * console.log(JSON.stringify(r))
+ * // => {"xnum":13,"xmin":0,"xmax":1200,"dx":100,"ynum":9,"ymin":0,"ymax":400,"dy":50,"zmin":27.716420638719953,"zmax":229.93464715826363,"grds":[[44.75150359539723,33.3731130456213,33.898285959160816,75.75470490990179,111.95710473149887,141.1498265462182,162.9459009371747,178.5859300936557,191.48293861156722,208.81802511395625,199.48735656974148,162.3010652278742,139.58229163878707],[43.278487385601736,36.56178372212586,43.70097267468564,81.34411459253306,118.98473675109445,149.02943152384924,170.1140778466147,183.179952389838,190.7561365867865,203.31673250583924,190.93888531046477,152.18106412879473,131.1303732840151],[43.188448792813944,44.65140466690163,58.49967415560579,90.73641845998743,128.7782694260323,158.79276063034584,178.11277546087098,187.40687634934702,185.37913042930217,183.4194561959133,166.72664102123443,135.5945265305907,119.75833215759324],[43.01723687928934,53.805263181724015,74.78037419059208,102.80931089174139,141.2308220822208,170.46799156406598,186.77594170674982,191.60033532320872,175.79675777808842,159.46469201580726,139.1261747237881,114.04299018304688,106.38160257786514],[41.08480660653358,61.698862792557975,100.50549432728357,120.4075127328534,155.7753896524789,183.98181777819244,195.76812296601736,193.304061251412,159.6797783607982,136.06558026941445,112.82889049770114,89.27300522673426,92.8537338093916],[35.967488458888354,65.74413088706663,124.53720660721237,142.9397535622437,170.60148308554733,199.17487480394269,205.06424627939438,187.86800147223812,136.21583771498067,117.90972253067889,91.6262819436468,62.417613690228954,82.44922512861409],[27.716420638719953,66.37302553897003,123.09560307481306,153.90890176196856,182.78671416843704,215.5841197140003,214.71430540817065,183.44168933500427,136.1609898169329,109.45391646724778,80.8624102184981,45.28745840459231,79.54913115775784],[31.847991354360566,69.51355338701046,120.62450343623853,156.78399055536397,189.72044252660112,229.93464715826363,221.71844479339836,181.5468968539019,139.24108529554678,108.74457142842883,81.95639661703564,66.50915956751138,84.78931182091229],[48.71434172098658,77.18149833637538,120.04944872983332,156.36419684697321,190.18663173864695,226.8039064989942,218.03385229477985,179.15549143493547,141.35776216308315,111.63930150324393,88.90310614106163,81.63042177987194,90.7749456396484]]}
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * r = await interp2Grid(ps, xmin, xmax, dx, ymin, ymax, dy, { model: 'gaussian' })
+ * console.log(JSON.stringify(r))
+ * // => {"xnum":13,"xmin":0,"xmax":1200,"dx":100,"ynum":9,"ymin":0,"ymax":400,"dy":50,"zmin":-384.9201026300543,"zmax":751.2486667428893,"grds":[[158.4482759179864,102.91948079701615,0.6427517504198477,-76.00797355886607,-68.61483684207815,36.665182208944316,199.83602440246614,345.00056213926655,396.5981895665918,315.1995415714464,114.98419154713338,-144.3509008078363,-384.9201026300543],[-2.804444662458991,-2.4952083123462216,-60.97934153869028,-111.66170902352133,-96.02852249400712,5.207837377654869,160.5808502566615,302.76790555566186,362.1489304061961,301.11674822207897,131.5364918945761,-92.16170607212916,-298.50266437656865],[-118.93900065626804,-56.340223227791284,-68.73471627734216,-96.72954345654944,-81.85939091966793,2.020786152976143,134.65918081245218,260.47611794230215,318.44862005717914,274.1365497524548,136.8288381582006,-45.894921513683585,-211.18795045322622],[-186.25795259313963,-57.13678728956256,-22.92129248260062,-32.59210483370771,-27.8351209619359,25.59859956942455,121.05320514790401,217.5277153486495,264.99722601877875,233.4224463794908,129.30048060534682,-8.057124315122564,-126.42995914376297],[-204.6982411436402,-7.390837633351111,72.13154973463315,75.65547666719249,61.266778354751295,72.2993374763264,117.60932224509997,173.09761839135172,201.734808129484,178.928047108584,108.22019594248195,19.480190656797276,-47.36329745889998],[-177.70454124452772,86.69644962914026,208.46936428354638,219.66178929024136,178.06125662916565,136.71746638113837,121.3145643337175,126.31575766424248,129.1573951962073,111.48613425033363,73.78789676929591,35.622695265119546,23.390294461762096],[-111.78240342620666,215.85784505185075,375.2536623066626,388.57921593784704,313.24173519090436,212.2249882690594,128.66033199911908,76.46368709732087,48.391715239609766,32.82513522314184,27.15561605971925,40.124916167271294,83.86576457299452],[-15.788129694388772,368.6553909168142,559.7541046391179,570.0412080583301,456.43269708112166,291.61788155091926,136.04813556018962,23.157013756701417,-38.78597402585001,-54.49378940718998,-29.636587407456318,33.58501755302677,132.8379551795224],[99.95941993298584,532.539599799884,748.4812810539061,751.2486667428893,597.1137915874442,367.79370328149344,140.18765012677795,-33.51285171881864,-129.99549037223733,-147.21704968592712,-93.80481946551481,17.364755515549405,169.84006648967988]]}
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * r = await interp2Grid(ps, xmin, xmax, dx, ymin, ymax, dy, { sigma2: 0.001, alpha: 70 })
+ * console.log(JSON.stringify(r))
+ * // => {"xnum":13,"xmin":0,"xmax":1200,"dx":100,"ynum":9,"ymin":0,"ymax":400,"dy":50,"zmin":26.701776096728345,"zmax":231.16722254290013,"grds":[[44.11259991617855,32.58450881510232,32.76678140889048,74.2917476479156,110.8906140074769,140.71177964055232,163.06616115295472,179.11502822658102,192.29078928968042,209.95815571466474,200.55109691937588,162.85705779717352,139.89170721934147],[42.61820720122279,35.71041576002229,42.20317945504952,79.46948139766397,117.76066932315202,148.59606792401644,170.29707464354252,183.76349937447452,191.5061647507026,204.2911682442632,191.7981952284658,152.53751223841732,131.30395530835756],[42.539549140517906,43.8682532885825,56.67719512603222,88.39339544912986,127.49833508140833,158.44006523651268,178.39437462529554,188.06459836041196,185.98874971121745,183.9624064738573,167.1064571105411,135.6435755796063,119.76026775033723],[42.40373922516747,53.363687192570794,73.04828246858823,100.13694358752468,140.12379463484046,170.29909587800478,187.1850067213191,192.35842981670092,176.16886158624536,159.48169146034536,138.9684068006453,113.70615799956849,106.20087092877779],[40.475947890621654,61.84636782352866,100.87164130491789,118.51969471321917,155.17367785922463,184.10530910814234,196.31283310410095,194.0800848116069,159.58692053597147,135.55390133035564,112.17296618268094,88.50580626168168,92.52730118195944],[35.241030309738626,66.37032301391976,127.92631718109324,143.48034347842253,170.73957790937519,199.67024834314628,205.7419513911939,188.38823643531202,135.36768638962553,117.01563653626947,90.61097302023494,61.19704954557336,82.09912411624504],[26.701776096728345,67.08365868969182,126.02587930956292,155.6532451767952,183.60847488953968,216.47538395931667,215.53334174966398,183.76978391699137,135.4260482049657,108.47833203695497,79.76360673569025,43.90263898577459,79.40538262088131],[30.87691293677275,70.13688477331618,122.88731890916635,158.7167710050036,190.97418094947915,231.16722254290013,222.66784391843683,181.84273299017318,138.739345167688,107.91389402110133,81.0648238841768,65.98340433363867,85.04412844530214],[48.14919037640777,77.76315260022243,121.8147111056278,158.17170146686848,191.6135973149057,228.14610013364904,219.01737089705114,179.49014246253026,141.06205182632874,111.03450527633353,88.31839228901936,81.59594088565929,91.24372341789248]]}
+ *
+ */
+async function interp2Grid(pts, xmin, xmax, dx, ymin, ymax, dy, opt = {}) {
+
+    //check
+    if (!isearr(pts)) {
+        throw new Error(`no pts`)
+    }
+
+    //check xmin
+    if (!isnum(xmin)) {
+        throw new Error(`xmin[${xmin}] is not an effective number`)
+    }
+    xmin = cdbl(xmin)
+
+    //check xmax
+    if (!isnum(xmax)) {
+        throw new Error(`xmax[${xmax}] is not an effective number`)
+    }
+    xmax = cdbl(xmax)
+
+    //check dx
+    if (!isnum(dx)) {
+        throw new Error(`dx[${dx}] is not an effective number`)
+    }
+    dx = cdbl(dx)
+
+    //check xmin>xmax
+    if (xmin > xmax) {
+        throw new Error(`xmin[${xmin}]>xmax[${xmax}]`)
+    }
+
+    //check ymin
+    if (!isnum(ymin)) {
+        throw new Error(`ymin[${ymin}] is not an effective number`)
+    }
+    ymin = cdbl(ymin)
+
+    //check ymax
+    if (!isnum(ymax)) {
+        throw new Error(`ymax[${ymax}] is not an effective number`)
+    }
+    ymax = cdbl(ymax)
+
+    //check dy
+    if (!isnum(dy)) {
+        throw new Error(`dy[${dy}] is not an effective number`)
+    }
+    dy = cdbl(dy)
+
+    //check ymin>ymax
+    if (ymin > ymax) {
+        throw new Error(`ymin[${ymin}]>ymax[${ymax}]`)
+    }
+
+    //keyX
+    let keyX = get(opt, 'keyX')
+    if (!isestr(keyX)) {
+        keyX = 'x'
+    }
+
+    //keyY
+    let keyY = get(opt, 'keyY')
+    if (!isestr(keyY)) {
+        keyY = 'y'
+    }
+
+    //keyZ
+    let keyZ = get(opt, 'keyZ')
+    if (!isestr(keyZ)) {
+        keyZ = 'z'
+    }
+
+    //funValid
+    let funValid = get(opt, 'funValid')
+    if (!isfun(funValid)) {
+        funValid = () => {
+            return true
+        }
+    }
+
+    //funKriging
+    let funKriging = get(opt, 'funKriging')
+    if (!isfun(funKriging)) {
+        funKriging = _kriging
+    }
+
+    //variogram_model
+    let variogram_model = get(opt, 'variogram_model')
+    if (!isestr(variogram_model)) {
+        variogram_model = 'spherical'
+    }
+
+    //nlags
+    let nlags = get(opt, 'nlags')
+    if (!ispint(nlags)) {
+        nlags = 9
+    }
+    nlags = cint(nlags)
+
+    //funAdjust
+    let funAdjust = get(opt, 'funAdjust')
+    if (!isfun(funAdjust)) {
+        funAdjust = (x, y, z) => {
+            return z
+        }
+    }
+
+    //returnGrid
+    let returnGrid = get(opt, 'returnGrid')
+    if (!isbol(returnGrid)) {
+        returnGrid = true
+    }
+
+    //inverseKeyY
+    let inverseKeyY = get(opt, 'inverseKeyY')
+    if (!isbol(inverseKeyY)) {
+        inverseKeyY = false
+    }
+
+    //xnum
+    let xnum = 0
+    for (let x = xmin; x &lt;= xmax; x += dx) {
+        xnum++
+    }
+
+    //ynum
+    let ynum = 0
+    for (let y = ymin; y &lt;= ymax; y += dy) {
+        ynum++
+    }
+
+    //vpts
+    let vpts = []
+    let kpInx = {}
+    let k = -1
+    let ix = -1
+    for (let x = xmin; x &lt;= xmax; x += dx) {
+        ix++
+
+        let iy = -1
+        for (let y = ymin; y &lt;= ymax; y += dy) {
+            iy++
+            k++
+
+            //funValid
+            let b = funValid(x, y)
+            if (ispm(b)) {
+                b = await b
+            }
+
+            //check
+            if (!b) {
+                continue
+            }
+
+            //push
+            vpts.push({
+                [keyX]: x,
+                [keyY]: y,
+                [keyZ]: '',
+            })
+
+            //save
+            kpInx[`${ix}:${iy}`] = k
+
+        }
+    }
+    // console.log('rs', rs)
+
+    //check
+    if (size(vpts) === 0) {
+        console.log(xmin, xmax, dx, ymin, ymax, dy)
+        throw new Error(`no vpts`)
+    }
+
+    //funKriging
+    let ipts = await funKriging(pts, vpts, {
+
+        keyX,
+        keyY,
+        keyZ,
+
+        ...opt,
+
+        //interp2Kriging設定參數
+        // scale,
+        // model,
+        // sigma2,
+        // alpha,
+
+        //WKriging設定參數
+        // variogram_model,
+        // nlags,
+
+    })
+
+    //調整不合理值
+    ipts = await pmSeries(ipts, async (m) => {
+        // console.log('m', m)
+
+        //funAdjust
+        let z = funAdjust(m[keyX], m[keyY], m[keyZ])
+        if (ispm(z)) {
+            z = await z
+        }
+
+        //update
+        m[keyZ] = z
+
+        return m
+    })
+    // console.log('ipts(adjust)', ipts)
+
+    //returnGrid
+    let rs = null
+    if (!returnGrid) {
+        rs = ipts
+    }
+    else {
+        let grds = []
+        let zmin = 1e20
+        let zmax = -1e20
+        for (let iy = 0; iy &lt; ynum; iy++) {
+            grds[iy] = []
+            let _iy = iy
+            if (inverseKeyY) {
+                _iy = ynum - 1 - iy
+            }
+            for (let ix = 0; ix &lt; xnum; ix++) {
+                let k = kpInx[`${ix}:${_iy}`]
+                grds[iy][ix] = ipts[k][keyZ]
+                zmin = Math.min(zmin, ipts[k][keyZ])
+                zmax = Math.max(zmax, ipts[k][keyZ])
+            }
+        }
+        rs = {
+
+            xnum,
+            xmin,
+            xmax,
+            dx,
+
+            ynum,
+            ymin,
+            ymax,
+            dy,
+
+            zmin,
+            zmax,
+
+            grds,
+
+        }
+    }
+
+    return rs
+
+}
+
+export default interp2Grid
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Wed Mar 04 2026 21:29:16 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

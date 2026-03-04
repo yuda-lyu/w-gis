@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>getCenterOfMassMultiPolygon.mjs - Documentation</title>
+    <title>simplifyMultiPolygon.mjs - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -35,7 +35,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">getCenterOfMassMultiPolygon.mjs</h1>
+    <h1 class="page-title">simplifyMultiPolygon.mjs</h1>
     
 
     
@@ -47,127 +47,135 @@
         <article>
             <pre class="prettyprint source linenums"><code>import get from 'lodash-es/get.js'
 import isearr from 'wsemi/src/isearr.mjs'
+import isbol from 'wsemi/src/isbol.mjs'
+import isnum from 'wsemi/src/isnum.mjs'
+import cdbl from 'wsemi/src/cdbl.mjs'
 import turf from './importTurf.mjs'
 import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 
 
 /**
- * 計算MultiPolygon質心座標
+ * 針對MultiPolygon進行Simplify處理
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getCenterOfMassMultiPolygon.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/simplifyMultiPolygon.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} pgs 輸入MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
- * @returns {Number} 回傳面積數字
+ * @param {Number} [opt.tolerance=0.005] 輸入簡化容許值數字，代表點到線的最大允許距離，故跟座標係有關，預設0.005
+ * @param {Boolean} [opt.highQuality=true] 輸入處理模式布林值，true代表品質優先，false代表速度優先，預設true
+ * @returns {Array} 回傳MultiPolygon陣列
  * @example
  *
  * let pgs
  * let r
  *
- * pgs = [ //ringString
- *     [0, 0],
- *     [100, 0],
- *     [100, 1],
- *     [0, 1],
- *     [0, 0], //閉合
- * ]
- * r = getCenterOfMassMultiPolygon(pgs)
- * console.log(JSON.stringify(r))
- * // => [50,0.5]
- *
- * pgs = [ //ringString
- *     [0, 0],
- *     [100, 0],
- *     [100, 1],
- *     [0, 1],
- * ]
- * r = getCenterOfMassMultiPolygon(pgs)
- * console.log(JSON.stringify(r))
- * // => [50,0.5]
- *
- * pgs = [ //polygon
- *     [
- *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ]
- * ]
- * r = getCenterOfMassMultiPolygon(pgs)
- * console.log(JSON.stringify(r))
- * // => [50,0.5]
- *
  * pgs = [ //polygon
  *     [
  *         [0, 0],
  *         [10, 0],
+ *         [10, 0.9],
  *         [10, 1],
  *         [0, 1],
  *     ]
  * ]
- * r = getCenterOfMassMultiPolygon(pgs)
+ * r = simplifyMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [5,0.5]
+ * // => [[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
  *
  * pgs = [ //polygon
  *     [
  *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ],
- *     [
- *         [0, 0],
- *         [10, 0],
+ *         [9.995, 0],
+ *         [9.995, 0.995],
  *         [10, 1],
  *         [0, 1],
  *     ]
  * ]
- * r = getCenterOfMassMultiPolygon(pgs) //預設polygon轉multiPolygon使用視為polygons, 故其內會是2個polygons
+ * r = simplifyMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [50,0.5] //非2個ringString共構的polygon質心, 僅計算第1個
+ * // => [[[[0,0],[9.995,0],[10,1],[0,1],[0,0]]]]
  *
  * pgs = [ //polygon
  *     [
  *         [0, 0],
- *         [100, 0],
- *         [100, 1],
- *         [0, 1],
- *     ],
- *     [
- *         [0, 0],
- *         [10, 0],
+ *         [9.99, 0],
+ *         [9.99, 0.99],
  *         [10, 1],
  *         [0, 1],
  *     ]
  * ]
- * r = getCenterOfMassMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
+ * r = simplifyMultiPolygon(pgs)
  * console.log(JSON.stringify(r))
- * // => [50,0.5] //非第1個ringString剔除第2個ringString的質心, 僅計算第1個
+ * // => [[[[0,0],[9.99,0],[9.99,0.99],[10,1],[0,1],[0,0]]]]
  *
- * pgs = [ //multiPolygon
+ * pgs = [ //polygon
  *     [
- *         [
- *             [0, 0],
- *             [100, 0],
- *             [100, 1],
- *             [0, 1],
- *         ],
- *         [
- *             [0, 0],
- *             [10, 0],
- *             [10, 1],
- *             [0, 1],
- *         ]
+ *         [0, 0],
+ *         [9.99, 0],
+ *         [9.99, 0.99],
+ *         [10, 1],
+ *         [0, 1],
  *     ]
  * ]
- * r = getCenterOfMassMultiPolygon(pgs)
+ * r = simplifyMultiPolygon(pgs, { tolerance: 0.01 })
  * console.log(JSON.stringify(r))
- * // => [50,0.5] //非第1個ringString剔除第2個ringString的質心, 僅計算第1個
+ * // => [[[[0,0],[9.99,0],[10,1],[0,1],[0,0]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [
+ *         [0, 0],
+ *         [10, 0],
+ *         [10, 0.9],
+ *         [10, 1],
+ *         [0, 1],
+ *     ]
+ * ]]
+ * r = simplifyMultiPolygon(pgs)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[10,0],[10,1],[0,1],[0,0]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [
+ *         [0, 0],
+ *         [9.995, 0],
+ *         [9.995, 0.995],
+ *         [10, 1],
+ *         [0, 1],
+ *     ]
+ * ]]
+ * r = simplifyMultiPolygon(pgs)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[9.995,0],[10,1],[0,1],[0,0]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [
+ *         [0, 0],
+ *         [9.99, 0],
+ *         [9.99, 0.99],
+ *         [10, 1],
+ *         [0, 1],
+ *     ]
+ * ]]
+ * r = simplifyMultiPolygon(pgs)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[9.99,0],[9.99,0.99],[10,1],[0,1],[0,0]]]]
+ *
+ * pgs = [[ //multiPolygon
+ *     [
+ *         [0, 0],
+ *         [9.99, 0],
+ *         [9.99, 0.99],
+ *         [10, 1],
+ *         [0, 1],
+ *     ]
+ * ]]
+ * r = simplifyMultiPolygon(pgs, { tolerance: 0.01 })
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[9.99,0],[10,1],[0,1],[0,0]]]]
  *
  */
-function getCenterOfMassMultiPolygon(pgs, opt = {}) {
+function simplifyMultiPolygon(pgs, opt = {}) {
 
     //check
     if (!isearr(pgs)) {
@@ -180,6 +188,19 @@ function getCenterOfMassMultiPolygon(pgs, opt = {}) {
         supposeType = 'polygons'
     }
 
+    //tolerance
+    let tolerance = get(opt, 'tolerance')
+    if (!isnum(tolerance)) {
+        tolerance = 0.005
+    }
+    tolerance = cdbl(tolerance)
+
+    //highQuality
+    let highQuality = get(opt, 'highQuality')
+    if (!isbol(highQuality)) {
+        highQuality = true
+    }
+
     //fixCloseMultiPolygon裡面已有toMultiPolygon故不用另外呼叫處理
 
     //fixCloseMultiPolygon
@@ -189,17 +210,18 @@ function getCenterOfMassMultiPolygon(pgs, opt = {}) {
     //multiPolygon
     pgs = turf.multiPolygon(pgs)
 
-    //centerOfMass
-    let r = turf.centerOfMass(pgs)
+    //simplify
+    let r = turf.simplify(pgs, { tolerance, highQuality })
 
-    //pt
-    let pt = get(r, 'geometry.coordinates', [])
+    //get pgs
+    r = get(r, 'geometry.coordinates', [])
+    // console.log('r',r)
 
-    return pt
+    return r
 }
 
 
-export default getCenterOfMassMultiPolygon
+export default simplifyMultiPolygon
 </code></pre>
         </article>
     </section>
