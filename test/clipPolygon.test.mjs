@@ -41,7 +41,7 @@ describe(`clipPolygon`, function() {
         pgs2: [],
         opt: {},
     }
-    out[k] = [[[0, 0], [1, 0], [1, 1], [0, 1]]]
+    out[k] = [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]]
     it(`should return pgs1 when clipPolygon(pgs2 empty)`, function() {
         k = 2
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -55,7 +55,7 @@ describe(`clipPolygon`, function() {
         pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4]]],
         opt: {},
     }
-    out[k] = [[[2, 4], [2, 0], [0, 0], [0, 4]]]
+    out[k] = [[[2, 4], [2, 0], [0, 0], [0, 4], [2, 4]]]
     it(`should clip polygon case1 when clipPolygon(polygon)`, function() {
         k = 3
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -69,7 +69,7 @@ describe(`clipPolygon`, function() {
         pgs2: [[[0, 0], [2, 0], [2, 2], [0, 2]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [2, 0], [2, 2], [0, 2], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [2, 0], [2, 2], [0, 2], [0, 4], [4, 4]]]
     it(`should clip polygon case2 when clipPolygon(polygon)`, function() {
         k = 4
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -83,7 +83,7 @@ describe(`clipPolygon`, function() {
         pgs2: [[[0, 0], [2, 2], [0, 4]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [0, 0], [2, 2], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [0, 0], [2, 2], [0, 4], [4, 4]]]
     it(`should clip polygon case3 when clipPolygon(polygon)`, function() {
         k = 5
         let r = clipPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)

@@ -41,7 +41,7 @@ describe(`unionPolygon`, function() {
         pgs2: [],
         opt: {},
     }
-    out[k] = [[[0, 0], [1, 0], [1, 1], [0, 1]]]
+    out[k] = [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]]
     it(`should return pgs1 when unionPolygon(pgs2 empty)`, function() {
         k = 2
         let r = unionPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -55,7 +55,7 @@ describe(`unionPolygon`, function() {
         pgs2: [[[2, 0], [4, 0], [4, 4], [2, 4]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4], [4, 4]]]
     it(`should union polygon case1 when unionPolygon(polygon)`, function() {
         k = 3
         let r = unionPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -69,7 +69,7 @@ describe(`unionPolygon`, function() {
         pgs2: [[[0, 0], [2, 0], [2, 2], [0, 2]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4], [4, 4]]]
     it(`should union polygon case2 when unionPolygon(polygon)`, function() {
         k = 4
         let r = unionPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -83,7 +83,7 @@ describe(`unionPolygon`, function() {
         pgs2: [[[0, 0], [2, 2], [0, 4]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 4], [4, 4]]]
     it(`should union polygon case3 when unionPolygon(polygon)`, function() {
         k = 5
         let r = unionPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)
@@ -97,7 +97,7 @@ describe(`unionPolygon`, function() {
         pgs2: [[[-1, 0], [2, 1], [-1, 4]]],
         opt: {},
     }
-    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 0.3333333333333333], [-1, 0], [-1, 4], [0, 3], [0, 4]]]
+    out[k] = [[[4, 4], [4, 0], [0, 0], [0, 0.3333333333333333], [-1, 0], [-1, 4], [0, 3], [0, 4], [4, 4]]]
     it(`should union polygon case4 when unionPolygon(polygon)`, function() {
         k = 6
         let r = unionPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)

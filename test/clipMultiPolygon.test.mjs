@@ -41,7 +41,7 @@ describe(`clipMultiPolygon`, function() {
         pgs2: [],
         opt: {},
     }
-    out[k] = [[[[0, 0], [1, 0], [1, 1], [0, 1]]]]
+    out[k] = [[[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]]]
     it(`should return pgs1 when clipMultiPolygon(pgs2 empty)`, function() {
         k = 2
         let r = clipMultiPolygon(oin[k].pgs1, oin[k].pgs2, oin[k].opt)

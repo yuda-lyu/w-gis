@@ -20,7 +20,7 @@ describe(`interp2`, function() {
 
     k++
     oin[k] = { ps, p: { x: 283, y: 207 }, opt: {} }
-    out[k] = { x: 283, y: 207, z: 114.43040421951906 }
+    out[k] = { x: 283, y: 207, z: 114.43040421951908 }
     it(`should interpolate naturalNeighbor when interp2(case2)`, async function() {
         k = 1
         let r = await interp2(oin[k].ps, oin[k].p, oin[k].opt)
@@ -47,7 +47,7 @@ describe(`interp2`, function() {
 
     k++
     oin[k] = { ps, p: [{ x: 243, y: 207 }, { x: 283, y: 207 }], opt: {} }
-    out[k] = [{ x: 243, y: 207, z: 97.29447682486813 }, { x: 283, y: 207, z: 114.43040421951906 }]
+    out[k] = [{ x: 243, y: 207, z: 97.29447682486813 }, { x: 283, y: 207, z: 114.43040421951908 }]
     it(`should interpolate array targets when interp2(psTar array)`, async function() {
         k = 4
         let r = await interp2(oin[k].ps, oin[k].p, oin[k].opt)

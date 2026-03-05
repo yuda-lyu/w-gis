@@ -15,6 +15,7 @@ export { default as findPointInKpBoxPolygons } from './findPointInKpBoxPolygons.
 export { default as findPointInKpFeature } from './findPointInKpFeature.mjs'
 export { default as findPointInKpPolygons } from './findPointInKpPolygons.mjs'
 export { default as fixCloseMultiPolygon } from './fixCloseMultiPolygon.mjs'
+export { default as fixClosePolygon } from './fixClosePolygon.mjs'
 export { default as fixGeometryMultiPolygon } from './fixGeometryMultiPolygon.mjs'
 export { default as flattenMultiPolygon } from './flattenMultiPolygon.mjs'
 export { default as getAreaMultiPolygon } from './getAreaMultiPolygon.mjs'

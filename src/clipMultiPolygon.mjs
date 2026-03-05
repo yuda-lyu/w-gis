@@ -49,7 +49,7 @@ import distilMultiPolygon from './distilMultiPolygon.mjs'
  * pgs2 = []
  * r = clipMultiPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[[0,0],[1,0],[1,1],[0,1]]]]
+ * // => [[[[0,0],[1,0],[1,1],[0,1],[0,0]]]]
  *
  * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
  * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
@@ -95,18 +95,19 @@ function clipMultiPolygon(pgs1, pgs2, opt = {}) {
         throw new Error(`no pgs1`)
     }
 
-    //check pgs2
-    if (isarr(pgs2) && size(pgs2) === 0) {
-        return pgs1
-    }
-    if (!isarr(pgs2)) {
-        throw new Error(`invalid pgs2`)
-    }
-
     //supposeType
     let supposeType = get(opt, 'supposeType')
     if (supposeType !== 'polygons' && supposeType !== 'ringStrings') {
         supposeType = 'polygons'
+    }
+
+    //check pgs2
+    if (isarr(pgs2) && size(pgs2) === 0) {
+        pgs1 = fixCloseMultiPolygon(pgs1, { supposeType })
+        return pgs1
+    }
+    if (!isarr(pgs2)) {
+        throw new Error(`invalid pgs2`)
     }
 
     //fixCloseMultiPolygon

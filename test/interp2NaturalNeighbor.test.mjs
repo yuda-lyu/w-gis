@@ -145,7 +145,7 @@ describe(`interp2NaturalNeighbor`, function() {
     }
     // r = interp2NaturalNeighbor(ps, p)
     // console.log(r)
-    r = { x: 283, y: 207, z: 114.43040421951906 }
+    r = { x: 283, y: 207, z: 114.43040421951908 }
 
     k++
     oin[k] = {
@@ -219,7 +219,7 @@ describe(`interp2NaturalNeighbor`, function() {
     // console.log(r)
     r = [
         { x: 243, y: 207, z: 97.29447682486813 },
-        { x: 283, y: 207, z: 114.43040421951906 }
+        { x: 283, y: 207, z: 114.43040421951908 }
     ]
 
     k++

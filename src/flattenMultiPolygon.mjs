@@ -2,6 +2,7 @@ import get from 'lodash-es/get.js'
 import each from 'lodash-es/each.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import toMultiPolygon from './toMultiPolygon.mjs'
+import fixClosePolygon from './fixClosePolygon.mjs'
 import polybooljs from 'polybooljs'
 // import * as polyclip from 'polyclip-ts'
 
@@ -38,7 +39,7 @@ import polybooljs from 'polybooljs'
  * ]
  * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
- * // => [[[[2,4],[2,0],[0,0],[0,4]]]]
+ * // => [[[[2,4],[2,0],[0,0],[0,4],[2,4]]]]
  *
  * pgs = [ //polygon
  *     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -46,7 +47,7 @@ import polybooljs from 'polybooljs'
  * ]
  * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
- * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]]
+ * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4],[4,4]]]]
  *
  * pgs = [ //polygon
  *     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -54,7 +55,7 @@ import polybooljs from 'polybooljs'
  * ]
  * r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
  * console.log(JSON.stringify(r))
- * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4]]]]
+ * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4],[4,4]]]]
  *
  * pgs = [[ //multiPolygon
  *     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -62,7 +63,7 @@ import polybooljs from 'polybooljs'
  * ]]
  * r = flattenMultiPolygon(pgs, {})
  * console.log(JSON.stringify(r))
- * // => [[[[2,4],[2,0],[0,0],[0,4]]]]
+ * // => [[[[2,4],[2,0],[0,0],[0,4],[2,4]]]]
  *
  * pgs = [[ //multiPolygon
  *     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -70,7 +71,7 @@ import polybooljs from 'polybooljs'
  * ]]
  * r = flattenMultiPolygon(pgs, {})
  * console.log(JSON.stringify(r))
- * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]]
+ * // => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4],[4,4]]]]
  *
  * pgs = [[ //multiPolygon
  *     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -78,7 +79,7 @@ import polybooljs from 'polybooljs'
  * ]]
  * r = flattenMultiPolygon(pgs, {})
  * console.log(JSON.stringify(r))
- * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4]]]]
+ * // => [[[[4,4],[4,0],[0,0],[2,2],[0,4],[4,4]]]]
  *
  */
 function flattenMultiPolygon(pgs, opt = {}) {
@@ -113,6 +114,9 @@ function flattenMultiPolygon(pgs, opt = {}) {
 
         //pgs
         let pgs = get(ints, 'regions', [])
+
+        //fixClosePolygon
+        pgs = fixClosePolygon(pgs)
 
         return pgs
     }

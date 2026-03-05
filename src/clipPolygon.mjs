@@ -4,6 +4,7 @@ import isarr from 'wsemi/src/isarr.mjs'
 import isearr from 'wsemi/src/isearr.mjs'
 import polybooljs from 'polybooljs'
 import toPolygon from './toPolygon.mjs'
+import fixClosePolygon from './fixClosePolygon.mjs'
 
 
 /**
@@ -48,25 +49,25 @@ import toPolygon from './toPolygon.mjs'
  * pgs2 = []
  * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[0,0],[1,0],[1,1],[0,1]]]
+ * // => [[[0,0],[1,0],[1,1],[0,1],[0,0]]]
  *
  * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
  * pgs2 = [[[2, 0], [4, 0], [4, 4], [2, 4]]] //polygon
  * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[2,4],[2,0],[0,0],[0,4]]]
+ * // => [[[2,4],[2,0],[0,0],[0,4],[2,4]]]
  *
  * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
  * pgs2 = [[[0, 0], [2, 0], [2, 2], [0, 2]]] //polygon
  * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4]]]
+ * // => [[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4],[4,4]]]
  *
  * pgs1 = [[[0, 0], [4, 0], [4, 4], [0, 4]]] //polygon
  * pgs2 = [[[0, 0], [2, 2], [0, 4]]] //polygon
  * r = clipPolygon(pgs1, pgs2, {})
  * console.log(JSON.stringify(r))
- * // => [[[4,4],[4,0],[0,0],[2,2],[0,4]]]
+ * // => [[[4,4],[4,0],[0,0],[2,2],[0,4],[4,4]]]
  *
  */
 function clipPolygon(pgs1, pgs2, opt = {}) {
@@ -78,6 +79,7 @@ function clipPolygon(pgs1, pgs2, opt = {}) {
 
     //check pgs2
     if (isarr(pgs2) && size(pgs2) === 0) {
+        pgs1 = fixClosePolygon(pgs1)
         return pgs1
     }
     if (!isarr(pgs2)) {
@@ -101,6 +103,9 @@ function clipPolygon(pgs1, pgs2, opt = {}) {
 
     //pgs
     let pgs = get(ints, 'regions', [])
+
+    //fixClosePolygon
+    pgs = fixClosePolygon(pgs)
 
     return pgs
 }
