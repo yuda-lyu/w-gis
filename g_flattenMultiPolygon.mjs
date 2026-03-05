@@ -20,7 +20,7 @@ pgs = [ //polygon
 ]
 r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
 console.log(JSON.stringify(r))
-// => [[[[2,4],[2,0],[0,0],[0,4],[2,4]]]]
+// => [[[[0,4],[0,0],[2,0],[2,4],[0,4]]]]
 
 pgs = [ //polygon
     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -28,7 +28,7 @@ pgs = [ //polygon
 ]
 r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
 console.log(JSON.stringify(r))
-// => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4],[4,4]]]]
+// => [[[[0,4],[0,2],[2,2],[2,0],[4,0],[4,4],[0,4]]]]
 
 pgs = [ //polygon
     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -36,7 +36,7 @@ pgs = [ //polygon
 ]
 r = flattenMultiPolygon(pgs, { supposeType: 'ringStrings' }) //為多層套疊polygon時轉multiPolygon須使用ringStrings
 console.log(JSON.stringify(r))
-// => [[[[4,4],[4,0],[0,0],[2,2],[0,4],[4,4]]]]
+// => [[[[0,4],[2,2],[0,0],[4,0],[4,4],[0,4]]]]
 
 pgs = [[ //multiPolygon
     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -44,7 +44,7 @@ pgs = [[ //multiPolygon
 ]]
 r = flattenMultiPolygon(pgs, {})
 console.log(JSON.stringify(r))
-// => [[[[2,4],[2,0],[0,0],[0,4],[2,4]]]]
+// => [[[[0,4],[0,0],[2,0],[2,4],[0,4]]]]
 
 pgs = [[ //multiPolygon
     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -52,7 +52,7 @@ pgs = [[ //multiPolygon
 ]]
 r = flattenMultiPolygon(pgs, {})
 console.log(JSON.stringify(r))
-// => [[[[4,4],[4,0],[2,0],[2,2],[0,2],[0,4],[4,4]]]]
+// => [[[[0,4],[0,2],[2,2],[2,0],[4,0],[4,4],[0,4]]]]
 
 pgs = [[ //multiPolygon
     [[0, 0], [4, 0], [4, 4], [0, 4]],
@@ -60,7 +60,7 @@ pgs = [[ //multiPolygon
 ]]
 r = flattenMultiPolygon(pgs, {})
 console.log(JSON.stringify(r))
-// => [[[[4,4],[4,0],[0,0],[2,2],[0,4],[4,4]]]]
+// => [[[[0,4],[2,2],[0,0],[4,0],[4,4],[0,4]]]]
 
 
 //node g_flattenMultiPolygon.mjs

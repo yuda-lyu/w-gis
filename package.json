@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.0.77",
+  "version": "1.0.78",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^7.3.4",
@@ -10,6 +10,7 @@
     "json5": "^2.2.3",
     "lodash-es": "^4.17.23",
     "polybooljs": "^1.2.2",
+    "polyclip-ts": "^0.16.8",
     "proj4": "^2.20.3",
     "wsemi": "^1.8.43"
   },
