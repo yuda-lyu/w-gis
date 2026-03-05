@@ -62,5 +62,13 @@ r = flattenMultiPolygon(pgs, {})
 console.log(JSON.stringify(r))
 // => [[[[0,4],[2,2],[0,0],[4,0],[4,4],[0,4]]]]
 
+pgs = [[ //multiPolygon
+    [[0, 0], [4, 0], [4, 4], [0, 4]],
+    [[10, 0], [12, 2], [10, 4]],
+]]
+r = flattenMultiPolygon(pgs, {})
+console.log(JSON.stringify(r))
+// => [[[[0,4],[0,0],[4,0],[4,4],[0,4]]],[[[10,4],[10,0],[12,2],[10,4]]]]
+
 
 //node g_flattenMultiPolygon.mjs

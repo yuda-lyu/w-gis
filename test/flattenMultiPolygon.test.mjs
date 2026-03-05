@@ -116,4 +116,20 @@ describe(`flattenMultiPolygon`, function() {
         assert.strict.deepStrictEqual(r, rr)
     })
 
+    k++
+    oin[k] = {
+        pgs: [[
+            [[0, 0], [4, 0], [4, 4], [0, 4]],
+            [[10, 0], [12, 2], [10, 4]],
+        ]],
+        opt: {},
+    }
+    out[k] = [[[[0, 4], [0, 0], [4, 0], [4, 4], [0, 4]]], [[[10, 4], [10, 0], [12, 2], [10, 4]]]]
+    it(`should flatten multiPolygon case3 when flattenMultiPolygon(multiPolygon)`, function() {
+        k = 7
+        let r = flattenMultiPolygon(oin[k].pgs, oin[k].opt)
+        let rr = out[k]
+        assert.strict.deepStrictEqual(r, rr)
+    })
+
 })

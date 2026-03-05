@@ -1,8 +1,8 @@
 import get from 'lodash-es/get.js'
-import map from 'lodash-es/map.js'
+import each from 'lodash-es/each.js'
 import size from 'lodash-es/size.js'
 import isearr from 'wsemi/src/isearr.mjs'
-import fixClosePolygon from './fixClosePolygon.mjs'
+import getPointDepth from './getPointDepth.mjs'
 import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 import polybooljs from 'polybooljs'
 // import * as polyclip from 'polyclip-ts'
@@ -82,6 +82,14 @@ import polybooljs from 'polybooljs'
  * console.log(JSON.stringify(r))
  * // => [[[[0,4],[2,2],[0,0],[4,0],[4,4],[0,4]]]]
  *
+ * pgs = [[ //multiPolygon
+ *     [[0, 0], [4, 0], [4, 4], [0, 4]],
+ *     [[10, 0], [12, 2], [10, 4]],
+ * ]]
+ * r = flattenMultiPolygon(pgs, {})
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,4],[0,0],[4,0],[4,4],[0,4]]],[[[10,4],[10,0],[12,2],[10,4]]]]
+ *
  */
 function flattenMultiPolygon(pgs, opt = {}) {
 
@@ -133,17 +141,34 @@ function flattenMultiPolygon(pgs, opt = {}) {
         let pgsNew = get(geojson, 'coordinates', [])
         // console.log('pgsNew', pgsNew)
 
-        //fixClosePolygon
-        pgsNew = fixClosePolygon(pgsNew, { supposeType })
-        // console.log('fixClosePolygon pgs', JSON.stringify(pgs))
+        //d
+        let d = getPointDepth(pgsNew)
+        if (d === 2) {
+            //大半回傳polygon, 強制轉multiPolygon
+            pgsNew = [pgsNew]
+        }
+        else if (d === 3) {
+            //若回傳multiPolygon, 例如不相干的polygon做xor, 就直接回傳
+        }
+        else {
+            throw new Error(`invalid point depth[${d}]`)
+        }
+
+        //fixCloseMultiPolygon
+        pgs = fixCloseMultiPolygon(pgs, { supposeType })
+        // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
         return pgsNew
     }
 
     //pgsNew
-    let pgsNew = map(pgs, (v) => {
-        let vv = xorPolygon(v)
-        return vv
+    let pgsNew = []
+    each(pgs, (v) => {
+        let pgsTemp = xorPolygon(v)
+        pgsNew = [
+            ...pgsNew,
+            ...pgsTemp,
+        ]
     })
     // console.log('pgsNew', JSON.stringify(pgsNew))
 
