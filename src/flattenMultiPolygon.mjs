@@ -117,12 +117,8 @@ function flattenMultiPolygon(pgs, opt = {}) {
     let xorPolygon = (pgs) => {
 
         //check
-        let n = size(pgs)
-        if (n === 0) {
+        if (!isearr(pgs)) {
             return []
-        }
-        else if (n === 1) {
-            return pgs
         }
 
         //xorPoly
@@ -155,7 +151,7 @@ function flattenMultiPolygon(pgs, opt = {}) {
         }
 
         //fixCloseMultiPolygon
-        pgsNew = fixCloseMultiPolygon(pgsNew, { supposeType })
+        pgsNew = fixCloseMultiPolygon(pgsNew, { supposeType: 'ringStrings' })
         // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
         return pgsNew
