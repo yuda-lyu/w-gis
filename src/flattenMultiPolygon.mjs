@@ -155,7 +155,7 @@ function flattenMultiPolygon(pgs, opt = {}) {
         }
 
         //fixCloseMultiPolygon
-        pgs = fixCloseMultiPolygon(pgs, { supposeType })
+        pgsNew = fixCloseMultiPolygon(pgsNew, { supposeType })
         // console.log('fixCloseMultiPolygon pgs', JSON.stringify(pgs))
 
         return pgsNew
