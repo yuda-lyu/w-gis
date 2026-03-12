@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>splitAndProcGeoJSON.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.aggregatePoints">aggregatePoints</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.clipMultiPolygon">clipMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.clipPolygon">clipPolygon</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.distilMultiPolygon">distilMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixClosePolygon">fixClosePolygon</a></li><li data-type='method'><a href="w-gis.html#.fixGeometryMultiPolygon">fixGeometryMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.flattenMultiPolygon">flattenMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getPointDepth">getPointDepth</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Grid">interp2Grid</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp2Normalize">interp2Normalize</a></li><li data-type='method'><a href="w-gis.html#.interp2Raster">interp2Raster</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.intersectMultiPolygon">intersectMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.intersectPolygon">intersectPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygon">invCoordMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygonOrMultiPolyline">invCoordMultiPolygonOrMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolyline">invCoordMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygon">invCoordPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygonOrPolyline">invCoordPolygonOrPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolyline">invCoordPolyline</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.simplifyMultiPolygon">simplifyMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.splineMultiPolygon">splineMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionMultiPolygon">unionMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionPolygon">unionPolygon</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#classifyFeature">classifyFeature</a></li><li><a href="global.html#createEmptyResult">createEmptyResult</a></li><li><a href="global.html#ensureRingClosed">ensureRingClosed</a></li><li><a href="global.html#fixCloseMultiPolygonCoords">fixCloseMultiPolygonCoords</a></li><li><a href="global.html#fixClosePolygonCoords">fixClosePolygonCoords</a></li><li><a href="global.html#procSpecPolygon">procSpecPolygon</a></li><li><a href="global.html#processPolygonCoords">processPolygonCoords</a></li><li><a href="global.html#splitAndProcGeoJSON">splitAndProcGeoJSON</a></li><li><a href="global.html#splitGeoJSON">splitGeoJSON</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">splitAndProcGeoJSON.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import get from 'lodash-es/get.js'
+import each from 'lodash-es/each.js'
+import map from 'lodash-es/map.js'
+import isEqual from 'lodash-es/isEqual.js'
+import size from 'lodash-es/size.js'
+import cloneDeep from 'lodash-es/cloneDeep.js'
+import isearr from 'wsemi/src/isearr.mjs'
+import isobj from 'wsemi/src/isobj.mjs'
+import iseobj from 'wsemi/src/iseobj.mjs'
+import isestr from 'wsemi/src/isestr.mjs'
+import flattenMultiPolygon from './flattenMultiPolygon.mjs'
+
+
+/**
+ * 建立空的分類結果物件
+ *
+ * @returns {Object} 回傳包含 points、lines、polygons 三個空 FeatureCollection 的物件
+ */
+function createEmptyResult() {
+    return {
+        points: { type: 'FeatureCollection', features: [] },
+        lines: { type: 'FeatureCollection', features: [] },
+        polygons: { type: 'FeatureCollection', features: [] },
+    }
+}
+
+
+/**
+ * 修復 Polygon ring 閉合（首尾座標相同）
+ *
+ * @param {Array} ring 輸入 ring 座標陣列
+ * @returns {Array} 回傳已閉合的 ring 座標陣列
+ */
+function ensureRingClosed(ring) {
+    if (!isearr(ring)) {
+        return ring
+    }
+    let n = size(ring)
+    if (n &lt; 2) {
+        return ring
+    }
+    let first = ring[0]
+    let last = ring[n - 1]
+    if (!isEqual(first, last)) {
+        ring = [...ring, first]
+    }
+    return ring
+}
+
+
+/**
+ * 修復 Polygon 的所有 ring 閉合
+ *
+ * @param {Array} coordinates Polygon 的 coordinates（二維陣列，每個元素為一個 ring）
+ * @returns {Array} 回傳已修復閉合的 coordinates
+ */
+function fixClosePolygonCoords(coordinates) {
+    return map(coordinates, (ring) => ensureRingClosed(ring))
+}
+
+
+/**
+ * 修復 MultiPolygon 的所有 ring 閉合
+ *
+ * @param {Array} coordinates MultiPolygon 的 coordinates（三維陣列）
+ * @returns {Array} 回傳已修復閉合的 coordinates
+ */
+function fixCloseMultiPolygonCoords(coordinates) {
+    return map(coordinates, (polygon) => fixClosePolygonCoords(polygon))
+}
+
+
+/**
+ * 將單一 Feature 依幾何類型分類到結果物件中
+ *
+ * @param {Object} feature 輸入 GeoJSON Feature
+ * @param {Object} result 輸入分類結果物件（包含 points、lines、polygons）
+ */
+function classifyFeature(feature, result) {
+
+    // 安全取得 geometry
+    let geometry = get(feature, 'geometry')
+    if (!iseobj(geometry)) {
+        return
+    }
+
+    let type = get(geometry, 'type', '')
+    let properties = get(feature, 'properties', {}) || {}
+    let id = get(feature, 'id')
+
+    // GeometryCollection：遞迴拆解為多個獨立 Feature，各自繼承原始 properties
+    if (type === 'GeometryCollection') {
+        let geometries = get(geometry, 'geometries', [])
+        each(geometries, (subGeom) => {
+            let subFeature = {
+                type: 'Feature',
+                properties: cloneDeep(properties),
+                geometry: cloneDeep(subGeom),
+            }
+            if (id !== undefined) {
+                subFeature.id = id
+            }
+            classifyFeature(subFeature, result)
+        })
+        return
+    }
+
+    // 建立輸出 Feature（深拷貝以避免汙染原始資料）
+    let outFeature = {
+        type: 'Feature',
+        properties: cloneDeep(properties),
+        geometry: cloneDeep(geometry),
+    }
+    if (id !== undefined) {
+        outFeature.id = id
+    }
+
+    // 依幾何類型分類
+    switch (type) {
+
+    case 'Point':
+    case 'MultiPoint':
+        result.points.features.push(outFeature)
+        break
+
+    case 'LineString':
+    case 'MultiLineString':
+        result.lines.features.push(outFeature)
+        break
+
+    case 'Polygon':
+        // 修復 ring 閉合
+        outFeature.geometry.coordinates = fixClosePolygonCoords(outFeature.geometry.coordinates)
+        result.polygons.features.push(outFeature)
+        break
+
+    case 'MultiPolygon':
+        // 修復 ring 閉合
+        outFeature.geometry.coordinates = fixCloseMultiPolygonCoords(outFeature.geometry.coordinates)
+        result.polygons.features.push(outFeature)
+        break
+
+    default:
+        // 未知幾何類型跳過
+        break
+    }
+}
+
+
+/**
+ * 將 GeoJSON 資料拆分成依幾何類型分類的多個 FeatureCollection
+ *
+ * 此函數的設計目的是針對 MapLibre GL JS 的 layer type 限制，
+ * 將混合不同幾何類型的 GeoJSON 資料預先拆分成：
+ *   - points：包含 Point / MultiPoint 的 FeatureCollection
+ *   - lines：包含 LineString / MultiLineString 的 FeatureCollection
+ *   - polygons：包含 Polygon / MultiPolygon 的 FeatureCollection
+ *
+ * 額外處理：
+ *   1. GeometryCollection 會被遞迴拆解成獨立的 Feature，properties 繼承父 Feature
+ *   2. Polygon / MultiPolygon 的 ring 自動修復閉合（首尾座標相同）
+ *   3. 支援多種輸入格式：FeatureCollection、Feature、裸 Geometry、JSON 字串
+ *   4. 深拷貝輸出，不汙染原始資料
+ *   5. 空輸入 / 無效輸入回傳空的分類結果
+ *
+ * @param {Object|String|null} geoIn 輸入 GeoJSON 資料，可為 FeatureCollection、Feature、裸 Geometry 物件或 JSON 字串
+ * @returns {Object} 回傳分類結果物件，結構為 { points: FeatureCollection, lines: FeatureCollection, polygons: FeatureCollection }
+ *
+ * @example
+ *
+ * // 混合類型 FeatureCollection
+ * let input = {
+ *     type: 'FeatureCollection',
+ *     features: [
+ *         { type: 'Feature', properties: { name: 'pt' }, geometry: { type: 'Point', coordinates: [121, 25] } },
+ *         { type: 'Feature', properties: { name: 'ls' }, geometry: { type: 'LineString', coordinates: [[121, 25], [122, 26]] } },
+ *         { type: 'Feature', properties: { name: 'pg' }, geometry: { type: 'Polygon', coordinates: [[[0, 0], [4, 0], [4, 4], [0, 4], [0, 0]]] } },
+ *     ],
+ * }
+ * let result = splitGeoJSON(input)
+ * console.log(result.points.features.length)   // 1
+ * console.log(result.lines.features.length)    // 1
+ * console.log(result.polygons.features.length) // 1
+ *
+ */
+function splitGeoJSON(geoIn) {
+
+    // 建立空的分類結果
+    let result = createEmptyResult()
+
+    // 空值 / 未定義 / 無效類型直接回傳空結果
+    if (geoIn === null || geoIn === undefined) {
+        return result
+    }
+
+    // 支援 JSON 字串輸入
+    if (isestr(geoIn)) {
+        try {
+            geoIn = JSON.parse(geoIn)
+        }
+        catch (e) {
+            return result
+        }
+    }
+
+    // 非物件直接回傳空結果
+    if (!isobj(geoIn)) {
+        return result
+    }
+
+    let type = get(geoIn, 'type', '')
+
+    // 輸入為 FeatureCollection
+    if (type === 'FeatureCollection') {
+        let features = get(geoIn, 'features', [])
+        if (!isearr(features)) {
+            return result
+        }
+        each(features, (feature) => {
+            classifyFeature(feature, result)
+        })
+        return result
+    }
+
+    // 輸入為 Feature
+    if (type === 'Feature') {
+        classifyFeature(geoIn, result)
+        return result
+    }
+
+    // 輸入為裸 Geometry（Point、LineString、Polygon 等）
+    let geometryTypes = [
+        'Point', 'MultiPoint',
+        'LineString', 'MultiLineString',
+        'Polygon', 'MultiPolygon',
+        'GeometryCollection',
+    ]
+    if (geometryTypes.indexOf(type) >= 0) {
+        // 包裝成 Feature 後分類
+        let feature = {
+            type: 'Feature',
+            properties: {},
+            geometry: geoIn,
+        }
+        classifyFeature(feature, result)
+        return result
+    }
+
+    // 不認得的類型，回傳空結果
+    return result
+}
+
+
+/**
+ * 處理特殊 Polygon 數據，讓 MapLibre GL JS 可正確渲染
+ *
+ * 此函數的設計目的是處理 splitGeoJSON 回傳的 polygons FeatureCollection 中，
+ * 含有「多層套疊 ring」的 Polygon / MultiPolygon 數據。
+ *
+ * Leaflet 利用 SVG 的 evenodd fill rule 可直接繪製多層套疊的 ring，
+ * 但 MapLibre GL JS 僅依賴 winding order（外環 CCW、洞環 CW）來決定填色/挖洞。
+ * 因此，必須將多層套疊結構轉換為符合 RFC 7946 的標準 MultiPolygon 格式。
+ *
+ * 處理邏輯：
+ *   1. 遍歷所有 Feature
+ *   2. 對於 Polygon 類型：
+ *      - ring 數量 &lt;= 2 時，使用 flattenMultiPolygon 修正 winding order
+ *      - ring 數量 > 2 時（可能為多層套疊），使用 flattenMultiPolygon 搭配
+ *        supposeType='ringStrings' 模式，透過 XOR 運算將套疊結構轉為標準 MultiPolygon
+ *   3. 對於 MultiPolygon 類型：
+ *      - 將每個子 polygon 各自透過 flattenMultiPolygon 處理後合併
+ *   4. 處理完畢後，若 MultiPolygon 只含一個 polygon，降級為 Polygon 類型
+ *   5. 深拷貝輸出，不汙染原始資料
+ *   6. 保留所有 properties
+ *
+ * @param {Object|null} polygonsFC 輸入 polygons FeatureCollection（來自 splitGeoJSON 的 polygons 欄位）
+ * @returns {Object} 回傳處理後的 FeatureCollection
+ *
+ * @example
+ *
+ * // 三層套疊 Polygon
+ * let input = {
+ *     type: 'FeatureCollection',
+ *     features: [{
+ *         type: 'Feature',
+ *         properties: { name: '三層' },
+ *         geometry: {
+ *             type: 'Polygon',
+ *             coordinates: [
+ *                 [[0, 0], [20, 0], [20, 20], [0, 20], [0, 0]],
+ *                 [[4, 4], [16, 4], [16, 16], [4, 16], [4, 4]],
+ *                 [[8, 8], [12, 8], [12, 12], [8, 12], [8, 8]],
+ *             ],
+ *         },
+ *     }],
+ * }
+ * let result = procSpecPolygon(input)
+ * console.log(result.features[0].geometry.type) // 'MultiPolygon'
+ *
+ */
+function procSpecPolygon(polygonsFC) {
+
+    // 建立空結果
+    let emptyResult = { type: 'FeatureCollection', features: [] }
+
+    // 無效輸入
+    if (polygonsFC === null || polygonsFC === undefined) {
+        return emptyResult
+    }
+    if (!iseobj(polygonsFC)) {
+        return emptyResult
+    }
+
+    let features = get(polygonsFC, 'features')
+    if (!isearr(features)) {
+        return { type: 'FeatureCollection', features: [] }
+    }
+
+    let outFeatures = []
+
+    each(features, (feature) => {
+
+        // 深拷貝避免汙染原始資料
+        let feat = cloneDeep(feature)
+
+        let geometry = get(feat, 'geometry')
+        if (!iseobj(geometry)) {
+            // 無 geometry 的 Feature 直接保留
+            outFeatures.push(feat)
+            return
+        }
+
+        let type = get(geometry, 'type', '')
+        let coordinates = get(geometry, 'coordinates', [])
+
+        if (type === 'Polygon') {
+            // 處理 Polygon
+            let processed = processPolygonCoords(coordinates)
+            feat.geometry = processed
+        }
+        else if (type === 'MultiPolygon') {
+            // 處理 MultiPolygon：每個子 polygon 各自處理後合併
+            let allPolygons = []
+            each(coordinates, (polygonCoords) => {
+                let processed = processPolygonCoords(polygonCoords)
+                if (processed.type === 'MultiPolygon') {
+                    each(processed.coordinates, (pg) => {
+                        allPolygons.push(pg)
+                    })
+                }
+                else if (processed.type === 'Polygon') {
+                    allPolygons.push(processed.coordinates)
+                }
+            })
+
+            // 依結果數量決定類型
+            if (size(allPolygons) === 1) {
+                feat.geometry = { type: 'Polygon', coordinates: allPolygons[0] }
+            }
+            else if (size(allPolygons) > 1) {
+                feat.geometry = { type: 'MultiPolygon', coordinates: allPolygons }
+            }
+        }
+
+        outFeatures.push(feat)
+    })
+
+    return { type: 'FeatureCollection', features: outFeatures }
+}
+
+
+/**
+ * 處理單一 Polygon 的 coordinates
+ *
+ * @param {Array} coordinates Polygon 的 coordinates（二維陣列，每個元素為一個 ring）
+ * @returns {Object} 回傳 GeoJSON Geometry 物件（Polygon 或 MultiPolygon）
+ */
+function processPolygonCoords(coordinates) {
+
+    if (!isearr(coordinates)) {
+        return { type: 'Polygon', coordinates }
+    }
+
+    let ringCount = size(coordinates)
+
+    if (ringCount === 0) {
+        return { type: 'Polygon', coordinates }
+    }
+
+    // 使用 flattenMultiPolygon 處理
+    // ring 數量 > 2 時可能為多層套疊（Leaflet evenodd 風格）
+    // 使用 ringStrings 模式讓 polybooljs 做 XOR 運算
+    let supposeType = ringCount > 2 ? 'ringStrings' : 'ringStrings'
+    let pgsResult
+
+    try {
+        pgsResult = flattenMultiPolygon(coordinates, { supposeType })
+    }
+    catch (e) {
+        // fallback：若 flattenMultiPolygon 失敗，原樣回傳
+        return { type: 'Polygon', coordinates }
+    }
+
+    // flattenMultiPolygon 回傳的是 MultiPolygon coordinates（depth=3）
+    if (!isearr(pgsResult)) {
+        return { type: 'Polygon', coordinates }
+    }
+
+    let pgCount = size(pgsResult)
+    if (pgCount === 0) {
+        return { type: 'Polygon', coordinates }
+    }
+    else if (pgCount === 1) {
+        return { type: 'Polygon', coordinates: pgsResult[0] }
+    }
+    else {
+        return { type: 'MultiPolygon', coordinates: pgsResult }
+    }
+}
+
+
+/**
+ * 將任意 GeoJSON 資料拆分為依幾何類型分類的多個 FeatureCollection，
+ * 並對其中的 Polygon 數據進行特殊處理（多層套疊 ring 轉換為標準 MultiPolygon）
+ *
+ * 此函數結合了 splitGeoJSON 與 procSpecPolygon 的功能：
+ *   1. splitGeoJSON：將混合幾何類型的 GeoJSON 拆分為 points / lines / polygons
+ *   2. procSpecPolygon：將 polygons 中含有多層套疊 ring 的 Polygon/MultiPolygon
+ *      轉換為符合 RFC 7946 規範的標準格式，確保 winding order 正確
+ *
+ * 此函數設計為方便日後 MapLibre GL JS 渲染使用的一站式前處理函數。
+ *
+ * @param {Object|String|null} geoIn 輸入 GeoJSON 資料，可為 FeatureCollection、Feature、裸 Geometry 物件或 JSON 字串
+ * @returns {Object} 回傳分類結果物件，結構為 { points: FeatureCollection, lines: FeatureCollection, polygons: FeatureCollection }
+ *
+ * @example
+ *
+ * let input = {
+ *     type: 'FeatureCollection',
+ *     features: [
+ *         { type: 'Feature', properties: { name: 'pt' }, geometry: { type: 'Point', coordinates: [121, 25] } },
+ *         { type: 'Feature', properties: { name: 'ls' }, geometry: { type: 'LineString', coordinates: [[121, 25], [122, 26]] } },
+ *         {
+ *             type: 'Feature',
+ *             properties: { name: '三層' },
+ *             geometry: {
+ *                 type: 'Polygon',
+ *                 coordinates: [
+ *                     [[0, 0], [20, 0], [20, 20], [0, 20], [0, 0]],
+ *                     [[4, 4], [16, 4], [16, 16], [4, 16], [4, 4]],
+ *                     [[8, 8], [12, 8], [12, 12], [8, 12], [8, 8]],
+ *                 ],
+ *             },
+ *         },
+ *     ],
+ * }
+ * let result = splitAndProcGeoJSON(input)
+ * console.log(result.points.features.length)   // 1
+ * console.log(result.lines.features.length)    // 1
+ * console.log(result.polygons.features.length) // 1（polygon 已被處理為 MultiPolygon）
+ *
+ */
+function splitAndProcGeoJSON(geoIn) {
+
+    // 步驟一：使用 splitGeoJSON 拆分幾何類型
+    let splitted = splitGeoJSON(geoIn)
+
+    // 步驟二：使用 procSpecPolygon 處理 polygon 數據
+    let processedPolygons = procSpecPolygon(splitted.polygons)
+
+    // 回傳結果，points 與 lines 不需特殊處理
+    return {
+        points: splitted.points,
+        lines: splitted.lines,
+        polygons: processedPolygons,
+    }
+}
+
+
+export default splitAndProcGeoJSON
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Thu Mar 12 2026 21:37:27 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

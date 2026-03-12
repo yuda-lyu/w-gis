@@ -1,6 +1,5 @@
 import get from 'lodash-es/get.js'
 import each from 'lodash-es/each.js'
-import size from 'lodash-es/size.js'
 import isearr from 'wsemi/src/isearr.mjs'
 import getPointDepth from './getPointDepth.mjs'
 import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
