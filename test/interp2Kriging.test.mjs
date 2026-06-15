@@ -11,7 +11,7 @@ describe(`interp2Kriging`, function() {
 
     k++
     oin[k] = { ps, p: { x: 243, y: 205 }, opt: {} }
-    out[k] = { x: 243, y: 205, z: 94.88479948418721 }
+    out[k] = { x: 243, y: 205, z: 94.94925898784527 }
     it(`should interpolate kriging when interp2Kriging(case1)`, function() {
         k = 0
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -20,7 +20,7 @@ describe(`interp2Kriging`, function() {
 
     k++
     oin[k] = { ps, p: { x: 283, y: 205 }, opt: {} }
-    out[k] = { x: 283, y: 205, z: 116.32333499687805 }
+    out[k] = { x: 283, y: 205, z: 117.14896310695147 }
     it(`should interpolate kriging when interp2Kriging(case2)`, function() {
         k = 1
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -29,7 +29,7 @@ describe(`interp2Kriging`, function() {
 
     k++
     oin[k] = { ps, p: { x: 1160, y: 380 }, opt: {} }
-    out[k] = { x: 1160, y: 380, z: 87.27045807621836 }
+    out[k] = { x: 1160, y: 380, z: 84.98314672005334 }
     it(`should extrapolate kriging when interp2Kriging(outside area)`, function() {
         k = 2
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -38,7 +38,7 @@ describe(`interp2Kriging`, function() {
 
     k++
     oin[k] = { ps: [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }], p: { a: 243, b: 205 }, opt: { keyX: 'a', keyY: 'b', keyZ: 'c' } }
-    out[k] = { a: 243, b: 205, c: 94.88479948418721 }
+    out[k] = { a: 243, b: 205, c: 94.94925898784527 }
     it(`should support custom keys when interp2Kriging(keyX/keyY/keyZ)`, function() {
         k = 3
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -47,7 +47,7 @@ describe(`interp2Kriging`, function() {
 
     k++
     oin[k] = { ps, p: [{ x: 243, y: 205 }, { x: 283, y: 205 }], opt: {} }
-    out[k] = [{ x: 243, y: 205, z: 94.88479948418721 }, { x: 283, y: 205, z: 116.32333499687805 }]
+    out[k] = [{ x: 243, y: 205, z: 94.94925898784527 }, { x: 283, y: 205, z: 117.14896310695147 }]
     it(`should interpolate array targets when interp2Kriging(psTar array)`, function() {
         k = 4
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -55,7 +55,7 @@ describe(`interp2Kriging`, function() {
     })
 
     k++
-    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { scale: 1000 } }
+    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { scale: 1000, method: 'invall' } } //scale-robust為invall專屬, friedrich固定kernel非scale-robust, 故釘invall
     out[k] = { x: 243, y: 205, z: 94.88479948418878 }
     it(`should support scale when interp2Kriging(scale=1000)`, function() {
         k = 5
@@ -64,8 +64,8 @@ describe(`interp2Kriging`, function() {
     })
 
     k++
-    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { model: 'gaussian' } }
-    out[k] = { x: 243, y: 205, z: 92.39124139470005 }
+    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { model: 'gaussian' } } //friedrich默認, gaussian對應SquaredExp核
+    out[k] = { x: 243, y: 205, z: 118.90582500747983 }
     it(`should support model gaussian when interp2Kriging(model='gaussian')`, function() {
         k = 6
         let r = interp2Kriging(oin[k].ps, oin[k].p, oin[k].opt)
@@ -73,7 +73,7 @@ describe(`interp2Kriging`, function() {
     })
 
     k++
-    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { sigma2: 0.001, alpha: 70 } }
+    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { sigma2: 0.001, alpha: 70, method: 'invall' } } //sigma2/alpha為invall半變異圖擬合參數, friedrich不適用, 故釘invall
     out[k] = { x: 243, y: 205, z: 90.88702949276343 }
     it(`should support sigma2 and alpha when interp2Kriging(sigma2/alpha)`, function() {
         k = 7
@@ -82,7 +82,7 @@ describe(`interp2Kriging`, function() {
     })
 
     k++
-    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { returnWithVariogram: true } }
+    oin[k] = { ps, p: { x: 243, y: 205 }, opt: { returnWithVariogram: true, method: 'invall' } } //variogram為invall專屬, friedrich回傳null, 故釘invall
     out[k] = {
         result: { x: 243, y: 205, z: 94.88479948418721 },
         variogram: {

@@ -12,7 +12,7 @@ p = {
 }
 r = interp2Kriging(ps, p)
 console.log(r)
-// => { x: 243, y: 205, z: 94.88479948418721 }
+// => { x: 243, y: 205, z: 94.94925898784527 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -21,7 +21,7 @@ p = {
 }
 r = interp2Kriging(ps, p)
 console.log(r)
-// => { x: 283, y: 205, z: 116.32333499687805 }
+// => { x: 283, y: 205, z: 117.14896310695147 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -30,7 +30,7 @@ p = {
 }
 r = interp2Kriging(ps, p)
 console.log(r)
-// => { x: 1160, y: 380, z: 87.27045807621836 }
+// => { x: 1160, y: 380, z: 84.98314672005334 }
 
 ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]
 p = {
@@ -39,7 +39,7 @@ p = {
 }
 r = interp2Kriging(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
 console.log(r)
-// => { a: 243, b: 205, c: 94.88479948418721 }
+// => { a: 243, b: 205, c: 94.94925898784527 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = [
@@ -55,8 +55,8 @@ p = [
 r = interp2Kriging(ps, p)
 console.log(r)
 // => [
-//   { x: 243, y: 205, z: 94.88479948418721 },
-//   { x: 283, y: 205, z: 116.32333499687805 }
+//   { x: 243, y: 205, z: 94.94925898784527 },
+//   { x: 283, y: 205, z: 117.14896310695147 }
 // ]
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
@@ -64,7 +64,7 @@ p = {
     x: 243,
     y: 205,
 }
-r = interp2Kriging(ps, p, { scale: 1000 })
+r = interp2Kriging(ps, p, { scale: 1000, method: 'invall' }) //scale-robust為invall專屬, friedrich固定kernel非scale-robust
 console.log(r)
 // => { x: 243, y: 205, z: 94.88479948418878 }
 
@@ -73,16 +73,16 @@ p = {
     x: 243,
     y: 205,
 }
-r = interp2Kriging(ps, p, { model: 'gaussian' })
+r = interp2Kriging(ps, p, { model: 'gaussian' }) //friedrich默認, gaussian對應SquaredExp核
 console.log(r)
-// => { x: 243, y: 205, z: 92.39124139470005 }
+// => { x: 243, y: 205, z: 118.90582500747983 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
     x: 243,
     y: 205,
 }
-r = interp2Kriging(ps, p, { sigma2: 0.001, alpha: 70 })
+r = interp2Kriging(ps, p, { sigma2: 0.001, alpha: 70, method: 'invall' }) //sigma2/alpha為invall半變異圖擬合參數, friedrich不適用
 console.log(r)
 // => { x: 243, y: 205, z: 90.88702949276343 }
 
@@ -91,7 +91,7 @@ p = {
     x: 243,
     y: 205,
 }
-r = interp2Kriging(ps, p, { returnWithVariogram: true })
+r = interp2Kriging(ps, p, { returnWithVariogram: true, method: 'invall' }) //variogram為invall專屬, friedrich回傳null
 console.log(r)
 // => {
 //   result: { x: 243, y: 205, z: 94.88479948418721 },

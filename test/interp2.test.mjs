@@ -55,8 +55,8 @@ describe(`interp2`, function() {
     })
 
     k++
-    oin[k] = { ps, p: { x: 243, y: 207 }, opt: { method: 'kriging' } }
-    out[k] = { x: 243, y: 207, z: 97.4283695751981 }
+    oin[k] = { ps, p: { x: 243, y: 207 }, opt: { method: 'kriging' } } //method='kriging'走interp2Kriging, 默認friedrich引擎
+    out[k] = { x: 243, y: 207, z: 97.49846235108123 }
     it(`should interpolate by kriging when interp2(method='kriging')`, async function() {
         k = 5
         let r = await interp2(oin[k].ps, oin[k].p, oin[k].opt)

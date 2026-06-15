@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>kriging-friedrich/kernels.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CholeskyDecomposition.html">CholeskyDecomposition</a><ul class='methods'><li data-type='method'><a href="CholeskyDecomposition.html#insertColumn">insertColumn</a></li><li data-type='method'><a href="CholeskyDecomposition.html#inverse">inverse</a></li><li data-type='method'><a href="CholeskyDecomposition.html#l">l</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solve">solve</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solveLower">solveLower</a></li></ul></li><li><a href="ConstantPrior.html">ConstantPrior</a><ul class='methods'><li data-type='method'><a href="ConstantPrior.html#fit">fit</a></li><li data-type='method'><a href="ConstantPrior.html#prior">prior</a></li><li data-type='method'><a href="ConstantPrior.html#.default">default</a></li></ul></li><li><a href="Exponential.html">Exponential</a><ul class='methods'><li data-type='method'><a href="Exponential.html#gradient">gradient</a></li><li data-type='method'><a href="Exponential.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Exponential.html#kernel">kernel</a></li><li data-type='method'><a href="Exponential.html#rescale">rescale</a></li><li data-type='method'><a href="Exponential.html#setParameters">setParameters</a></li></ul></li><li><a href="ExtendableMatrix.html">ExtendableMatrix</a><ul class='methods'><li data-type='method'><a href="ExtendableMatrix.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableMatrix.html#asMatrix">asMatrix</a></li></ul></li><li><a href="ExtendableVector.html">ExtendableVector</a><ul class='methods'><li data-type='method'><a href="ExtendableVector.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableVector.html#asVector">asVector</a></li><li data-type='method'><a href="ExtendableVector.html#assign">assign</a></li></ul></li><li><a href="GaussianProcess.html">GaussianProcess</a><ul class='methods'><li data-type='method'><a href="GaussianProcess.html#add_samples">add_samples</a></li><li data-type='method'><a href="GaussianProcess.html#fit_parameters">fit_parameters</a></li><li data-type='method'><a href="GaussianProcess.html#likelihood">likelihood</a></li><li data-type='method'><a href="GaussianProcess.html#predict">predict</a></li><li data-type='method'><a href="GaussianProcess.html#predict_covariance">predict_covariance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_mean_variance">predict_mean_variance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_variance">predict_variance</a></li><li data-type='method'><a href="GaussianProcess.html#sample_at">sample_at</a></li><li data-type='method'><a href="GaussianProcess.html#.builder">builder</a></li><li data-type='method'><a href="GaussianProcess.html#.default">default</a></li><li data-type='method'><a href="GaussianProcess.html#.fromData">fromData</a></li></ul></li><li><a href="GaussianProcessBuilder.html">GaussianProcessBuilder</a><ul class='methods'><li data-type='method'><a href="GaussianProcessBuilder.html#fitKernel">fitKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#fitPrior">fitPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setCholeskyEpsilon">setCholeskyEpsilon</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setFitParameters">setFitParameters</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setKernel">setKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setNoise">setNoise</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setPrior">setPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#train">train</a></li></ul></li><li><a href="HyperTan.html">HyperTan</a><ul class='methods'><li data-type='method'><a href="HyperTan.html#gradient">gradient</a></li><li data-type='method'><a href="HyperTan.html#kernel">kernel</a></li><li data-type='method'><a href="HyperTan.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelProd.html">KernelProd</a><ul class='methods'><li data-type='method'><a href="KernelProd.html#gradient">gradient</a></li><li data-type='method'><a href="KernelProd.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelProd.html#kernel">kernel</a></li><li data-type='method'><a href="KernelProd.html#rescale">rescale</a></li><li data-type='method'><a href="KernelProd.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelSum.html">KernelSum</a><ul class='methods'><li data-type='method'><a href="KernelSum.html#gradient">gradient</a></li><li data-type='method'><a href="KernelSum.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelSum.html#kernel">kernel</a></li><li data-type='method'><a href="KernelSum.html#rescale">rescale</a></li><li data-type='method'><a href="KernelSum.html#setParameters">setParameters</a></li></ul></li><li><a href="Linear.html">Linear</a><ul class='methods'><li data-type='method'><a href="Linear.html#gradient">gradient</a></li><li data-type='method'><a href="Linear.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Linear.html#kernel">kernel</a></li><li data-type='method'><a href="Linear.html#setParameters">setParameters</a></li></ul></li><li><a href="LinearPrior.html">LinearPrior</a><ul class='methods'><li data-type='method'><a href="LinearPrior.html#fit">fit</a></li><li data-type='method'><a href="LinearPrior.html#prior">prior</a></li><li data-type='method'><a href="LinearPrior.html#.default">default</a></li></ul></li><li><a href="Matern1.html">Matern1</a><ul class='methods'><li data-type='method'><a href="Matern1.html#gradient">gradient</a></li><li data-type='method'><a href="Matern1.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern1.html#kernel">kernel</a></li><li data-type='method'><a href="Matern1.html#rescale">rescale</a></li><li data-type='method'><a href="Matern1.html#setParameters">setParameters</a></li></ul></li><li><a href="Matern2.html">Matern2</a><ul class='methods'><li data-type='method'><a href="Matern2.html#gradient">gradient</a></li><li data-type='method'><a href="Matern2.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern2.html#kernel">kernel</a></li><li data-type='method'><a href="Matern2.html#rescale">rescale</a></li><li data-type='method'><a href="Matern2.html#setParameters">setParameters</a></li></ul></li><li><a href="Multiquadric.html">Multiquadric</a><ul class='methods'><li data-type='method'><a href="Multiquadric.html#gradient">gradient</a></li><li data-type='method'><a href="Multiquadric.html#kernel">kernel</a></li><li data-type='method'><a href="Multiquadric.html#setParameters">setParameters</a></li></ul></li><li><a href="MultivariateNormal.html">MultivariateNormal</a><ul class='methods'><li data-type='method'><a href="MultivariateNormal.html#mean">mean</a></li><li data-type='method'><a href="MultivariateNormal.html#sample">sample</a></li></ul></li><li><a href="Polynomial.html">Polynomial</a><ul class='methods'><li data-type='method'><a href="Polynomial.html#gradient">gradient</a></li><li data-type='method'><a href="Polynomial.html#kernel">kernel</a></li><li data-type='method'><a href="Polynomial.html#setParameters">setParameters</a></li></ul></li><li><a href="RationalQuadratic.html">RationalQuadratic</a><ul class='methods'><li data-type='method'><a href="RationalQuadratic.html#gradient">gradient</a></li><li data-type='method'><a href="RationalQuadratic.html#kernel">kernel</a></li><li data-type='method'><a href="RationalQuadratic.html#setParameters">setParameters</a></li></ul></li><li><a href="SquaredExp.html">SquaredExp</a><ul class='methods'><li data-type='method'><a href="SquaredExp.html#gradient">gradient</a></li><li data-type='method'><a href="SquaredExp.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="SquaredExp.html#kernel">kernel</a></li><li data-type='method'><a href="SquaredExp.html#rescale">rescale</a></li><li data-type='method'><a href="SquaredExp.html#setParameters">setParameters</a></li></ul></li><li><a href="ZeroPrior.html">ZeroPrior</a><ul class='methods'><li data-type='method'><a href="ZeroPrior.html#fit">fit</a></li><li data-type='method'><a href="ZeroPrior.html#prior">prior</a></li><li data-type='method'><a href="ZeroPrior.html#.default">default</a></li></ul></li><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.aggregatePoints">aggregatePoints</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.clipMultiPolygon">clipMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.clipPolygon">clipPolygon</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.distilMultiPolygon">distilMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixClosePolygon">fixClosePolygon</a></li><li data-type='method'><a href="w-gis.html#.fixGeometryMultiPolygon">fixGeometryMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.flattenMultiPolygon">flattenMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getPointDepth">getPointDepth</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Grid">interp2Grid</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp2Normalize">interp2Normalize</a></li><li data-type='method'><a href="w-gis.html#.interp2Raster">interp2Raster</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.intersectMultiPolygon">intersectMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.intersectPolygon">intersectPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygon">invCoordMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygonOrMultiPolyline">invCoordMultiPolygonOrMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolyline">invCoordMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygon">invCoordPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygonOrPolyline">invCoordPolygonOrPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolyline">invCoordPolyline</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.simplifyMultiPolygon">simplifyMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.splineMultiPolygon">splineMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionMultiPolygon">unionMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionPolygon">unionPolygon</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_MAX_TIME_MS">DEFAULT_MAX_TIME_MS</a></li><li><a href="global.html#Gaussian">Gaussian</a></li><li><a href="global.html#addKernels">addKernels</a></li><li><a href="global.html#addRowsCholeskyCovMatrix">addRowsCholeskyCovMatrix</a></li><li><a href="global.html#addToDiagonal">addToDiagonal</a></li><li><a href="global.html#addVec">addVec</a></li><li><a href="global.html#assert">assert</a></li><li><a href="global.html#cholesky">cholesky</a></li><li><a href="global.html#choleskyInverse">choleskyInverse</a></li><li><a href="global.html#choleskySolve">choleskySolve</a></li><li><a href="global.html#classifyFeature">classifyFeature</a></li><li><a href="global.html#columnDot">columnDot</a></li><li><a href="global.html#columnNormSquared">columnNormSquared</a></li><li><a href="global.html#createEmptyResult">createEmptyResult</a></li><li><a href="global.html#diagonal">diagonal</a></li><li><a href="global.html#dot">dot</a></li><li><a href="global.html#ensureRingClosed">ensureRingClosed</a></li><li><a href="global.html#fitAmplitudeVar">fitAmplitudeVar</a></li><li><a href="global.html#fitBandwidthMean">fitBandwidthMean</a></li><li><a href="global.html#fixCloseMultiPolygonCoords">fixCloseMultiPolygonCoords</a></li><li><a href="global.html#fixClosePolygonCoords">fixClosePolygonCoords</a></li><li><a href="global.html#fromVector">fromVector</a></li><li><a href="global.html#gradientMarginalLikelihood">gradientMarginalLikelihood</a></li><li><a href="global.html#hypot">hypot</a></li><li><a href="global.html#identity">identity</a></li><li><a href="global.html#isSingle">isSingle</a></li><li><a href="global.html#lstsqSolve">lstsqSolve</a></li><li><a href="global.html#makeCholeskyCovMatrix">makeCholeskyCovMatrix</a></li><li><a href="global.html#makeCovarianceMatrix">makeCovarianceMatrix</a></li><li><a href="global.html#makeGp">makeGp</a></li><li><a href="global.html#makeGradientCovarianceMatrices">makeGradientCovarianceMatrices</a></li><li><a href="global.html#matMul">matMul</a></li><li><a href="global.html#matSub">matSub</a></li><li><a href="global.html#matTransposeVec">matTransposeVec</a></li><li><a href="global.html#matVec">matVec</a></li><li><a href="global.html#mulKernels">mulKernels</a></li><li><a href="global.html#mulberry32">mulberry32</a></li><li><a href="global.html#norm">norm</a></li><li><a href="global.html#normSquared">normSquared</a></li><li><a href="global.html#optimizeParameters">optimizeParameters</a></li><li><a href="global.html#procSpecPolygon">procSpecPolygon</a></li><li><a href="global.html#processPolygonCoords">processPolygonCoords</a></li><li><a href="global.html#scaleVec">scaleVec</a></li><li><a href="global.html#scaledGradientMarginalLikelihood">scaledGradientMarginalLikelihood</a></li><li><a href="global.html#scaledOptimizeParameters">scaledOptimizeParameters</a></li><li><a href="global.html#solveLowerTri">solveLowerTri</a></li><li><a href="global.html#solveLowerTriVec">solveLowerTriVec</a></li><li><a href="global.html#solveUpperTri">solveUpperTri</a></li><li><a href="global.html#solveUpperTriVec">solveUpperTriVec</a></li><li><a href="global.html#splitAndProcGeoJSON">splitAndProcGeoJSON</a></li><li><a href="global.html#splitGeoJSON">splitGeoJSON</a></li><li><a href="global.html#standardNormal">standardNormal</a></li><li><a href="global.html#subVec">subVec</a></li><li><a href="global.html#toMatrix">toMatrix</a></li><li><a href="global.html#toVector">toVector</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#transpose">transpose</a></li><li><a href="global.html#zeros">zeros</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">kriging-friedrich/kernels.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//! # Kernels
+//!
+//! Port of `friedrich 0.6.0` `src/parameters/kernel.rs`.
+//!
+//! A kernel maps two row-vectors (`number[]`) to a scalar expressing their
+//! similarity. Each kernel class implements the common interface:
+//!   nbParameters() : number
+//!   isScalable()   : boolean (default false)
+//!   rescale(scale) : amplitude *= scale (scalable kernels only; throws otherwise)
+//!   kernel(x1, x2) : number   (covariance value)
+//!   gradient(x1,x2): number[] (gradient w.r.t. each hyper-parameter, in get/setParameters order)
+//!   getParameters(): number[]
+//!   setParameters(params): void
+//!   heuristicFit(inputs, outputs): void (default no-op; some kernels override)
+//!
+//! SANITIZE convention (matches Rust): the optimizer may feed illegal (e.g.
+//! negative) parameters, so kernel()/gradient() take Math.abs() of `ampl`/`ls`
+//! where the Rust source does, and use Math.sign() (Rust `signum()`) for the
+//! amplitude gradient. Faithfulness is the priority; some latent Rust bugs are
+//! preserved verbatim (see Multiquadric and Matern2 notes).
+//!
+//! Data representation (PORT_SPEC §2): point / vector = number[].
+
+import { dot, subVec, norm, normSquared, hypot } from './algebra.mjs';
+
+//=============================================================================
+// FIT HEURISTICS (free functions, exported for kernels &amp; tests)
+//=============================================================================
+
+/**
+ * Rough bandwidth estimate: mean Euclidean distance between distinct samples.
+ *   Σ_{i&lt;j} ‖xᵢ − xⱼ‖ / (n(n−1)/2)
+ * @param {number[][]} inputs
+ * @returns {number}
+ */
+export function fitBandwidthMean(inputs) {
+    let sumDistances = 0;
+    const nbSamples = inputs.length;
+    for (let i = 0; i &lt; nbSamples; i++) {
+        for (let j = i + 1; j &lt; nbSamples; j++) {
+            sumDistances += norm(subVec(inputs[i], inputs[j]));
+        }
+    }
+    // Integer arithmetic matches Rust `(n*n - n) / 2`.
+    const nbDistances = (nbSamples * nbSamples - nbSamples) / 2;
+    return sumDistances / nbDistances;
+}
+
+/**
+ * Best-guess amplitude = variance of the outputs.
+ *
+ * Matches nalgebra `variance()`: Σ(yᵢ − mean)² / N (divides by N, the sample
+ * count — NOT N−1). Confirmed from nalgebra 0.34.2 statistics.rs (PORT_SPEC §4.1).
+ *
+ * @param {number[]} outputs
+ * @returns {number}
+ */
+export function fitAmplitudeVar(outputs) {
+    const n = outputs.length;
+    let mean = 0;
+    for (let i = 0; i &lt; n; i++) mean += outputs[i];
+    mean /= n;
+    let acc = 0;
+    for (let i = 0; i &lt; n; i++) {
+        const d = outputs[i] - mean;
+        acc += d * d;
+    }
+    return acc / n;
+}
+
+//=============================================================================
+// CLASSICAL KERNELS
+//=============================================================================
+
+/**
+ * Linear kernel: k(x,y) = xᵀy + c.
+ * Parameters: [c] (default c = 0). nbParameters = 1. Not scalable.
+ */
+export class Linear {
+    /** @param {number} [c=0] */
+    constructor(c = 0) {
+        /** @type {number} */
+        this.c = c;
+    }
+
+    nbParameters() {
+        return 1;
+    }
+
+    isScalable() {
+        return false;
+    }
+
+    rescale(_scale) {
+        throw new Error('You tried to rescale a Kernel that is not Scalable!');
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return dot(x1, x2) + this.c;
+    }
+
+    /**
+     * gradient = [grad_c] = [1].
+     * @param {number[]} _x1
+     * @param {number[]} _x2
+     * @returns {number[]}
+     */
+    gradient(_x1, _x2) {
+        const gradC = 1;
+        return [gradC];
+    }
+
+    getParameters() {
+        return [this.c];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.c = parameters[0];
+    }
+
+    /** Default no-op heuristic fit. */
+    heuristicFit(_inputs, _outputs) {}
+}
+
+//-----------------------------------------------
+
+/**
+ * Polynomial kernel: k(x,y) = (α·xᵀy + c)^d.
+ * Parameters: [alpha, c, d] (defaults alpha = 1, c = 0, d = 1). nbParameters = 3.
+ * Not scalable.
+ */
+export class Polynomial {
+    /**
+     * @param {number} [alpha=1]
+     * @param {number} [c=0]
+     * @param {number} [d=1]
+     */
+    constructor(alpha = 1, c = 0, d = 1) {
+        /** @type {number} scaling of the inner product */
+        this.alpha = alpha;
+        /** @type {number} constant added to the inner product */
+        this.c = c;
+        /** @type {number} power */
+        this.d = d;
+    }
+
+    nbParameters() {
+        return 3;
+    }
+
+    isScalable() {
+        return false;
+    }
+
+    rescale(_scale) {
+        throw new Error('You tried to rescale a Kernel that is not Scalable!');
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return Math.pow(this.alpha * dot(x1, x2) + this.c, this.d);
+    }
+
+    /**
+     * gradient = [grad_alpha, grad_c, grad_d]:
+     *   x = x1·x2, inner = alpha·x + c
+     *   grad_c     = d · inner^(d−1)
+     *   grad_alpha = x · grad_c
+     *   grad_d     = ln(inner) · inner^d
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const x = dot(x1, x2);
+        const innerTerm = this.alpha * x + this.c;
+
+        const gradC = this.d * Math.pow(innerTerm, this.d - 1);
+        const gradAlpha = x * gradC;
+        const gradD = Math.log(innerTerm) * Math.pow(innerTerm, this.d);
+
+        return [gradAlpha, gradC, gradD];
+    }
+
+    getParameters() {
+        return [this.alpha, this.c, this.d];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.alpha = parameters[0];
+        this.c = parameters[1];
+        this.d = parameters[2];
+    }
+
+    heuristicFit(_inputs, _outputs) {}
+}
+
+//-----------------------------------------------
+
+/**
+ * Squared exponential (a.k.a. Gaussian) kernel:
+ *   k(x,y) = A·exp(−‖x−y‖² / (2·ls²)),  A = |ampl|.
+ * Parameters: [ls, ampl] (defaults ls = 1, ampl = 1). nbParameters = 2. Scalable.
+ */
+export class SquaredExp {
+    /**
+     * @param {number} [ls=1]
+     * @param {number} [ampl=1]
+     */
+    constructor(ls = 1, ampl = 1) {
+        /** @type {number} length scale */
+        this.ls = ls;
+        /** @type {number} amplitude */
+        this.ampl = ampl;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return true;
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        // Sanitize parameters.
+        const ampl = Math.abs(this.ampl);
+        const distanceSquared = normSquared(subVec(x1, x2));
+        const x = -distanceSquared / (2 * this.ls * this.ls);
+        return ampl * Math.exp(x);
+    }
+
+    /**
+     * gradient = [grad_ls, grad_ampl] with d² = ‖x−y‖², A = |ampl|,
+     *   e = exp(−d²/(2·ls²)):
+     *   grad_ls   = (d² · A · e) / ls³
+     *   grad_ampl = sign(ampl) · e
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const distanceSquared = normSquared(subVec(x1, x2));
+        const exponential = Math.exp(-distanceSquared / (2 * this.ls * this.ls));
+        const gradLs = (distanceSquared * ampl * exponential) / Math.pow(this.ls, 3);
+        const gradAmpl = Math.sign(this.ampl) * exponential;
+        return [gradLs, gradAmpl];
+    }
+
+    /** @param {number} scale */
+    rescale(scale) {
+        this.ampl *= scale;
+    }
+
+    getParameters() {
+        return [this.ls, this.ampl];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.ls = parameters[0];
+        this.ampl = parameters[1];
+    }
+
+    /**
+     * heuristic: ls = mean inter-sample distance, ampl = output variance.
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.ls = fitBandwidthMean(inputs);
+        this.ampl = fitAmplitudeVar(outputs);
+    }
+}
+
+/** Gaussian kernel — alias of SquaredExp (Rust `pub type Gaussian = SquaredExp`). */
+export const Gaussian = SquaredExp;
+
+//-----------------------------------------------
+
+/**
+ * Exponential kernel:
+ *   k(x,y) = A·exp(−‖x−y‖ / (2·ls²)),  A = |ampl|.
+ * NOTE the denominator is 2·ls² (NOT ls), faithful to Rust.
+ * Parameters: [ls, ampl] (defaults ls = 1, ampl = 1). nbParameters = 2. Scalable.
+ */
+export class Exponential {
+    /**
+     * @param {number} [ls=1]
+     * @param {number} [ampl=1]
+     */
+    constructor(ls = 1, ampl = 1) {
+        /** @type {number} length scale */
+        this.ls = ls;
+        /** @type {number} amplitude */
+        this.ampl = ampl;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return true;
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const distance = norm(subVec(x1, x2));
+        const x = -distance / (2 * this.ls * this.ls);
+        return ampl * Math.exp(x);
+    }
+
+    /**
+     * gradient = [grad_ls, grad_ampl] with d = ‖x−y‖, A = |ampl|,
+     *   e = exp(−d/(2·ls²)):
+     *   grad_ls   = (d · A · e) / ls³
+     *   grad_ampl = sign(ampl) · e
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const distance = norm(subVec(x1, x2));
+        const exponential = Math.exp(-distance / (2 * this.ls * this.ls));
+        const gradLs = (distance * ampl * exponential) / Math.pow(this.ls, 3);
+        const gradAmpl = Math.sign(this.ampl) * exponential;
+        return [gradLs, gradAmpl];
+    }
+
+    /** @param {number} scale */
+    rescale(scale) {
+        this.ampl *= scale;
+    }
+
+    getParameters() {
+        return [this.ls, this.ampl];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.ls = parameters[0];
+        this.ampl = parameters[1];
+    }
+
+    /**
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.ls = fitBandwidthMean(inputs);
+        this.ampl = fitAmplitudeVar(outputs);
+    }
+}
+
+//-----------------------------------------------
+
+/**
+ * Matèrn1 kernel (ν = 3/2, 1-differentiable):
+ *   k(x,y) = A·(1 + x)·exp(−x),  A = |ampl|, l = |ls|, x = √3·d/l, d = ‖x−y‖.
+ * Parameters: [ls, ampl] (defaults ls = 1, ampl = 1). nbParameters = 2. Scalable.
+ */
+export class Matern1 {
+    /**
+     * @param {number} [ls=1]
+     * @param {number} [ampl=1]
+     */
+    constructor(ls = 1, ampl = 1) {
+        /** @type {number} length scale */
+        this.ls = ls;
+        /** @type {number} amplitude */
+        this.ampl = ampl;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return true;
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const l = Math.abs(this.ls);
+        const distance = norm(subVec(x1, x2));
+        const x = Math.sqrt(3) * distance / l;
+        return ampl * (1 + x) * Math.exp(-x);
+    }
+
+    /**
+     * gradient = [grad_ls, grad_ampl] with d = ‖x−y‖, A = |ampl|, l = |ls|,
+     *   x = √3·d/l:
+     *   grad_ls   = (3 · A · d² · exp(−x)) / ls³
+     *   grad_ampl = sign(ampl) · (1 + x) · exp(−x)
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const l = Math.abs(this.ls);
+        const distance = norm(subVec(x1, x2));
+        const x = Math.sqrt(3) * distance / l;
+        const gradLs = (3 * ampl * Math.pow(distance, 2) * Math.exp(-x)) / Math.pow(this.ls, 3);
+        const gradAmpl = Math.sign(this.ampl) * (1 + x) * Math.exp(-x);
+        return [gradLs, gradAmpl];
+    }
+
+    /** @param {number} scale */
+    rescale(scale) {
+        this.ampl *= scale;
+    }
+
+    getParameters() {
+        return [this.ls, this.ampl];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.ls = parameters[0];
+        this.ampl = parameters[1];
+    }
+
+    /**
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.ls = fitBandwidthMean(inputs);
+        this.ampl = fitAmplitudeVar(outputs);
+    }
+}
+
+//-----------------------------------------------
+
+/**
+ * Matèrn2 kernel (ν = 5/2, 2-differentiable):
+ *   k(x,y) = A·(1 + x + 5d²/(3l²))·exp(−x),
+ *   A = |ampl|, l = |ls|, x = √5·d/l, d = ‖x−y‖.
+ * Parameters: [ls, ampl] (defaults ls = 1, ampl = 1). nbParameters = 2. Scalable.
+ */
+export class Matern2 {
+    /**
+     * @param {number} [ls=1]
+     * @param {number} [ampl=1]
+     */
+    constructor(ls = 1, ampl = 1) {
+        /** @type {number} length scale */
+        this.ls = ls;
+        /** @type {number} amplitude */
+        this.ampl = ampl;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return true;
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const l = Math.abs(this.ls);
+        const distance = norm(subVec(x1, x2));
+        const x = Math.sqrt(5) * distance / l;
+        return ampl * (1 + x + (5 * distance * distance) / (3 * l * l)) * Math.exp(-x);
+    }
+
+    /**
+     * gradient = [grad_ls, grad_ampl] with d = ‖x−y‖, A = |ampl|, l = |ls|.
+     *
+     * NOTE (faithful to Rust source): the exponent `x` here uses the RAW `this.ls`
+     * (not the sanitized `l = |ls|`) — i.e. x = √5·d/this.ls — which differs from
+     * kernel()'s x = √5·d/l. Both are reproduced exactly as in Rust.
+     *   grad_ls   = sign(ls) · A · ((2l/3 + 1) + d·√5·((l²/3 + l + 1)/l²)) · exp(−x)
+     *   grad_ampl = sign(ampl) · (1 + x + 5d²/(3l²)) · exp(−x)
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const ampl = Math.abs(this.ampl);
+        const l = Math.abs(this.ls);
+        const distance = norm(subVec(x1, x2));
+        // NOTE: faithful to Rust source — divides by raw this.ls, not l = |ls|.
+        const x = Math.sqrt(5) * distance / this.ls;
+        const gradLs =
+            Math.sign(this.ls) *
+            ampl *
+            ((2 * l / 3 + 1) +
+                distance * Math.sqrt(5) * ((Math.pow(l, 2) / 3 + l + 1) / Math.pow(l, 2))) *
+            Math.exp(-x);
+        const gradAmpl =
+            Math.sign(this.ampl) *
+            (1 + x + (5 * distance * distance) / (3 * l * l)) *
+            Math.exp(-x);
+        return [gradLs, gradAmpl];
+    }
+
+    /** @param {number} scale */
+    rescale(scale) {
+        this.ampl *= scale;
+    }
+
+    getParameters() {
+        return [this.ls, this.ampl];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.ls = parameters[0];
+        this.ampl = parameters[1];
+    }
+
+    /**
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.ls = fitBandwidthMean(inputs);
+        this.ampl = fitAmplitudeVar(outputs);
+    }
+}
+
+//-----------------------------------------------
+
+/**
+ * Hyperbolic tangent kernel: k(x,y) = tanh(α·xᵀy + c).
+ * Parameters: [alpha, c] (defaults alpha = 1, c = 0). nbParameters = 2.
+ * Not scalable.
+ */
+export class HyperTan {
+    /**
+     * @param {number} [alpha=1]
+     * @param {number} [c=0]
+     */
+    constructor(alpha = 1, c = 0) {
+        /** @type {number} scaling of the inner product */
+        this.alpha = alpha;
+        /** @type {number} constant added to the inner product */
+        this.c = c;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return false;
+    }
+
+    rescale(_scale) {
+        throw new Error('You tried to rescale a Kernel that is not Scalable!');
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return Math.tanh(this.alpha * dot(x1, x2) + this.c);
+    }
+
+    /**
+     * gradient = [grad_alpha, grad_c] with x = x1·x2:
+     *   grad_c     = 1 / cosh(α·x + c)²
+     *   grad_alpha = x · grad_c
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const x = dot(x1, x2);
+        const gradC = 1 / Math.pow(Math.cosh(this.alpha * x + this.c), 2);
+        const gradAlpha = x * gradC;
+        return [gradAlpha, gradC];
+    }
+
+    getParameters() {
+        return [this.alpha, this.c];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.alpha = parameters[0];
+        this.c = parameters[1];
+    }
+
+    heuristicFit(_inputs, _outputs) {}
+}
+
+//-----------------------------------------------
+
+/**
+ * Multiquadric kernel: k(x,y) = sqrt(‖x−y‖² + c²).
+ *
+ * Faithful to Rust, this class preserves THREE latent bugs (PORT_SPEC §4.2):
+ *   1. nbParameters() returns 2, but there is really only one parameter `c`.
+ *   2. kernel() uses the SQUARED distance inside hypot (`‖x−y‖².hypot(c)` =
+ *      sqrt(‖x−y‖⁴ + c²)), while gradient() uses the NON-squared distance
+ *      (`‖x−y‖.hypot(c)`) — the two are inconsistent.
+ *   3. setParameters() reads parameters[1] although getParameters() returns [c]
+ *      at index 0.
+ * None are "fixed" — consistency with Rust 0.6.0 is the requirement.
+ *
+ * Parameters: [c] (default c = 0). Not scalable.
+ */
+export class Multiquadric {
+    /** @param {number} [c=0] */
+    constructor(c = 0) {
+        /** @type {number} constant added to the square of the difference */
+        this.c = c;
+    }
+
+    // NOTE: faithful to Rust latent bug — returns 2 although only `c` exists.
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return false;
+    }
+
+    rescale(_scale) {
+        throw new Error('You tried to rescale a Kernel that is not Scalable!');
+    }
+
+    /**
+     * k(x,y) = hypot(‖x−y‖², c) = sqrt(‖x−y‖⁴ + c²).
+     * NOTE: faithful to Rust latent bug — uses the SQUARED norm inside hypot
+     * (inconsistent with gradient()'s non-squared norm).
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return hypot(normSquared(subVec(x1, x2)), this.c);
+    }
+
+    /**
+     * gradient = [grad_c]:
+     *   grad_c = c / hypot(‖x−y‖, c)
+     * NOTE: faithful to Rust latent bug — uses the NON-squared norm here
+     * (inconsistent with kernel()'s squared norm).
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const gradC = this.c / hypot(norm(subVec(x1, x2)), this.c);
+        return [gradC];
+    }
+
+    getParameters() {
+        return [this.c];
+    }
+
+    /**
+     * @param {number[]} parameters
+     * NOTE: faithful to Rust latent bug — reads index 1, while getParameters
+     * returns `c` at index 0.
+     */
+    setParameters(parameters) {
+        this.c = parameters[1];
+    }
+
+    heuristicFit(_inputs, _outputs) {}
+}
+
+//-----------------------------------------------
+
+/**
+ * Rational quadratic kernel:
+ *   k(x,y) = (1 + ‖x−y‖² / (2·α·ls²))^(−α).
+ * Parameters: [alpha, ls] (defaults alpha = 1, ls = 1). nbParameters = 2.
+ * Not scalable.
+ */
+export class RationalQuadratic {
+    /**
+     * @param {number} [alpha=1]
+     * @param {number} [ls=1]
+     */
+    constructor(alpha = 1, ls = 1) {
+        /** @type {number} controls inverse power and difference scale */
+        this.alpha = alpha;
+        /** @type {number} length scale */
+        this.ls = ls;
+    }
+
+    nbParameters() {
+        return 2;
+    }
+
+    isScalable() {
+        return false;
+    }
+
+    rescale(_scale) {
+        throw new Error('You tried to rescale a Kernel that is not Scalable!');
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        const distanceSquared = normSquared(subVec(x1, x2));
+        return Math.pow(
+            1 + distanceSquared / (2 * this.alpha * this.ls * this.ls),
+            -this.alpha
+        );
+    }
+
+    /**
+     * gradient = [grad_alpha, grad_ls] with l = |ls|, d² = ‖x−y‖²:
+     *   grad_alpha = ((d² + 2l²α)/(l²α))^(−α) ·
+     *                ( 2^α·(1 − ln((d² + 2l²α)/(2l²α))) − (l²·2^(α+1)·α)/(d² + 2l²α) )
+     *   grad_ls    = d² · (d²/(2αl²) + 1)^(−α−1) / ls³
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        // Sanitize parameters.
+        const l = Math.abs(this.ls);
+        const distanceSquared = normSquared(subVec(x1, x2));
+        const l2 = Math.pow(l, 2);
+
+        const gradAlpha =
+            Math.pow(
+                (distanceSquared + 2 * l2 * this.alpha) / (l2 * this.alpha),
+                -this.alpha
+            ) *
+            (Math.pow(2, this.alpha) *
+                (1 -
+                    Math.log(
+                        (distanceSquared + 2 * l2 * this.alpha) / (2 * l2 * this.alpha)
+                    )) -
+                (l2 * Math.pow(2, this.alpha + 1) * this.alpha) /
+                    (distanceSquared + 2 * l2 * this.alpha));
+
+        const gradLs =
+            distanceSquared *
+            Math.pow(distanceSquared / (2 * this.alpha * l * l) + 1, -this.alpha - 1) /
+            Math.pow(this.ls, 3);
+
+        return [gradAlpha, gradLs];
+    }
+
+    getParameters() {
+        return [this.alpha, this.ls];
+    }
+
+    /** @param {number[]} parameters */
+    setParameters(parameters) {
+        this.alpha = parameters[0];
+        this.ls = parameters[1];
+    }
+
+    heuristicFit(_inputs, _outputs) {}
+}
+
+//=============================================================================
+// KERNEL COMBINATORS
+//=============================================================================
+
+/**
+ * Sum of two kernels: k(x,y) = k1(x,y) + k2(x,y).
+ *
+ * Corresponds to Rust `KernelSum&lt;T, U>`. Default construction is just
+ * `new KernelSum(new T(), new U())`.
+ */
+export class KernelSum {
+    /**
+     * @param {object} k1
+     * @param {object} k2
+     */
+    constructor(k1, k2) {
+        this.k1 = k1;
+        this.k2 = k2;
+    }
+
+    nbParameters() {
+        return this.k1.nbParameters() + this.k2.nbParameters();
+    }
+
+    isScalable() {
+        return this.k1.isScalable() &amp;&amp; this.k2.isScalable();
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return this.k1.kernel(x1, x2) + this.k2.kernel(x1, x2);
+    }
+
+    /**
+     * Concatenation of both child gradients.
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        return [...this.k1.gradient(x1, x2), ...this.k2.gradient(x1, x2)];
+    }
+
+    /** @param {number} scale */
+    rescale(scale) {
+        this.k1.rescale(scale);
+        this.k2.rescale(scale);
+    }
+
+    getParameters() {
+        return [...this.k1.getParameters(), ...this.k2.getParameters()];
+    }
+
+    /**
+     * Splits the parameter slice between the two children.
+     * @param {number[]} parameters
+     */
+    setParameters(parameters) {
+        const n1 = this.k1.nbParameters();
+        this.k1.setParameters(parameters.slice(0, n1));
+        this.k2.setParameters(parameters.slice(n1));
+    }
+
+    /**
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.k1.heuristicFit(inputs, outputs);
+        this.k2.heuristicFit(inputs, outputs);
+    }
+}
+
+/**
+ * Point-wise product of two kernels: k(x,y) = k1(x,y) · k2(x,y).
+ *
+ * Corresponds to Rust `KernelProd&lt;T, U>`.
+ */
+export class KernelProd {
+    /**
+     * @param {object} k1
+     * @param {object} k2
+     */
+    constructor(k1, k2) {
+        this.k1 = k1;
+        this.k2 = k2;
+    }
+
+    nbParameters() {
+        return this.k1.nbParameters() + this.k2.nbParameters();
+    }
+
+    isScalable() {
+        return this.k1.isScalable() || this.k2.isScalable();
+    }
+
+    /**
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number}
+     */
+    kernel(x1, x2) {
+        return this.k1.kernel(x1, x2) * this.k2.kernel(x1, x2);
+    }
+
+    /**
+     * Product rule: [ ...k1.gradient · k2val, ...k2.gradient · k1val ],
+     * where k1val = k1.kernel(x,y), k2val = k2.kernel(x,y).
+     * @param {number[]} x1
+     * @param {number[]} x2
+     * @returns {number[]}
+     */
+    gradient(x1, x2) {
+        const k1val = this.k1.kernel(x1, x2);
+        const k2val = this.k2.kernel(x1, x2);
+        const g1 = this.k1.gradient(x1, x2).map((g) => g * k2val);
+        const g2 = this.k2.gradient(x1, x2).map((g) => g * k1val);
+        return [...g1, ...g2];
+    }
+
+    /**
+     * Rescale the first scalable child, else the second.
+     * @param {number} scale
+     */
+    rescale(scale) {
+        if (this.k1.isScalable()) {
+            this.k1.rescale(scale);
+        } else {
+            this.k2.rescale(scale);
+        }
+    }
+
+    getParameters() {
+        return [...this.k1.getParameters(), ...this.k2.getParameters()];
+    }
+
+    /**
+     * @param {number[]} parameters
+     */
+    setParameters(parameters) {
+        const n1 = this.k1.nbParameters();
+        this.k1.setParameters(parameters.slice(0, n1));
+        this.k2.setParameters(parameters.slice(n1));
+    }
+
+    /**
+     * @param {number[][]} inputs
+     * @param {number[]} outputs
+     */
+    heuristicFit(inputs, outputs) {
+        this.k1.heuristicFit(inputs, outputs);
+        this.k2.heuristicFit(inputs, outputs);
+    }
+}
+
+/**
+ * Convenience constructor for k1 + k2 (Rust `KernelArith` Add operator).
+ * @param {object} k1
+ * @param {object} k2
+ * @returns {KernelSum}
+ */
+export function addKernels(k1, k2) {
+    return new KernelSum(k1, k2);
+}
+
+/**
+ * Convenience constructor for k1 · k2 (Rust `KernelArith` Mul operator).
+ * @param {object} k1
+ * @param {object} k2
+ * @returns {KernelProd}
+ */
+export function mulKernels(k1, k2) {
+    return new KernelProd(k1, k2);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Jun 15 2026 20:28:08 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

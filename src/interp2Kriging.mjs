@@ -12,7 +12,8 @@ import haskey from 'wsemi/src/haskey.mjs'
 import ptsXYtoArr from './ptsXYtoArr.mjs'
 import ptsXYZtoArr from './ptsXYZtoArr.mjs'
 import interp2Normalize from './interp2Normalize.mjs'
-import kriging from './_kriging.mjs'
+import kriging from './kriging-invall/kriging.mjs'
+import { GaussianProcess, Exponential, SquaredExp } from './kriging-friedrich/index.mjs'
 
 
 /**
@@ -31,10 +32,13 @@ import kriging from './_kriging.mjs'
  * @param {String} [opt.keyY='y'] 輸入點物件之y欄位字串，為座標，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z欄位字串，為觀測值，預設'z'
  * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
- * @param {String} [opt.model='exponential'] 輸入擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
- * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，預設0
- * @param {Number} [opt.alpha=100] 輸入自動擬合參數alpha數值，預設100
- * @param {Boolean} [opt.returnWithVariogram=false] 輸入是否回傳擬合半變異數結果布林值，預設false
+ * @param {String} [opt.method='friedrich'] 輸入後端引擎字串，可選'friedrich'(Gaussian Process Regression，核函數，kriging-friedrich)、'invall'(經典Ordinary Kriging，半變異圖擬合，kriging-invall/kriging.mjs)，預設'friedrich'
+ * @param {String} [opt.model='exponential'] 輸入擬合模式字串，method='invall'時可選'exponential'、'gaussian'、'spherical'；method='friedrich'時'gaussian'對應SquaredExp、其餘(含spherical)對應Exponential，預設'exponential'
+ * @param {Number} [opt.sigma2=0] 輸入自動擬合參數sigma2數值，僅method='invall'時有效，預設0
+ * @param {Number} [opt.alpha=100] 輸入自動擬合參數alpha數值，僅method='invall'時有效，預設100
+ * @param {Number} [opt.ls=0.5] 輸入friedrich核函數lengthscale數值(對應正規化後值域)，僅method='friedrich'時有效，預設0.5
+ * @param {Number} [opt.noise=0.01] 輸入friedrich觀測噪音標準差(對應正規化後值域)，僅method='friedrich'時有效，預設0.01
+ * @param {Boolean} [opt.returnWithVariogram=false] 輸入是否回傳擬合半變異數結果布林值，method='friedrich'時variogram回傳null，預設false
  * @returns {Array|Object} 回傳點物件陣列或點物件，若使用returnWithVariogram=true則回傳物件資訊，若發生錯誤則回傳錯誤訊息物件
  * @example
  *
@@ -49,7 +53,7 @@ import kriging from './_kriging.mjs'
  * }
  * r = interp2Kriging(ps, p)
  * console.log(r)
- * // => { x: 243, y: 205, z: 94.88479948418721 }
+ * // => { x: 243, y: 205, z: 94.94925898784527 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -58,7 +62,7 @@ import kriging from './_kriging.mjs'
  * }
  * r = interp2Kriging(ps, p)
  * console.log(r)
- * // => { x: 283, y: 205, z: 116.32333499687805 }
+ * // => { x: 283, y: 205, z: 117.14896310695147 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -67,7 +71,7 @@ import kriging from './_kriging.mjs'
  * }
  * r = interp2Kriging(ps, p)
  * console.log(r)
- * // => { x: 1160, y: 380, z: 87.27045807621836 }
+ * // => { x: 1160, y: 380, z: 84.98314672005334 }
  *
  * ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]
  * p = {
@@ -76,7 +80,7 @@ import kriging from './_kriging.mjs'
  * }
  * r = interp2Kriging(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
  * console.log(r)
- * // => { a: 243, b: 205, c: 94.88479948418721 }
+ * // => { a: 243, b: 205, c: 94.94925898784527 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = [
@@ -92,8 +96,8 @@ import kriging from './_kriging.mjs'
  * r = interp2Kriging(ps, p)
  * console.log(r)
  * // => [
- * //   { x: 243, y: 205, z: 94.88479948418721 },
- * //   { x: 283, y: 205, z: 116.32333499687805 }
+ * //   { x: 243, y: 205, z: 94.94925898784527 },
+ * //   { x: 283, y: 205, z: 117.14896310695147 }
  * // ]
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
@@ -101,7 +105,7 @@ import kriging from './_kriging.mjs'
  *     x: 243,
  *     y: 205,
  * }
- * r = interp2Kriging(ps, p, { scale: 1000 })
+ * r = interp2Kriging(ps, p, { scale: 1000, method: 'invall' }) //scale-robust為invall專屬, friedrich固定kernel非scale-robust
  * console.log(r)
  * // => { x: 243, y: 205, z: 94.88479948418878 }
  *
@@ -110,16 +114,16 @@ import kriging from './_kriging.mjs'
  *     x: 243,
  *     y: 205,
  * }
- * r = interp2Kriging(ps, p, { model: 'gaussian' })
+ * r = interp2Kriging(ps, p, { model: 'gaussian' }) //friedrich默認, gaussian對應SquaredExp核
  * console.log(r)
- * // => { x: 243, y: 205, z: 92.39124139470005 }
+ * // => { x: 243, y: 205, z: 118.90582500747983 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
  *     x: 243,
  *     y: 205,
  * }
- * r = interp2Kriging(ps, p, { sigma2: 0.001, alpha: 70 })
+ * r = interp2Kriging(ps, p, { sigma2: 0.001, alpha: 70, method: 'invall' }) //sigma2/alpha為invall半變異圖擬合參數, friedrich不適用
  * console.log(r)
  * // => { x: 243, y: 205, z: 90.88702949276343 }
  *
@@ -128,7 +132,7 @@ import kriging from './_kriging.mjs'
  *     x: 243,
  *     y: 205,
  * }
- * r = interp2Kriging(ps, p, { returnWithVariogram: true })
+ * r = interp2Kriging(ps, p, { returnWithVariogram: true, method: 'invall' }) //variogram為invall專屬, friedrich回傳null
  * console.log(r)
  * // => {
  * //   result: { x: 243, y: 205, z: 94.88479948418721 },
@@ -275,6 +279,12 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
     }
     scale = cdbl(scale)
 
+    //method
+    let method = get(opt, 'method')
+    if (method !== 'friedrich' && method !== 'invall') {
+        method = 'friedrich'
+    }
+
     //krigingModel
     let krigingModel = get(opt, 'model')
     if (krigingModel !== 'exponential' && krigingModel !== 'gaussian' && krigingModel !== 'spherical') {
@@ -294,6 +304,20 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
         krigingAlpha = 100
     }
     krigingAlpha = cdbl(krigingAlpha)
+
+    //ls, friedrich核函數lengthscale
+    let ls = get(opt, 'ls')
+    if (!isnum(ls)) {
+        ls = 0.5
+    }
+    ls = cdbl(ls)
+
+    //noise, friedrich觀測噪音標準差
+    let noise = get(opt, 'noise')
+    if (!isnum(noise)) {
+        noise = 0.01
+    }
+    noise = cdbl(noise)
 
     //returnWithVariogram
     let returnWithVariogram = get(opt, 'returnWithVariogram')
@@ -337,26 +361,66 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
         kpKnown[k] = v.z //已經被正規化至x,y,z
     })
 
-    //x, y, t
-    let x = []
-    let y = []
-    let t = []
-    each(psSrc, (v) => {
-        x.push(v.x)
-        y.push(v.y)
-        t.push(v.z)
-    })
+    //variogram, predict: 依method切換後端引擎
+    let variogram = null //friedrich無半變異圖概念, 回傳時維持null
+    let predict //(nx, ny) => nz
+    if (method === 'friedrich') {
 
-    //variogram
-    let variogram = kriging.train(
-        t,
-        x,
-        y,
-        krigingModel,
-        krigingSigma2,
-        krigingAlpha
-    )
-    // console.log('variogram', variogram)
+        //inputs, outputs (已正規化)
+        let inputs = []
+        let outputs = []
+        each(psSrc, (v) => {
+            inputs.push([v.x, v.y])
+            outputs.push(v.z)
+        })
+
+        //kernel, model對應核函數: gaussian->SquaredExp, 其餘(含spherical)->Exponential
+        let kernel
+        if (krigingModel === 'gaussian') {
+            kernel = new SquaredExp(ls, 1)
+        }
+        else {
+            kernel = new Exponential(ls, 1)
+        }
+
+        //gp, 固定kernel不做ADAM優化(資料已正規化, 固定lengthscale即合理)
+        let gp = GaussianProcess
+            .builder(inputs, outputs)
+            .setKernel(kernel)
+            .setNoise(noise)
+            .train()
+
+        //predict
+        predict = (nx, ny) => gp.predict([nx, ny])
+
+    }
+    else {
+
+        //x, y, t
+        let x = []
+        let y = []
+        let t = []
+        each(psSrc, (v) => {
+            x.push(v.x)
+            y.push(v.y)
+            t.push(v.z)
+        })
+
+        //variogram
+        variogram = kriging.train(
+            t,
+            x,
+            y,
+            krigingModel,
+            krigingSigma2,
+            krigingAlpha
+        )
+        // console.log('variogram', variogram)
+
+        //predict
+        predict = (nx, ny) => kriging.predict(nx, ny, variogram)
+
+    }
 
     //kpdt
     let kpdt = (nx, ny) => {
@@ -368,7 +432,7 @@ function interp2Kriging(psSrc, psTar, opt = {}) {
         }
 
         //predict
-        let nz = kriging.predict(nx, ny, variogram)
+        let nz = predict(nx, ny)
 
         //save
         kpKnown[k] = nz

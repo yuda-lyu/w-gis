@@ -17,11 +17,13 @@ import interp2Kriging from './interp2Kriging.mjs'
  * @param {String} [opt.keyY='y'] 輸入點物件之y座標欄位字串，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z座標或值欄位字串，預設'z'
  * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
- * @param {String} [opt.method='naturalNeighbor'] 輸入內插方法字串，可選'naturalNeighbor'、'kriging'，預設'naturalNeighbor'
- * @param {String} [opt.model='exponential'] 輸入若method='kriging'時之擬合模式字串，可選'exponential'、'gaussian'、'spherical'，預設'exponential'
- * @param {Number} [opt.sigma2=0] 輸入若method='kriging'時之自動擬合參數sigma2數值，預設0
- * @param {Number} [opt.alpha=100] 輸入若method='kriging'時之自動擬合參數alpha數值，預設100
- * @param {Boolean} [opt.returnWithVariogram=false] 輸入若method='kriging'時之是否回傳擬合半變異數結果布林值，預設false
+ * @param {String} [opt.method='naturalNeighbor'] 輸入內插方法字串，可選'naturalNeighbor'、'kriging'，預設'naturalNeighbor'；method='kriging'時呼叫interp2Kriging並固定使用其friedrich引擎(經interp2無法選用invall引擎)
+ * @param {String} [opt.model='exponential'] 輸入若method='kriging'時之核函數對應模式字串，'gaussian'對應SquaredExp、其餘(含'exponential'、'spherical')對應Exponential，預設'exponential'
+ * @param {Number} [opt.ls=0.5] 輸入若method='kriging'時之friedrich核函數lengthscale數值(對應正規化後值域)，預設0.5
+ * @param {Number} [opt.noise=0.01] 輸入若method='kriging'時之friedrich觀測噪音標準差(對應正規化後值域)，預設0.01
+ * @param {Number} [opt.sigma2=0] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數sigma2數值，預設0
+ * @param {Number} [opt.alpha=100] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數alpha數值，預設100
+ * @param {Boolean} [opt.returnWithVariogram=false] (僅舊invall引擎參數，因interp2之kriging固定走friedrich故不生效，friedrich無半變異圖) 輸入是否回傳擬合半變異數結果布林值，預設false
  * @param {Boolean} [opt.useSync=false] 輸入是否使用同步函數布林值，預設false
  * @returns {Promise|Array|Object} 回傳Promise或點物件陣列或點物件，若useSync=false則回傳Promise，resolve為回傳點物件陣列或點物件，reject為失敗訊息，若useSync=true則回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example
@@ -89,9 +91,9 @@ import interp2Kriging from './interp2Kriging.mjs'
  *     x: 243,
  *     y: 207,
  * }
- * r = await interp2(ps, p, { method: 'kriging' })
+ * r = await interp2(ps, p, { method: 'kriging' }) //method='kriging'走interp2Kriging, 默認friedrich引擎
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.4283695751981 }
+ * // => { x: 243, y: 207, z: 97.49846235108123 }
  *
  * ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
  * p = {
