@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>kriging-friedrich/optimizer.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CholeskyDecomposition.html">CholeskyDecomposition</a><ul class='methods'><li data-type='method'><a href="CholeskyDecomposition.html#insertColumn">insertColumn</a></li><li data-type='method'><a href="CholeskyDecomposition.html#inverse">inverse</a></li><li data-type='method'><a href="CholeskyDecomposition.html#l">l</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solve">solve</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solveLower">solveLower</a></li></ul></li><li><a href="ConstantPrior.html">ConstantPrior</a><ul class='methods'><li data-type='method'><a href="ConstantPrior.html#fit">fit</a></li><li data-type='method'><a href="ConstantPrior.html#prior">prior</a></li><li data-type='method'><a href="ConstantPrior.html#.default">default</a></li></ul></li><li><a href="Exponential.html">Exponential</a><ul class='methods'><li data-type='method'><a href="Exponential.html#gradient">gradient</a></li><li data-type='method'><a href="Exponential.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Exponential.html#kernel">kernel</a></li><li data-type='method'><a href="Exponential.html#rescale">rescale</a></li><li data-type='method'><a href="Exponential.html#setParameters">setParameters</a></li></ul></li><li><a href="ExtendableMatrix.html">ExtendableMatrix</a><ul class='methods'><li data-type='method'><a href="ExtendableMatrix.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableMatrix.html#asMatrix">asMatrix</a></li></ul></li><li><a href="ExtendableVector.html">ExtendableVector</a><ul class='methods'><li data-type='method'><a href="ExtendableVector.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableVector.html#asVector">asVector</a></li><li data-type='method'><a href="ExtendableVector.html#assign">assign</a></li></ul></li><li><a href="GaussianProcess.html">GaussianProcess</a><ul class='methods'><li data-type='method'><a href="GaussianProcess.html#add_samples">add_samples</a></li><li data-type='method'><a href="GaussianProcess.html#fit_parameters">fit_parameters</a></li><li data-type='method'><a href="GaussianProcess.html#likelihood">likelihood</a></li><li data-type='method'><a href="GaussianProcess.html#predict">predict</a></li><li data-type='method'><a href="GaussianProcess.html#predict_covariance">predict_covariance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_mean_variance">predict_mean_variance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_variance">predict_variance</a></li><li data-type='method'><a href="GaussianProcess.html#sample_at">sample_at</a></li><li data-type='method'><a href="GaussianProcess.html#.builder">builder</a></li><li data-type='method'><a href="GaussianProcess.html#.default">default</a></li><li data-type='method'><a href="GaussianProcess.html#.fromData">fromData</a></li></ul></li><li><a href="GaussianProcessBuilder.html">GaussianProcessBuilder</a><ul class='methods'><li data-type='method'><a href="GaussianProcessBuilder.html#fitKernel">fitKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#fitPrior">fitPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setCholeskyEpsilon">setCholeskyEpsilon</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setFitParameters">setFitParameters</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setKernel">setKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setNoise">setNoise</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setPrior">setPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#train">train</a></li></ul></li><li><a href="HyperTan.html">HyperTan</a><ul class='methods'><li data-type='method'><a href="HyperTan.html#gradient">gradient</a></li><li data-type='method'><a href="HyperTan.html#kernel">kernel</a></li><li data-type='method'><a href="HyperTan.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelProd.html">KernelProd</a><ul class='methods'><li data-type='method'><a href="KernelProd.html#gradient">gradient</a></li><li data-type='method'><a href="KernelProd.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelProd.html#kernel">kernel</a></li><li data-type='method'><a href="KernelProd.html#rescale">rescale</a></li><li data-type='method'><a href="KernelProd.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelSum.html">KernelSum</a><ul class='methods'><li data-type='method'><a href="KernelSum.html#gradient">gradient</a></li><li data-type='method'><a href="KernelSum.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelSum.html#kernel">kernel</a></li><li data-type='method'><a href="KernelSum.html#rescale">rescale</a></li><li data-type='method'><a href="KernelSum.html#setParameters">setParameters</a></li></ul></li><li><a href="Linear.html">Linear</a><ul class='methods'><li data-type='method'><a href="Linear.html#gradient">gradient</a></li><li data-type='method'><a href="Linear.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Linear.html#kernel">kernel</a></li><li data-type='method'><a href="Linear.html#setParameters">setParameters</a></li></ul></li><li><a href="LinearPrior.html">LinearPrior</a><ul class='methods'><li data-type='method'><a href="LinearPrior.html#fit">fit</a></li><li data-type='method'><a href="LinearPrior.html#prior">prior</a></li><li data-type='method'><a href="LinearPrior.html#.default">default</a></li></ul></li><li><a href="Matern1.html">Matern1</a><ul class='methods'><li data-type='method'><a href="Matern1.html#gradient">gradient</a></li><li data-type='method'><a href="Matern1.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern1.html#kernel">kernel</a></li><li data-type='method'><a href="Matern1.html#rescale">rescale</a></li><li data-type='method'><a href="Matern1.html#setParameters">setParameters</a></li></ul></li><li><a href="Matern2.html">Matern2</a><ul class='methods'><li data-type='method'><a href="Matern2.html#gradient">gradient</a></li><li data-type='method'><a href="Matern2.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern2.html#kernel">kernel</a></li><li data-type='method'><a href="Matern2.html#rescale">rescale</a></li><li data-type='method'><a href="Matern2.html#setParameters">setParameters</a></li></ul></li><li><a href="Multiquadric.html">Multiquadric</a><ul class='methods'><li data-type='method'><a href="Multiquadric.html#gradient">gradient</a></li><li data-type='method'><a href="Multiquadric.html#kernel">kernel</a></li><li data-type='method'><a href="Multiquadric.html#setParameters">setParameters</a></li></ul></li><li><a href="MultivariateNormal.html">MultivariateNormal</a><ul class='methods'><li data-type='method'><a href="MultivariateNormal.html#mean">mean</a></li><li data-type='method'><a href="MultivariateNormal.html#sample">sample</a></li></ul></li><li><a href="Polynomial.html">Polynomial</a><ul class='methods'><li data-type='method'><a href="Polynomial.html#gradient">gradient</a></li><li data-type='method'><a href="Polynomial.html#kernel">kernel</a></li><li data-type='method'><a href="Polynomial.html#setParameters">setParameters</a></li></ul></li><li><a href="RationalQuadratic.html">RationalQuadratic</a><ul class='methods'><li data-type='method'><a href="RationalQuadratic.html#gradient">gradient</a></li><li data-type='method'><a href="RationalQuadratic.html#kernel">kernel</a></li><li data-type='method'><a href="RationalQuadratic.html#setParameters">setParameters</a></li></ul></li><li><a href="SquaredExp.html">SquaredExp</a><ul class='methods'><li data-type='method'><a href="SquaredExp.html#gradient">gradient</a></li><li data-type='method'><a href="SquaredExp.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="SquaredExp.html#kernel">kernel</a></li><li data-type='method'><a href="SquaredExp.html#rescale">rescale</a></li><li data-type='method'><a href="SquaredExp.html#setParameters">setParameters</a></li></ul></li><li><a href="ZeroPrior.html">ZeroPrior</a><ul class='methods'><li data-type='method'><a href="ZeroPrior.html#fit">fit</a></li><li data-type='method'><a href="ZeroPrior.html#prior">prior</a></li><li data-type='method'><a href="ZeroPrior.html#.default">default</a></li></ul></li><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.aggregatePoints">aggregatePoints</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.clipMultiPolygon">clipMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.clipPolygon">clipPolygon</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.distilMultiPolygon">distilMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixClosePolygon">fixClosePolygon</a></li><li data-type='method'><a href="w-gis.html#.fixGeometryMultiPolygon">fixGeometryMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.flattenMultiPolygon">flattenMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getPointDepth">getPointDepth</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Grid">interp2Grid</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp2Normalize">interp2Normalize</a></li><li data-type='method'><a href="w-gis.html#.interp2Raster">interp2Raster</a></li><li data-type='method'><a href="w-gis.html#.interp3">interp3</a></li><li data-type='method'><a href="w-gis.html#.intersectMultiPolygon">intersectMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.intersectPolygon">intersectPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygon">invCoordMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygonOrMultiPolyline">invCoordMultiPolygonOrMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolyline">invCoordMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygon">invCoordPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygonOrPolyline">invCoordPolygonOrPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolyline">invCoordPolyline</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.simplifyMultiPolygon">simplifyMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.splineMultiPolygon">splineMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionMultiPolygon">unionMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionPolygon">unionPolygon</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_MAX_TIME_MS">DEFAULT_MAX_TIME_MS</a></li><li><a href="global.html#Gaussian">Gaussian</a></li><li><a href="global.html#addKernels">addKernels</a></li><li><a href="global.html#addRowsCholeskyCovMatrix">addRowsCholeskyCovMatrix</a></li><li><a href="global.html#addToDiagonal">addToDiagonal</a></li><li><a href="global.html#addVec">addVec</a></li><li><a href="global.html#assert">assert</a></li><li><a href="global.html#cholesky">cholesky</a></li><li><a href="global.html#choleskyInverse">choleskyInverse</a></li><li><a href="global.html#choleskySolve">choleskySolve</a></li><li><a href="global.html#classifyFeature">classifyFeature</a></li><li><a href="global.html#columnDot">columnDot</a></li><li><a href="global.html#columnNormSquared">columnNormSquared</a></li><li><a href="global.html#createEmptyResult">createEmptyResult</a></li><li><a href="global.html#diagonal">diagonal</a></li><li><a href="global.html#dot">dot</a></li><li><a href="global.html#ensureRingClosed">ensureRingClosed</a></li><li><a href="global.html#fitAmplitudeVar">fitAmplitudeVar</a></li><li><a href="global.html#fitBandwidthMean">fitBandwidthMean</a></li><li><a href="global.html#fixCloseMultiPolygonCoords">fixCloseMultiPolygonCoords</a></li><li><a href="global.html#fixClosePolygonCoords">fixClosePolygonCoords</a></li><li><a href="global.html#fromVector">fromVector</a></li><li><a href="global.html#gradientMarginalLikelihood">gradientMarginalLikelihood</a></li><li><a href="global.html#hypot">hypot</a></li><li><a href="global.html#identity">identity</a></li><li><a href="global.html#isSingle">isSingle</a></li><li><a href="global.html#lstsqSolve">lstsqSolve</a></li><li><a href="global.html#makeCholeskyCovMatrix">makeCholeskyCovMatrix</a></li><li><a href="global.html#makeCovarianceMatrix">makeCovarianceMatrix</a></li><li><a href="global.html#makeGp">makeGp</a></li><li><a href="global.html#makeGradientCovarianceMatrices">makeGradientCovarianceMatrices</a></li><li><a href="global.html#matMul">matMul</a></li><li><a href="global.html#matSub">matSub</a></li><li><a href="global.html#matTransposeVec">matTransposeVec</a></li><li><a href="global.html#matVec">matVec</a></li><li><a href="global.html#mulKernels">mulKernels</a></li><li><a href="global.html#mulberry32">mulberry32</a></li><li><a href="global.html#norm">norm</a></li><li><a href="global.html#normSquared">normSquared</a></li><li><a href="global.html#optimizeParameters">optimizeParameters</a></li><li><a href="global.html#procSpecPolygon">procSpecPolygon</a></li><li><a href="global.html#processPolygonCoords">processPolygonCoords</a></li><li><a href="global.html#scaleVec">scaleVec</a></li><li><a href="global.html#scaledGradientMarginalLikelihood">scaledGradientMarginalLikelihood</a></li><li><a href="global.html#scaledOptimizeParameters">scaledOptimizeParameters</a></li><li><a href="global.html#solveLowerTri">solveLowerTri</a></li><li><a href="global.html#solveLowerTriVec">solveLowerTriVec</a></li><li><a href="global.html#solveUpperTri">solveUpperTri</a></li><li><a href="global.html#solveUpperTriVec">solveUpperTriVec</a></li><li><a href="global.html#splitAndProcGeoJSON">splitAndProcGeoJSON</a></li><li><a href="global.html#splitGeoJSON">splitGeoJSON</a></li><li><a href="global.html#standardNormal">standardNormal</a></li><li><a href="global.html#subVec">subVec</a></li><li><a href="global.html#toMatrix">toMatrix</a></li><li><a href="global.html#toVector">toVector</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#transpose">transpose</a></li><li><a href="global.html#zeros">zeros</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">kriging-friedrich/optimizer.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//! Parameter optimization (ADAM gradient ascent on the marginal log-likelihood).
+//!
+//! Port of `friedrich 0.6.0` `src/gaussian_process/optimizer.rs`.
+//!
+//! The fit of the parameters is done by gradient descent (the ADAM algorithm)
+//! on the gradient of the marginal log-likelihood, which lets us use all the
+//! data without bothering with cross-validation.
+//!
+//! - If the kernel is scalable, we follow "Fast methods for training Gaussian
+//!   processes on large datasets" (https://arxiv.org/pdf/1604.01250.pdf) to
+//!   rescale the kernel at each step with the optimal magnitude. This fits the
+//!   noise without computing its gradient.
+//! - Otherwise we fit the noise in log-scale, since its magnitude matters more
+//!   than its precise value.
+//!
+//! Porting notes (PORT_SPEC §7):
+//!   - These are free functions taking the GaussianProcess object `gp`; they are
+//!     mixed onto `GaussianProcess.prototype` by `gaussian_process.mjs`.
+//!   - `gp` is expected to expose: `covmatCholesky` (a CholeskyDecomposition),
+//!     `trainingInputs` / `trainingOutputs` (Extendable* with `.asMatrix()` /
+//!     `.asVector()`), `kernel`, `prior`, `noise`, `choleskyEpsilon`.
+//!   - Rust's `chrono::Duration` (seconds) is replaced by `maxTime` in
+//!     MILLISECONDS; timing uses `Date.now()` and the timeout comparison is `>`
+//!     (matching `signed_duration_since(...) > max_time`).
+
+import {
+    dot,
+    trace,
+    makeCholeskyCovMatrix,
+    makeGradientCovarianceMatrices,
+} from "./algebra.mjs";
+
+//=============================================================================
+// NON-SCALABLE KERNEL
+//=============================================================================
+
+/**
+ * Computes the gradient of the marginal likelihood for the current value of
+ * each parameter. The produced vector contains the gradient per kernel
+ * parameter followed by the gradient for the noise parameter.
+ *
+ * Per-parameter formula (`optimizer.rs:24`):
+ *   ½ ( alphaᵀ · dp · alpha − trace(K⁻¹ · dp) )
+ * where
+ *   K     = cov(train, train)
+ *   alpha = K⁻¹ · output
+ *   dp    = ∂K/∂parameter
+ *
+ * Noise gradient (`gradient(K, noise) = 2·noise·Id`):
+ *   noise · ( alpha·alpha − trace(K⁻¹) )
+ *
+ * @param {object} gp GaussianProcess (see module note)
+ * @returns {number[]} length = kernel.nbParameters() + 1 (last entry = noise)
+ */
+export function gradientMarginalLikelihood(gp) {
+    // Needed for the per-parameter gradient computation.
+    const covInv = gp.covmatCholesky.inverse(); // K⁻¹
+    const output = gp.trainingOutputs.asVector();
+
+    // alpha = K⁻¹ · output  (matVec; covInv is symmetric).
+    const n = output.length;
+    const alpha = new Array(n);
+    for (let r = 0; r &lt; n; r++) {
+        let s = 0;
+        const row = covInv[r];
+        for (let c = 0; c &lt; n; c++) s += row[c] * output[c];
+        alpha[r] = s;
+    }
+
+    const inputs = gp.trainingInputs.asMatrix();
+    const results = [];
+
+    // Loop over the gradient matrix for each parameter.
+    for (const covGradient of makeGradientCovarianceMatrices(inputs, gp.kernel)) {
+        // data_fit = Σ_c alpha[c] · (alpha · col_c)  =  alphaᵀ · covGradient · alpha
+        // covGradient is symmetric, so its column c equals its row c.
+        let dataFit = 0;
+        for (let c = 0; c &lt; n; c++) {
+            // alpha · (column c of covGradient)
+            let acol = 0;
+            for (let r = 0; r &lt; n; r++) acol += alpha[r] * covGradient[r][c];
+            dataFit += acol * alpha[c];
+        }
+
+        // complexity_penalty = Σ_r (row r of covInv) · (column r of covGradient)
+        //                    = trace(covInv · covGradient)
+        let complexityPenalty = 0;
+        for (let r = 0; r &lt; n; r++) {
+            const cRow = covInv[r];
+            let tr = 0;
+            for (let k = 0; k &lt; n; k++) tr += cRow[k] * covGradient[k][r];
+            complexityPenalty += tr;
+        }
+
+        results.push((dataFit - complexityPenalty) / 2);
+    }
+
+    // Noise parameter: gradient(K, noise) = 2·noise·Id.
+    const dataFit = dot(alpha, alpha);
+    const complexityPenalty = trace(covInv); // trace(K⁻¹)
+    const noiseGradient = gp.noise * (dataFit - complexityPenalty);
+    results.push(noiseGradient);
+
+    return results;
+}
+
+/**
+ * Fit parameters using the ADAM gradient-ascent algorithm.
+ *
+ * Runs for at most `maxIter` iterations. Stops early if every component of the
+ * update step `delta` is ≤ `convergenceFraction` in magnitude (no significant
+ * progress), or if the runtime exceeds `maxTime` (milliseconds).
+ *
+ * The `noise` parameter is fitted in log-scale, since its magnitude matters
+ * more than its precise value.
+ *
+ * ADAM constants (`optimizer.rs:79`): beta1=0.9, beta2=0.999, epsilon=1e-8,
+ * learningRate=0.1.
+ *
+ * @param {object} gp
+ * @param {number} maxIter
+ * @param {number} convergenceFraction
+ * @param {number} maxTime milliseconds
+ */
+export function optimizeParameters(gp, maxIter, convergenceFraction, maxTime) {
+    const beta1 = 0.9;
+    const beta2 = 0.999;
+    const epsilon = 1e-8;
+    const learningRate = 0.1;
+
+    // Initial parameters: kernel params with any 0 replaced by epsilon (a 0
+    // parameter would block the multiplicative ADAM update), then noise in
+    // log-space.
+    const parameters = gp.kernel.getParameters().map((p) => (p === 0 ? epsilon : p));
+    parameters.push(Math.log(gp.noise)); // noise in log-space
+
+    const meanGrad = new Array(parameters.length).fill(0);
+    const varGrad = new Array(parameters.length).fill(0);
+
+    const timeStart = Date.now();
+    for (let i = 1; i &lt;= maxIter; i++) {
+        const gradients = gradientMarginalLikelihood(gp);
+        // Correct the noise gradient for log-space.
+        gradients[gradients.length - 1] *= gp.noise;
+
+        let hadSignificantProgress = false;
+        for (let p = 0; p &lt; parameters.length; p++) {
+            meanGrad[p] = beta1 * meanGrad[p] + (1 - beta1) * gradients[p];
+            varGrad[p] = beta2 * varGrad[p] + (1 - beta2) * gradients[p] * gradients[p];
+            const biasCorrectedMean = meanGrad[p] / (1 - Math.pow(beta1, i));
+            const biasCorrectedVariance = varGrad[p] / (1 - Math.pow(beta2, i));
+            const delta = (learningRate * biasCorrectedMean) / (Math.sqrt(biasCorrectedVariance) + epsilon);
+            if (Math.abs(delta) > convergenceFraction) hadSignificantProgress = true;
+            parameters[p] *= 1 + delta;
+        }
+
+        // Set kernel parameters (the kernel reads only its own leading prefix
+        // of `parameters`; the trailing noise log-value is ignored by it).
+        gp.kernel.setParameters(parameters);
+        // Get the noise out of log-space before setting it.
+        gp.noise = Math.exp(parameters[parameters.length - 1]);
+
+        // Refit the model (rebuild the Cholesky factor of the covariance matrix).
+        gp.covmatCholesky = makeCholeskyCovMatrix(
+            gp.trainingInputs.asMatrix(),
+            gp.kernel,
+            gp.noise,
+            gp.choleskyEpsilon
+        );
+
+        if (!hadSignificantProgress || Date.now() - timeStart > maxTime) {
+            break;
+        }
+    }
+}
+
+//=============================================================================
+// SCALABLE KERNEL
+//=============================================================================
+
+/**
+ * Returns `[scale, gradients]`: the optimal scale for the kernel+noise (used to
+ * optimize the noise) plus the gradient per kernel parameter (NOT including the
+ * noise gradient).
+ *
+ * Per-parameter formula (`optimizer.rs:150`):
+ *   ½ ( alphaᵀ · dp · alpha / scale − trace(K⁻¹ · dp) )
+ *   scale = outputᵀ · K⁻¹ · output / n
+ * NOTE: the data-fit term is divided by `scale`, unlike the unscaled gradient.
+ *
+ * @param {object} gp
+ * @returns {[number, number[]]} [scale, results] (results length = nbParameters)
+ */
+export function scaledGradientMarginalLikelihood(gp) {
+    const covInv = gp.covmatCholesky.inverse(); // K⁻¹
+    const output = gp.trainingOutputs.asVector();
+    const n = output.length;
+
+    // alpha = K⁻¹ · output
+    const alpha = new Array(n);
+    for (let r = 0; r &lt; n; r++) {
+        let s = 0;
+        const row = covInv[r];
+        for (let c = 0; c &lt; n; c++) s += row[c] * output[c];
+        alpha[r] = s;
+    }
+
+    // Scaling for the kernel: outputᵀ · K⁻¹ · output / n = output·alpha / n.
+    const scale = dot(output, alpha) / n;
+
+    const inputs = gp.trainingInputs.asMatrix();
+    const results = [];
+
+    for (const covGradient of makeGradientCovarianceMatrices(inputs, gp.kernel)) {
+        // data_fit = (alphaᵀ · covGradient · alpha) / scale
+        let dataFit = 0;
+        for (let c = 0; c &lt; n; c++) {
+            let acol = 0;
+            for (let r = 0; r &lt; n; r++) acol += alpha[r] * covGradient[r][c];
+            dataFit += acol * alpha[c];
+        }
+        dataFit /= scale;
+
+        // complexity_penalty = trace(covInv · covGradient)
+        let complexityPenalty = 0;
+        for (let r = 0; r &lt; n; r++) {
+            const cRow = covInv[r];
+            let tr = 0;
+            for (let k = 0; k &lt; n; k++) tr += cRow[k] * covGradient[k][r];
+            complexityPenalty += tr;
+        }
+
+        results.push((dataFit - complexityPenalty) / 2);
+    }
+
+    // NOTE: faithful to Rust source — the noise gradient is intentionally NOT
+    // pushed here (it is commented out in optimizer.rs:188-191); the noise is
+    // instead fitted via `kernel.rescale(scale)` + `gp.noise *= scale`.
+
+    return [scale, results];
+}
+
+/**
+ * Fit parameters using ADAM gradient ascent; additionally, at each step the
+ * kernel and noise are rescaled by the optimal magnitude `scale`.
+ *
+ * Runs for at most `maxIter` iterations. Stops early on no significant progress
+ * (all `delta` ≤ `convergenceFraction`) or if the runtime exceeds `maxTime`
+ * (milliseconds).
+ *
+ * ADAM constants identical to {@link optimizeParameters}.
+ *
+ * @param {object} gp
+ * @param {number} maxIter
+ * @param {number} convergenceFraction
+ * @param {number} maxTime milliseconds
+ */
+export function scaledOptimizeParameters(gp, maxIter, convergenceFraction, maxTime) {
+    const beta1 = 0.9;
+    const beta2 = 0.999;
+    const epsilon = 1e-8;
+    const learningRate = 0.1;
+
+    // Initial parameters: kernel params with 0 replaced by epsilon.
+    // (No noise pushed: the noise is fitted by rescaling, not by gradient.)
+    let parameters = gp.kernel.getParameters().map((p) => (p === 0 ? epsilon : p));
+
+    const meanGrad = new Array(parameters.length).fill(0);
+    const varGrad = new Array(parameters.length).fill(0);
+
+    const timeStart = Date.now();
+    for (let i = 1; i &lt;= maxIter; i++) {
+        const [scale, gradients] = scaledGradientMarginalLikelihood(gp);
+
+        let hadSignificantProgress = false;
+        for (let p = 0; p &lt; parameters.length; p++) {
+            meanGrad[p] = beta1 * meanGrad[p] + (1 - beta1) * gradients[p];
+            varGrad[p] = beta2 * varGrad[p] + (1 - beta2) * gradients[p] * gradients[p];
+            const biasCorrectedMean = meanGrad[p] / (1 - Math.pow(beta1, i));
+            const biasCorrectedVariance = varGrad[p] / (1 - Math.pow(beta2, i));
+            const delta = (learningRate * biasCorrectedMean) / (Math.sqrt(biasCorrectedVariance) + epsilon);
+            if (Math.abs(delta) > convergenceFraction) hadSignificantProgress = true;
+            parameters[p] *= 1 + delta;
+        }
+
+        // Set parameters, then rescale the kernel and noise by the optimal scale.
+        gp.kernel.setParameters(parameters);
+        gp.kernel.rescale(scale);
+        gp.noise *= scale;
+        // Get parameters back as they have been rescaled (rescale changes the
+        // amplitude, so the local `parameters` must be refreshed from the kernel).
+        parameters = gp.kernel.getParameters();
+
+        // Refit the model.
+        gp.covmatCholesky = makeCholeskyCovMatrix(
+            gp.trainingInputs.asMatrix(),
+            gp.kernel,
+            gp.noise,
+            gp.choleskyEpsilon
+        );
+
+        if (!hadSignificantProgress || Date.now() - timeStart > maxTime) {
+            break;
+        }
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Jun 15 2026 20:28:08 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
