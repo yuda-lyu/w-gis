@@ -6,10 +6,10 @@
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-	var tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNwExports = {};
-	var tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNw = {
-	  get exports(){ return tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNwExports; },
-	  set exports(v){ tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNwExports = v; },
+	var tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNwExports = {};
+	var tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNw = {
+	  get exports(){ return tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNwExports; },
+	  set exports(v){ tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(commonjsGlobal,function(worker_threads){var eventemitter3Exports={};var eventemitter3={get exports(){return eventemitter3Exports;},set exports(v){eventemitter3Exports=v;}};(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
@@ -167,12 +167,12 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNw);var nw = tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBNwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNw);var nw = tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRNwExports;
 
-	var tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWwExports = {};
-	var tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWw = {
-	  get exports(){ return tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWwExports; },
-	  set exports(v){ tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWwExports = v; },
+	var tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWwExports = {};
+	var tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWw = {
+	  get exports(){ return tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWwExports; },
+	  set exports(v){ tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory();})(commonjsGlobal,function(){/**
@@ -185,16 +185,16 @@
 		   *    http://en.wikipedia.org/wiki/Base64
 		   *
 		   * @author Dan Kogai (https://github.com/dankogai)
-		   */const version='3.7.8';/**
+		   */const version='3.9.1';/**
 		   * @deprecated use lowercase `version`.
-		   */const VERSION=version;const _hasBuffer=typeof Buffer==='function';const _TD=typeof TextDecoder==='function'?new TextDecoder():undefined;const _TE=typeof TextEncoder==='function'?new TextEncoder():undefined;const b64ch='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';const b64chs=Array.prototype.slice.call(b64ch);const b64tab=(a=>{let tab={};a.forEach((c,i)=>tab[c]=i);return tab;})(b64chs);const b64re=/^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;const _fromCC=String.fromCharCode.bind(String);const _U8Afrom=typeof Uint8Array.from==='function'?Uint8Array.from.bind(Uint8Array):it=>new Uint8Array(Array.prototype.slice.call(it,0));const _mkUriSafe=src=>src.replace(/=/g,'').replace(/[+\/]/g,m0=>m0=='+'?'-':'_');const _tidyB64=s=>s.replace(/[^A-Za-z0-9\+\/]/g,'');/**
+		   */const VERSION=version;const _TD=typeof TextDecoder==='function'?new TextDecoder('utf-8',{ignoreBOM:true}):undefined;const _TE=typeof TextEncoder==='function'?new TextEncoder():undefined;const b64ch='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';const b64chs=Array.prototype.slice.call(b64ch);const b64tab=(a=>{let tab={};a.forEach((c,i)=>tab[c]=i);return tab;})(b64chs);const b64re=/^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;const _fromCC=String.fromCharCode.bind(String);const _U8Afrom=typeof Uint8Array.from==='function'?Uint8Array.from.bind(Uint8Array):it=>new Uint8Array(Array.prototype.slice.call(it,0));const _mkUriSafe=src=>src.replace(/=/g,'').replace(/[+\/]/g,m0=>m0=='+'?'-':'_');const _tidyB64=s=>s.replace(/[^A-Za-z0-9\+\/]/g,'');/**
 		   * polyfill version of `btoa`
 		   */const btoaPolyfill=bin=>{// console.log('polyfilled');
 	let u32,c0,c1,c2,asc='';const pad=bin.length%3;for(let i=0;i<bin.length;){if((c0=bin.charCodeAt(i++))>255||(c1=bin.charCodeAt(i++))>255||(c2=bin.charCodeAt(i++))>255)throw new TypeError('invalid character found');u32=c0<<16|c1<<8|c2;asc+=b64chs[u32>>18&63]+b64chs[u32>>12&63]+b64chs[u32>>6&63]+b64chs[u32&63];}return pad?asc.slice(0,pad-3)+"===".substring(pad):asc;};/**
 		   * does what `window.btoa` of web browsers do.
 		   * @param {String} bin binary string
 		   * @returns {string} Base64-encoded string
-		   */const _btoa=typeof btoa==='function'?bin=>btoa(bin):_hasBuffer?bin=>Buffer.from(bin,'binary').toString('base64'):btoaPolyfill;const _fromUint8Array=_hasBuffer?u8a=>Buffer.from(u8a).toString('base64'):u8a=>{// cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
+		   */const _btoa=typeof btoa==='function'?bin=>btoa(bin):btoaPolyfill;const _fromUint8Array=typeof Uint8Array.prototype.toBase64==='function'?u8a=>u8a.toBase64():u8a=>{// cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
 	const maxargs=0x1000;let strs=[];for(let i=0,l=u8a.length;i<l;i+=maxargs){strs.push(_fromCC.apply(null,u8a.subarray(i,i+maxargs)));}return _btoa(strs.join(''));};/**
 		   * converts a Uint8Array to a Base64 string.
 		   * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 §5
@@ -207,7 +207,7 @@
 		   * @param {string} src UTF-8 string
 		   * @returns {string} UTF-16 string
 		   */const utob=u=>u.replace(re_utob,cb_utob);//
-	const _encode=_hasBuffer?s=>Buffer.from(s,'utf8').toString('base64'):_TE?s=>_fromUint8Array(_TE.encode(s)):s=>_btoa(utob(s));/**
+	const _encode=_TE?s=>_fromUint8Array(_TE.encode(s)):s=>_btoa(utob(s));/**
 		   * converts a UTF-8-encoded string to a Base64 string.
 		   * @param {boolean} [urlsafe] if `true` make the result URL-safe
 		   * @returns {string} Base64 string
@@ -229,11 +229,11 @@
 		   * does what `window.atob` of web browsers do.
 		   * @param {String} asc Base64-encoded string
 		   * @returns {string} binary string
-		   */const _atob=typeof atob==='function'?asc=>atob(_tidyB64(asc)):_hasBuffer?asc=>Buffer.from(asc,'base64').toString('binary'):atobPolyfill;//
-	const _toUint8Array=_hasBuffer?a=>_U8Afrom(Buffer.from(a,'base64')):a=>_U8Afrom(_atob(a).split('').map(c=>c.charCodeAt(0)));/**
+		   */const _atob=typeof atob==='function'?asc=>atob(_tidyB64(asc)):atobPolyfill;//
+	const _toUint8Array=typeof Uint8Array.fromBase64==='function'?a=>Uint8Array.fromBase64(a):a=>_U8Afrom(_atob(a).split('').map(c=>c.charCodeAt(0)));/**
 		   * converts a Base64 string to a Uint8Array.
 		   */const toUint8Array=a=>_toUint8Array(_unURI(a));//
-	const _decode=_hasBuffer?a=>Buffer.from(a,'base64').toString('utf8'):_TD?a=>_TD.decode(_toUint8Array(a)):a=>btou(_atob(a));const _unURI=a=>_tidyB64(a.replace(/[-_]/g,m0=>m0=='-'?'+':'/'));/**
+	const _decode=_TD?a=>_TD.decode(_toUint8Array(a)):a=>btou(_atob(a));const _unURI=a=>_tidyB64(a.replace(/[-_]/g,m0=>m0=='-'?'+':'/'));/**
 		   * converts a Base64 string to a UTF-8 string.
 		   * @param {String} src Base64 string.  Both normal and URL-safe are supported
 		   * @returns {string} UTF-8 string
@@ -403,7 +403,7 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWw);var ww = tempKeeSaPa0hNqsnpIV1x2SpVoa24E7VFRBWwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWw);var ww = tempNGuAJQigkQKYKl3775O0gTbXcW4fqTGRWwExports;
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
