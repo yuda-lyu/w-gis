@@ -6,10 +6,10 @@
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-	var temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNwExports = {};
-	var temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNw = {
-	  get exports(){ return temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNwExports; },
-	  set exports(v){ temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNwExports = v; },
+	var temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNwExports = {};
+	var temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNw = {
+	  get exports(){ return temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNwExports; },
+	  set exports(v){ temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(commonjsGlobal,function(worker_threads){var eventemitter3Exports={};var eventemitter3={get exports(){return eventemitter3Exports;},set exports(v){eventemitter3Exports=v;}};(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
@@ -167,12 +167,12 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNw);var nw = temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GNwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNw);var nw = temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHNwExports;
 
-	var temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWwExports = {};
-	var temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWw = {
-	  get exports(){ return temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWwExports; },
-	  set exports(v){ temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWwExports = v; },
+	var temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWwExports = {};
+	var temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWw = {
+	  get exports(){ return temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWwExports; },
+	  set exports(v){ temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory();})(commonjsGlobal,function(){/**
@@ -403,7 +403,7 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWw);var ww = temp4c6eWybjvhzGFe5wadpRvd6zfWG9Q84GWwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWw);var ww = temp750rCOoioYjnSGGwjWsdMVke2PzSvLYHWwExports;
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';

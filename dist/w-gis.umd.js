@@ -1,5 +1,5 @@
 /*!
- * w-gis v1.0.92
+ * w-gis v1.0.93
  * (c) 2018-2021 yuda-lyu(semisphere)
  * Released under the MIT License.
  */
