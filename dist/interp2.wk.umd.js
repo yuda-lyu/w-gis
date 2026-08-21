@@ -6,10 +6,10 @@
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-	var tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNwExports = {};
-	var tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNw = {
-	  get exports(){ return tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNwExports; },
-	  set exports(v){ tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNwExports = v; },
+	var temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNwExports = {};
+	var temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNw = {
+	  get exports(){ return temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNwExports; },
+	  set exports(v){ temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(commonjsGlobal,function(worker_threads){var eventemitter3Exports={};var eventemitter3={get exports(){return eventemitter3Exports;},set exports(v){eventemitter3Exports=v;}};(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
@@ -167,12 +167,12 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNw);var nw = tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjNwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNw);var nw = temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUNwExports;
 
-	var tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWwExports = {};
-	var tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWw = {
-	  get exports(){ return tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWwExports; },
-	  set exports(v){ tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWwExports = v; },
+	var temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWwExports = {};
+	var temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWw = {
+	  get exports(){ return temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWwExports; },
+	  set exports(v){ temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory();})(commonjsGlobal,function(){/**
@@ -185,7 +185,7 @@
 		   *    http://en.wikipedia.org/wiki/Base64
 		   *
 		   * @author Dan Kogai (https://github.com/dankogai)
-		   */const version='3.9.1';/**
+		   */const version='3.9.3';/**
 		   * @deprecated use lowercase `version`.
 		   */const VERSION=version;const _TD=typeof TextDecoder==='function'?new TextDecoder('utf-8',{ignoreBOM:true}):undefined;const _TE=typeof TextEncoder==='function'?new TextEncoder():undefined;const b64ch='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';const b64chs=Array.prototype.slice.call(b64ch);const b64tab=(a=>{let tab={};a.forEach((c,i)=>tab[c]=i);return tab;})(b64chs);const b64re=/^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;const _fromCC=String.fromCharCode.bind(String);const _U8Afrom=typeof Uint8Array.from==='function'?Uint8Array.from.bind(Uint8Array):it=>new Uint8Array(Array.prototype.slice.call(it,0));const _mkUriSafe=src=>src.replace(/=/g,'').replace(/[+\/]/g,m0=>m0=='+'?'-':'_');const _tidyB64=s=>s.replace(/[^A-Za-z0-9\+\/]/g,'');/**
 		   * polyfill version of `btoa`
@@ -202,7 +202,7 @@
 		   */const fromUint8Array=function(u8a){let urlsafe=arguments.length>1&&arguments[1]!==undefined?arguments[1]:false;return urlsafe?_mkUriSafe(_fromUint8Array(u8a)):_fromUint8Array(u8a);};// This trick is found broken https://github.com/dankogai/js-base64/issues/130
 	// const utob = (src: string) => unescape(encodeURIComponent(src));
 	// reverting good old fationed regexp
-	const cb_utob=c=>{if(c.length<2){var cc=c.charCodeAt(0);return cc<0x80?c:cc<0x800?_fromCC(0xc0|cc>>>6)+_fromCC(0x80|cc&0x3f):_fromCC(0xe0|cc>>>12&0x0f)+_fromCC(0x80|cc>>>6&0x3f)+_fromCC(0x80|cc&0x3f);}else {var cc=0x10000+(c.charCodeAt(0)-0xD800)*0x400+(c.charCodeAt(1)-0xDC00);return _fromCC(0xf0|cc>>>18&0x07)+_fromCC(0x80|cc>>>12&0x3f)+_fromCC(0x80|cc>>>6&0x3f)+_fromCC(0x80|cc&0x3f);}};const re_utob=/[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;/**
+	const cb_utob=c=>{if(c.length<2){var cc=c.charCodeAt(0);return cc<0x80?c:cc<0x800?_fromCC(0xc0|cc>>>6)+_fromCC(0x80|cc&0x3f):_fromCC(0xe0|cc>>>12&0x0f)+_fromCC(0x80|cc>>>6&0x3f)+_fromCC(0x80|cc&0x3f);}else {var cc=0x10000+(c.charCodeAt(0)-0xD800)*0x400+(c.charCodeAt(1)-0xDC00);return _fromCC(0xf0|cc>>>18&0x07)+_fromCC(0x80|cc>>>12&0x3f)+_fromCC(0x80|cc>>>6&0x3f)+_fromCC(0x80|cc&0x3f);}};const re_utob=/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\x00-\x7F]/g;/**
 		   * @deprecated should have been internal use only.
 		   * @param {string} src UTF-8 string
 		   * @returns {string} UTF-16 string
@@ -403,7 +403,7 @@
 	ev.main=main;ev.main=main;ev.terminate=terminate;return ev;}//set ww
 	ww=async function(){let input=[...arguments];let nww=wrapWorker();let r=await nww.main(...input)//nww.main需跟cmain一致
 	.finally(()=>{nww.terminate();//每次執行完不論成功失敗都要中止worker
-	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWw);var ww = tempXMaPzcJ29z6IklcLGfjudenJfaRbqdBjWwExports;
+	});return r;};}protectShell();try{process.on('unhandledRejection',err=>{console.log('outer:unhandledRejection',err);});process.on('uncaughtException',err=>{console.log('outer:uncaughtException',err);});process.on('uncaughtExceptionMonitor',err=>{console.log('outer:uncaughtExceptionMonitor',err);});}catch(err){}var ww$1=ww;return ww$1;});})(temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWw);var ww = temp09ew6vaSPoqTppEROiKMAwBWgNNEyelUWwExports;
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
