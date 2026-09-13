@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.0.100",
+  "version": "1.0.101",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^7.3.5",
@@ -11,13 +11,13 @@
     "polybooljs": "^1.2.2",
     "polyclip-ts": "^0.16.8",
     "proj4": "^2.20.9",
-    "wsemi": "^1.8.85"
+    "wsemi": "^1.8.92"
   },
   "devDependencies": {
-    "w-package-tools": "^1.1.15"
+    "w-package-tools": "^1.1.16"
   },
   "scripts": {
-    "test": "mocha --parallel --timeout 60000",
+    "test": "mocha --parallel \"test/*.test.mjs\" --timeout 180000",
     "deploy": "gh-pages -d docs"
   },
   "repository": {
