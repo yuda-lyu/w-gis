@@ -133,7 +133,7 @@ export class GaussianProcess {
         this.trainingOutputs = new ExtendableVector(residual);
 
         // Cholesky of the covariance matrix K = kernel(X,X) + noise²·I.
-        /** @type {import('./algebra.mjs').CholeskyDecomposition} */
+        /** @type {CholeskyDecomposition} */
         this.covmatCholesky = makeCholeskyCovMatrix(inputsMatrix, kernel, noise, choleskyEpsilon);
     }
 
@@ -345,7 +345,7 @@ export class GaussianProcess {
      * separately.
      *
      * @param {number[]|number[][]} inputs
-     * @returns {[number|number[], number|number[]]} `[mean, variance]`.
+     * @returns {Array} `[mean, variance]`, each being number or number[] (same shape as `predict`).
      */
     predict_mean_variance(inputs) {
         const single = isSingle(inputs);

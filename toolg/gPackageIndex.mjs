@@ -1,7 +1,6 @@
 import fs from 'fs'
 import _ from 'lodash-es'
-import w from 'wsemi'
-import getFiles from 'w-package-tools/src/getFiles.mjs'
+import getIndexNames from './getIndexNames.mjs'
 
 
 let fd = './src/'
@@ -11,21 +10,8 @@ let fnIndex = 'WGis.mjs'
 function main() {
     //由src內取得指定函數檔案, 再自動產生WGeo.mjs, 供rollup編譯之用
 
-    //getFiles
-    let ltfs = getFiles(fd)
-
-    //pull
-    _.pull(ltfs, 'WGis.mjs')
-
-    //filter
-    ltfs = _.filter(ltfs, (v) => {
-        return w.strleft(v, 1) !== '_'
-    })
-
-    //get names
-    let ns = _.map(ltfs, function(v) {
-        return v.replace('.mjs', '')
-    })
+    //ns, 名單規則之單一出處為getIndexNames(帳本R-ENTRY-1), 測試亦引用之
+    let ns = getIndexNames(fd, fnIndex)
 
     //scs
     let scs = []
@@ -35,8 +21,8 @@ function main() {
         scs.push(sc)
     })
 
-    //merge content
-    let c = _.join(scs, '\r\n')
+    //merge content, 結尾補換行(eslint之eol-last)
+    let c = _.join(scs, '\r\n') + '\r\n'
 
     //write
     //console.log(c)

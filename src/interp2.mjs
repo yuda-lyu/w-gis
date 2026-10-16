@@ -8,6 +8,10 @@ import interp2Kriging from './interp2Kriging.mjs'
 /**
  * 針對不規則二維數據進行指定內插點數值
  *
+ * 另有Web Worker版產物dist/interp2.wk.umd.js(於Node使用worker_threads、於瀏覽器使用Web Worker), 供瀏覽器以script載入(掛於window['interp2'])或Node直接使用, 不支援同步模式;
+ * 該產物無法由bundler(例如webpack以web為target)打包, 因其Node分支須外部引用worker_threads;
+ * 於瀏覽器以blob URL建立Web Worker, 故頁面若設CSP, 須允許blob:(script-src或worker-src), 否則呼叫會reject
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} psSrc 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列

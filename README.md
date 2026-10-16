@@ -36,10 +36,12 @@ To view some examples for more understanding, visit examples:
 npm i w-gis
 ```
 
+> **Note:** In Node.js ES modules, import the main entry with the default import, e.g. `import gis from 'w-gis'`; named imports from the main entry (a UMD bundle) are not supported. Functions can also be imported one by one, e.g. `import calcContours from 'w-gis/src/calcContours.mjs'`.
+
 ### In a browser(UMD module):
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.1.6/dist/w-gis.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/w-gis@1.1.7/dist/w-gis.umd.js"></script>
 
 ```

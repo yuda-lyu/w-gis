@@ -189,7 +189,7 @@ export function optimizeParameters(gp, maxIter, convergenceFraction, maxTime) {
  * NOTE: the data-fit term is divided by `scale`, unlike the unscaled gradient.
  *
  * @param {object} gp
- * @returns {[number, number[]]} [scale, results] (results length = nbParameters)
+ * @returns {Array} [scale, results], scale is number and results is number[] (results length = nbParameters)
  */
 export function scaledGradientMarginalLikelihood(gp) {
     const covInv = gp.covmatCholesky.inverse(); // K⁻¹

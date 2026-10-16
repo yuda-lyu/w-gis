@@ -36,7 +36,7 @@ import { fromVector } from './conversion.mjs';
  *   rng(); // reproducible pseudo-random number
  *
  * @param {number} seed  32-bit unsigned integer seed
- * @returns {() => number}
+ * @returns {Function} `() => number ∈ [0, 1)`
  */
 export function mulberry32(seed) {
     let a = seed >>> 0;
@@ -64,7 +64,7 @@ export function mulberry32(seed) {
  * correctness is maintained; the sine branch would give equally valid samples
  * but is not required.
  *
- * @param {() => number} rng  uniform [0, 1) generator (e.g. from mulberry32)
+ * @param {Function} rng  `() => number` uniform [0, 1) generator (e.g. from mulberry32)
  * @returns {number}
  */
 export function standardNormal(rng) {
@@ -143,7 +143,7 @@ export class MultivariateNormal {
      * `rand`/`rand_distr`, so sample values will not match Rust bit-for-bit.
      * Statistical correctness and reproducibility given a seed are guaranteed.
      *
-     * @param {() => number} rng
+     * @param {Function} rng `() => number` uniform [0, 1) generator
      * @returns {number | number[]}
      */
     sample(rng) {

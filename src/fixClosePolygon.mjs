@@ -14,7 +14,17 @@ import toPolygon from './toPolygon.mjs'
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @returns {Array} 回傳Polygon陣列
  * @example
-
+ *
+ * let pgs
+ * let r
+ *
+ * pgs = [ //polygon
+ *     [[0, 0], [100, 0], [100, 1], [0, 1]],
+ * ]
+ * r = fixClosePolygon(pgs)
+ * console.log(JSON.stringify(r))
+ * // => [[[0,0],[100,0],[100,1],[0,1],[0,0]]]
+ *
  */
 function fixClosePolygon(pgs, opt = {}) {
 

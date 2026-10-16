@@ -726,7 +726,7 @@ export class CholeskyDecomposition {
  *
  * @param {number[][]} m1
  * @param {number[][]} m2
- * @param {{kernel: (x1:number[], x2:number[]) => number}} kernel
+ * @param {Object} kernel object with method `kernel(x1: number[], x2: number[]) => number`
  * @returns {number[][]}
  */
 export function makeCovarianceMatrix(m1, m2, kernel) {
@@ -753,7 +753,7 @@ export function makeCovarianceMatrix(m1, m2, kernel) {
  * positive → substitute mode).
  *
  * @param {number[][]} inputs
- * @param {{kernel: (x1:number[], x2:number[]) => number}} kernel
+ * @param {Object} kernel object with method `kernel(x1: number[], x2: number[]) => number`
  * @param {number} diagonalNoise the noise STANDARD DEVIATION
  * @param {number|null} [epsilon=null]
  * @returns {CholeskyDecomposition}
@@ -783,7 +783,7 @@ export function makeCholeskyCovMatrix(inputs, kernel, diagonalNoise, epsilon = n
  * @param {CholeskyDecomposition} cholesky updated in place
  * @param {number[][]} allInputs full input matrix (old rows then new rows)
  * @param {number} nbNewInputs number of trailing rows to add
- * @param {{kernel: (x1:number[], x2:number[]) => number}} kernel
+ * @param {Object} kernel object with method `kernel(x1: number[], x2: number[]) => number`
  * @param {number} diagonalNoise the noise STANDARD DEVIATION
  */
 export function addRowsCholeskyCovMatrix(cholesky, allInputs, nbNewInputs, kernel, diagonalNoise) {
@@ -813,7 +813,7 @@ export function addRowsCholeskyCovMatrix(cholesky, allInputs, nbNewInputs, kerne
  *   mats[p][r][c] = mats[p][c][r] = kernel.gradient(inputs[r], inputs[c])[p]
  *
  * @param {number[][]} inputs
- * @param {{nbParameters: () => number, gradient: (x1:number[], x2:number[]) => number[]}} kernel
+ * @param {Object} kernel object with methods `nbParameters() => number` and `gradient(x1: number[], x2: number[]) => number[]`
  * @returns {number[][][]}
  */
 export function makeGradientCovarianceMatrices(inputs, kernel) {

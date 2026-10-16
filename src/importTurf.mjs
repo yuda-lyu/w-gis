@@ -6,7 +6,7 @@ import turfNode from './_importTurfNode.mjs'
 /**
  * 取得引用turf物件
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/importTurf.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/unit-importTurf.test.mjs Github}
  * @memberOf w-gis
  * @returns {Object} 回傳turf物件
  * @example

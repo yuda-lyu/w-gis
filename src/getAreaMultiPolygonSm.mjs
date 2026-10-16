@@ -7,7 +7,7 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
 /**
  * 計算MultiPolygon面積，輸入各點為經緯度座標，輸出為平方公尺面積
  *
- * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaMultiPolygon.test.mjs Github}
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/getAreaMultiPolygonSm.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} pgs 輸入MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}

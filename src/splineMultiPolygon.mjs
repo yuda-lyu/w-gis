@@ -18,7 +18,20 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  * @param {Number} [opt.sharpness=0.05] 輸入曲線緊繃程度數字，0為平滑，代表取最小彎曲度，1為折線，代表切線指定很長會比較有彎度，預設0.05
  * @returns {Array} 回傳MultiPolygon陣列
  * @example
-
+ *
+ * let pgs
+ * let r
+ *
+ * pgs = [ //ringString
+ *     [0, 0],
+ *     [2, 0],
+ *     [2, 1],
+ *     [0, 1],
+ * ]
+ * r = splineMultiPolygon(pgs, { resolution: 100 })
+ * console.log(JSON.stringify(r).slice(0, 50))
+ * // => [[[[0,0],[0.6968000000000001,-0.003600000000000000
+ *
  */
 function splineMultiPolygon(pgs, opt = {}) {
 

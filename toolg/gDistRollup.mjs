@@ -1,30 +1,25 @@
-import path from 'path'
 import rollupFiles from 'w-package-tools/src/rollupFiles.mjs'
 import rollupWorker from 'w-package-tools/src/rollupWorker.mjs'
+import getDistOpts from './distConfig.mjs'
+import getIndexNames from './getIndexNames.mjs'
+import { captureWarns, assertDist } from './checkDist.mjs'
 
 
-let fdSrc = './src'
-let fdTar = './dist'
+//建置選項之單一出處為distConfig(帳本R-ENTRY-2), 測試亦引用之
+let { optMain, optWorker, fpMain, fpWorker, externalsMain, externalsWorker } = getDistOpts()
 
-await rollupFiles({ //rollupFiles預設會clean folder故得要放第1個
-    fns: 'WGis.mjs',
-    fdSrc,
-    fdTar,
-    nameDistType: 'kebabCase',
-    globals: {
-        '@turf/turf': '@turf/turf', //編譯給前端用的@turf為官方打包後js檔(轉b64再於前端載入), 不使用node版故需剔除
-    },
-    external: [
-        '@turf/turf',
-    ],
+let { warns } = await captureWarns(async () => {
+    await rollupFiles(optMain) //rollupFiles預設會clean folder故得要放第1個
+    await rollupWorker(optWorker)
 })
 
-await rollupWorker({
-    name: 'interp2', //原模組名稱, 將來會掛於winodw下或於node引入使用
-    type: 'function', //原模組輸出為函數, 可傳入參數初始化
-    // execFunctionByInstance: true, //default, 原模組為計算函數回傳結果
-    fpSrc: path.resolve(fdSrc, 'interp2.mjs'), //原始檔案路徑
-    fpTar: path.resolve(fdTar, 'interp2.wk.umd.js'), //檔案輸出路徑
-    formatOut: 'umd', //會提供w-leaflet-vue於html直接引用, 用es會有問題得使用umd
-    bMinify: false, //因目前壓縮會導致編譯worker無法接收與回應, 故暫時關閉
+//發布閘門(帳本R-ENTRY-2、R-ENTRY-3): 建置訊息、主產物與worker產物不符即拋錯, node以非0結束, w-pksupdate隨即中止(早於git add)
+await assertDist({
+    warns,
+    fpMain,
+    fpWorker,
+    names: getIndexNames('./src/'),
+    externalsMain,
+    externalsWorker,
 })
+console.log('\x1b[32m%s\x1b[0m', 'dist check: ok')
