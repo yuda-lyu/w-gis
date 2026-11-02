@@ -6,10 +6,10 @@
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-	var tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNwExports = {};
-	var tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNw = {
-	  get exports(){ return tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNwExports; },
-	  set exports(v){ tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNwExports = v; },
+	var temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNwExports = {};
+	var temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNw = {
+	  get exports(){ return temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNwExports; },
+	  set exports(v){ temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(commonjsGlobal,function(worker_threads){var eventemitter3Exports={};var eventemitter3={get exports(){return eventemitter3Exports;},set exports(v){eventemitter3Exports=v;}};(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
@@ -189,12 +189,12 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww$1=ww;return ww$1;});})(tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNw);var nw = tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoNwExports;
+	var ww$1=ww;return ww$1;});})(temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNw);var nw = temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyNwExports;
 
-	var tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWwExports = {};
-	var tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWw = {
-	  get exports(){ return tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWwExports; },
-	  set exports(v){ tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWwExports = v; },
+	var temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWwExports = {};
+	var temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWw = {
+	  get exports(){ return temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWwExports; },
+	  set exports(v){ temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory();})(commonjsGlobal,function(){/**
@@ -448,7 +448,7 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww$1=ww;return ww$1;});})(tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWw);var ww = tempTr0gqPuQjdrvFxAVt2WAVMf20dKRTevoWwExports;
+	var ww$1=ww;return ww$1;});})(temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWw);var ww = temp4B8ESVUvjXwxV1qpOlTWBfnGiUmEIQgyWwExports;
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
