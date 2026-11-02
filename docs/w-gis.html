@@ -9855,13 +9855,23 @@ console.log(r)
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>針對不規則一維數據進行指定內插點數值</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><p>針對不規則一維數據進行指定內插點數值</p>
+<p>數據點與內插點之數值一律以「有效數字」判定後才取用：原始型別number且為有限數，或去頭尾空白後為十進位寫法之字串(可帶正負號、小數點、科學記號，如'12'、' 1.5 '、'-.5'、'2.83e2')，字串轉為數字後使用。
+Infinity、-Infinity、NaN、'Infinity'、'0x10'、'0b11'、'0o7'、'1e400'(超出範圍)、'1e-400'(下溢)、包裝物件new Number(1)、布林、null、非數字字串皆為無效值。</p>
+<p>無效值之處置：</p>
+<ol>
+<li>數據點(ps)之x或y任一為無效值者，該點略過、不參與內插；若無任何有效數據點，回傳{ err: 'psSrc has no effective data' }。</li>
+<li>內插點(x)為單值但無效(含Infinity、'0x10')，回傳{ err: 'psTar is not a number or an effective object or array' }。</li>
+<li>內插點(x)為物件或陣列時，無效之內插點略過、不輸出於結果，結果只含有效內插點(依輸入順序)，每點為{ [keyX]: 有效數字, [keyY]: 內插值或null }；若無任何有效內插點，回傳{ err: 'psTar has no effective data' }。</li>
+<li>本函數只把有效數字(原始型別number且為有限數)交給wsemi interp1，內插點亦以純數字陣列交付，故wsemi對無效值之處置不影響本函數之結果與回傳形狀。</li>
+<li>上述錯誤皆以物件{ err }回傳(不論是否useSync)；有效內插點但落在數據範圍外或無法內插者，該點內插值為null。</li>
+</ol></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="interp1.mjs.html">interp1.mjs</a>, <a href="interp1.mjs.html#line97">line 97</a>
+        <a href="interp1.mjs.html">interp1.mjs</a>, <a href="interp1.mjs.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -9908,7 +9918,7 @@ console.log(r)
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 243,}r = await interp1(ps, p)console.log(r)// => { x: 243, y: 206 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 283,}r = await interp1(ps, p)console.log(r)// => { x: 283, y: 228.0408163265306 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 1160,}r = await interp1(ps, p)console.log(r)// => { x: 1160, y: null }ps = [{ a: 243, b: 206 }, { a: 233, b: 225 }, { a: 21, b: 325 }, { a: 953, b: 28 }, { a: 1092, b: 290 }, { a: 744, b: 200 }, { a: 174, b: 3 }, { a: 537, b: 368 }, { a: 1151, b: 371 }, { a: 814, b: 252 }]p = {    a: 243,}r = await interp1(ps, p, { keyX: 'a', keyY: 'b' })console.log(r)// => { a: 243, b: 206 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = [    {        x: 243,    },    {        x: 283,    },]r = await interp1(ps, p)console.log(r)// => [ { x: 243, y: 206 }, { x: 283, y: 228.0408163265306 } ]ps = [{ x: 0.000243, y: 0.000206 }, { x: 0.000233, y: 0.000225 }, { x: 0.000021, y: 0.000325 }, { x: 0.000953, y: 0.000028 }, { x: 0.001092, y: 0.00029 }, { x: 0.000744, y: 0.000200 }, { x: 0.000174, y: 0.000003 }, { x: 0.000537, y: 0.000368 }, { x: 0.001151, y: 0.000371 }, { x: 0.000814, y: 0.000252 }]p = {    x: 0.000243,}r = await interp1(ps, p)console.log(r)// => { x: 0.000243, y: 0.00020600000000000002 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 243,}r = interp1(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式console.log(r)// => { x: 243, y: 206 }</code></pre>
+    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 243,}r = await interp1(ps, p)console.log(r)// => { x: 243, y: 206 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 283,}r = await interp1(ps, p)console.log(r)// => { x: 283, y: 228.0408163265306 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 1160,}r = await interp1(ps, p)console.log(r)// => { x: 1160, y: null }ps = [{ a: 243, b: 206 }, { a: 233, b: 225 }, { a: 21, b: 325 }, { a: 953, b: 28 }, { a: 1092, b: 290 }, { a: 744, b: 200 }, { a: 174, b: 3 }, { a: 537, b: 368 }, { a: 1151, b: 371 }, { a: 814, b: 252 }]p = {    a: 243,}r = await interp1(ps, p, { keyX: 'a', keyY: 'b' })console.log(r)// => { a: 243, b: 206 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = [    {        x: 243,    },    {        x: 283,    },]r = await interp1(ps, p)console.log(r)// => [ { x: 243, y: 206 }, { x: 283, y: 228.0408163265306 } ]ps = [{ x: 0.000243, y: 0.000206 }, { x: 0.000233, y: 0.000225 }, { x: 0.000021, y: 0.000325 }, { x: 0.000953, y: 0.000028 }, { x: 0.001092, y: 0.00029 }, { x: 0.000744, y: 0.000200 }, { x: 0.000174, y: 0.000003 }, { x: 0.000537, y: 0.000368 }, { x: 0.001151, y: 0.000371 }, { x: 0.000814, y: 0.000252 }]p = {    x: 0.000243,}r = await interp1(ps, p)console.log(r)// => { x: 0.000243, y: 0.00020600000000000002 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = {    x: 243,}r = interp1(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式console.log(r)// => { x: 243, y: 206 }ps = [{ x: 243, y: 206 }, { x: 233, y: 225 }, { x: 21, y: 325 }, { x: 953, y: 28 }, { x: 1092, y: 290 }, { x: 744, y: 200 }, { x: 174, y: 3 }, { x: 537, y: 368 }, { x: 1151, y: 371 }, { x: 814, y: 252 }]p = [    {        x: 243,    },    {        x: Infinity, //無效值略過    },    {        x: '0x10', //無效值略過    },    {        x: ' 283 ', //有效數字字串，轉為283    },]r = await interp1(ps, p)console.log(r)// => [ { x: 243, y: 206 }, { x: 283, y: 228.0408163265306 } ]</code></pre>
 
 
 
@@ -9971,7 +9981,7 @@ console.log(r)
                 </td>
             
 
-            <td class="description last"><p>輸入一維數據，格式可支援兩種，第一種各點為陣列[[x1,y1],[x2,y2],...]，例如[[0.1,5],[0.2,12],...]，第二種各點為物件，屬性至少要有x與y，格式為[{x:x1,y:y1},{x:x2,y:y2},...]，例如[{x:0.1,y:5},{x:0.2,y:12},...]，key值x與y可由opt更換</p></td>
+            <td class="description last"><p>輸入一維數據，格式可支援兩種，第一種各點為陣列[[x1,y1],[x2,y2],...]，例如[[0.1,5],[0.2,12],...]，第二種各點為物件，屬性至少要有x與y，格式為[{x:x1,y:y1},{x:x2,y:y2},...]，例如[{x:0.1,y:5},{x:0.2,y:12},...]，key值x與y可由opt更換，x與y須為有效數字，無效點略過</p></td>
         </tr>
 
     
@@ -9985,6 +9995,12 @@ console.log(r)
             
                 
 <span class="param-type">Number</span>
+|
+
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Array</span>
 
 
 
@@ -10007,7 +10023,7 @@ console.log(r)
                 </td>
             
 
-            <td class="description last"><p>輸入要內插點的x值</p></td>
+            <td class="description last"><p>輸入要內插點的x值，可為有效數字，或物件{x}(key值可由opt更換)，或其陣列，例如283、{x:283}、[{x:243},{x:283}]、[243,283]、[[243],[283]]，無效值之處置詳見上述說明</p></td>
         </tr>
 
     
@@ -21898,7 +21914,7 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Nov 02 2026 11:05:14 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Nov 02 2026 17:38:45 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

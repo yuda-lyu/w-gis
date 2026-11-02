@@ -88,4 +88,15 @@
 - **已安裝 w-package-tools 1.1.21**:`rollupFiles` 內建 `cleanFolderStrict`,且「未列 `external` 且無法解析之裸引用」建置即失敗(其 JSDoc 第 29 行),故 UNRESOLVED_IMPORT 類問題多半在建置階段即以非 0 結束;無 `genDocsExams.mjs`,主控未提交之 `toolg/gDocsExams.mjs` 在此機執行得 `ERR_MODULE_NOT_FOUND`.
 - **在套件根實跑建置會動到受追蹤之 `dist/`、`docs/`**(`cleanFolder.mjs` 清空兩者):實跑前先備份於 `./tmp/<案>/before/`,實跑後比對(`w-gis.umd.js` 與 `.map` 位元組相同;`interp2.wk.umd.js` 僅 rollupWorker 隨機暫存識別字不同;docs 每檔僅 JSDoc 時間戳一行不同),再自備份還原,避免工作樹多出無實質差異之產物.`quiet-run` 以 cmd 執行,`./node_modules/.bin/jsdoc` 之寫法不通,改 `node node_modules/jsdoc/jsdoc.js -c .jsdoc`.
 - 測試鎖排隊曾達 8 分鐘,測試前先備妥全部改動,避免重複排鎖.
+
+## 2026-11-02 r3gis(interp1 交給 wsemi 之值先清理;wsemi 第 3 輪下游先行)
+
+- **wsemi 第 3 輪尚未發布時的前瞻驗證作法**:在測試工具寫「嚴格版」替身,以 `node:module` 的 `register` 載入 ESM 解析鉤,只把 `src/interp1.mjs` 對 `wsemi/src/interp1.mjs` 的引用導向替身(鉤以 `parentURL` 結尾 `/src/interp1.mjs` 且不含 `/node_modules/` 判斷,替身自己仍引用真實 wsemi,不會迴圈);測試在子行程(`--import` 該鉤)跑案例集並輸出 JSON,同一案例集另跑真實 wsemi,兩者結果字串相等.行程內無法 mock ESM 的靜態引用,子行程＋解析鉤是不改 src 的唯一接縫.
+- **替身要有兩種變體**:契約只說「無效元素原位 `{err}`」,未說物件／陣列元素如 `{ x }` 是否仍收;`faithful`(同 wsemi 現行取值)下修前碼結果與修前相同(0 差異),只有 `numberOnly`(物件、陣列元素亦無效)下修前碼才變(109 案中 76 案);所以單看「結果相同」會漏,須同時記錄交給 wsemi 之值(替身內的偵測,斷言皆為有限 number)才抓得到修前碼把 `[{ x, ind }]` 物件陣列交給 px 的做法.
+- **舊判定的實害(修前實測)**:`isnum`＋`toNumber` 讓 `'0x10'` 變 16、`'0b11'` 變 3、`'1e-400'` 變 0 參與內插;`Infinity`／`'1e400'` 當內插點會輸出 `{ x: Infinity, y: null }`,單值時經 `cdbl` 變 `{ x: 1.7976931348623157e+308, y: null }`;數據點 `y` 為 `'0x10'` 時被讀為 16,`'Infinity'` 時輸出變 `Number.MAX_VALUE`;`new Number(283)` 被當 283.
+- **`interp1` 的 `{ err }` 恆以物件回傳**(早於 `_sync` 之檢查直接 return),不論 `useSync`;`_async` 的 reject 只在 `_sync` 結果含 `err` 字串時才發生,實際不會.
+- **stairs 的 `opt.xMax = Infinity` 是可用功能**(最後一階延伸至無限,x 超界仍得最後一階的 y),與 dspec 第 19 項(`Infinity` 改用預設)相衝;本輪 wsemi 契約未涉及 `xMin`／`xMax`,故不動並列為已知限制 L5.
+- **變異驗證腳本要處理 CRLF**:工作樹之 `src/*.mjs` 為 CRLF,多行字串替換須先把 `\r\n` 正規化為 `\n` 再套用、寫出時還原;8 個變異中 4 個因此首輪「字串未命中」而被誤當未變異.未命中必須顯式報告,不可當作通過.
+- **`npm i wsemi@^<版>` 的副作用**:會把 `package.json` 結尾換行補上(原無結尾換行)、把 `package-lock.json` 頂部 `version` 同步為 `package.json` 之版號;前者以 Edit 還原,後者屬同步結果.wsemi 1.9.44 之 `interp1.mjs` 與 1.9.42 相同(行號一致,仍用 `isnum`),修前碼在兩版下 109 案輸出位元組相同.
+- eslint 的 `no-new-wrappers` 會擋測試中刻意用的 `new Number(…)`(包裝物件為無效輸入的測試對象);在測試檔頂以 `/* eslint-disable no-new-wrappers */` 並註明理由.
 - 工作樹內檔案多為 CRLF(autocrlf):`Edit` 之 `old_string` 避免跨行;整檔重寫用 `Write`(LF,git 正規化後無差異).

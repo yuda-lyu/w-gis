@@ -60,6 +60,18 @@
 - **測試**:`test/unit-importTurf.test.mjs`(injectTurf 之 a、c 與 Node 下 importTurf);`test/unit-entryDist.test.mjs` 於產物上以 vm 模擬:案 6(D9-b,worker 全域預載 turf)、案 7(一般頁注入後 turf 留在全域)、案 8(D9-a,宿主 turf 還原)、案 9(D9-c,innerHTML 拋錯仍可載入)、案 10(D9-c,注入未執行仍可載入).vm 之沙箱物件為 `[object Object]`,與瀏覽器之 Window 不同,故真實環境以 `./tmp/run02/acc-env.mjs` 之 Chromium 驗收補足.
 - **已知限制(未修)**:AMD 頁注入之 turf 走 AMD 分支,turf 不可用(只得 warn);CSP 禁 inline 時 turf 不可用(只得 warn);worker 須先 `importScripts` turf;注入改為延遲並優先使用已打包之 turf(Q7(d))另案.
 
+### R-I1 interp1 交給 wsemi 之值須先清理為有效數字(2026-11-02,r3gis;排程第 271 項,wsemi 第 221 項第二批第 3 輪「下游先行」)
+
+- **規則**:`src/interp1.mjs` 交給 wsemi `interp1` 之資料點(ps)與內插點(px)一律為「原始型別 number 且為有限數」:
+  - 數據點、內插點之原值先以 wsemi `isenum` 判定,有效者以 `Number()` 取值(`toEnum`,`src/interp1.mjs:17`),無效者由本套件略過,不交給 wsemi.不用 `isnum`、`cdbl`、lodash `toNumber`(`Infinity`、`'Infinity'`、`'0x10'`、`'0b11'`、`'1e400'`、`'1e-400'`、`new Number(1)` 皆為無效).
+  - 內插點以**純數字陣列**交付(`getPtsX`,:50),不再以 `[{ x, ind }]` 物件交付;故 wsemi 對 px 無效元素之處置(略過或原位 `{err}`)不影響本套件結果,`ts[k]` 與內插點恆逐點對位.
+  - 單值內插點無效 → `{ err: 'psTar is not a number or an effective object or array' }`;物件／陣列內插點中之無效點略過、不輸出,全無效 → `{ err: 'psTar has no effective data' }`;數據點無效者略過,全無效 → `{ err: 'psSrc has no effective data' }`.輸出每點 `{ [keyX]: 有效數字, [keyY]: 內插值或 null }`,形狀同修前;有效輸入之結果與修前逐字相同.處置與訊息寫於 `src/interp1.mjs` JSDoc.
+  - `opt.xMin`／`opt.xMax` 不屬本輪 wsemi 更動之契約,原樣交給 wsemi(`Infinity` 表 stairs 該側無界,修前即如此,見已知限制 L5).
+- **站點全集**:`git grep -n -E "interp1|arrGroupByMaxmin|arrLookupByMaxmin|strTruncate" -- src` 只命中 `src/interp1.mjs`(呼叫處 :262;`arrGroupByMaxmin`、`arrLookupByMaxmin`、`strTruncate` 在本套件 `src/` 內 0 站點).已套:`src/interp1.mjs`.刻意不套:`ptsXtoArr`／`ptsXYtoArr`(公開模組,仍供 `calcDelaunay`、`calcVoronoi`、`interp2NaturalNeighbor`、`interp2Kriging` 使用,不傳給上列 wsemi 函數,行為不在本輪範圍).
+- **前瞻驗證**:wsemi 第 3 輪尚未發布時,以測試工具內之「嚴格版」替身(`test/tools/wsemiInterp1Strict.mjs`,契約:px 陣列無效元素原位 `{ err: 'invalid px[<i>]: must be a valid number' }`、長度恆等於 px)經 ESM 解析鉤(`test/tools/registerWsemiStrict.mjs`)取代 `src/interp1.mjs` 對 wsemi 之引用,於子行程跑案例集(`test/tools/interp1Cases.mjs`).替身有 `faithful`(元素取值同 wsemi 現行)與 `numberOnly`(物件、陣列元素亦視為無效)兩種變體;並記錄交給 wsemi 之值,斷言無「非原始 number 有限數」者.
+- **盤點指令**:`git grep -n -E "interp1|arrGroupByMaxmin|arrLookupByMaxmin|strTruncate" -- src`;`npx mocha --no-parallel test/interp1.test.mjs test/unit-interp1WsemiStrict.test.mjs --timeout 180000`.
+- **測試**:`test/interp1.test.mjs` 案 7～19(有效數字字串、內插點／數據點無效值之略過與對位、單值無效、全無效);`test/unit-interp1WsemiStrict.test.mjs`(替身契約 4 案、真實與嚴格版 wsemi 下 109 案結果相同且不拋錯、交給 wsemi 之值皆為有限 number 3 案).
+
 ## 二、已知限制(文件化)
 
 | ID | 內容 | 落點 |
@@ -68,6 +80,7 @@
 | L2 | UMD 之 AMD 分支依賴 `@turf/turf`,AMD 使用者須自行提供 | 本帳本 |
 | L3 | worker 產物以 blob URL 建立 Web Worker,頁面 CSP 須允許 `blob:`,否則呼叫 reject(值為 Event) | `src/interp2.mjs` JSDoc |
 | L4 | 頁面已有 AMD 載入器時,以 `<script>` 載入主產物得不到 `window['w-gis']`(UMD 慣例) | 本帳本 |
+| L5 | `interp1` 之 `opt.xMin`／`opt.xMax` 原樣交給 wsemi:`Infinity`、`-Infinity` 使 stairs 該側無界(最後一階延伸至無限,修前即如此)、`NaN` 使 stairs 結果全 null;wsemi 後續輪次若將此二鍵改以 `isenum` 判定,上述行為會變,屆時須重評(本輪不動) | `src/interp1.mjs`;`test/tools/interp1Cases.mjs` 案例「stairs xMax Infinity passes through」等 5 案(僅比對真實與嚴格版 wsemi 下結果一致,未釘死數值) |
 | D10 | 無 ESM 入口:Node ESM 須以 default 匯入主入口(`import gis from 'w-gis'`),具名匯入不可用 | `README.md` |
 | D11(已修,2026-10-14 run03) | 原 `writeTiff` 以 `Float32Array` 寫入卻宣告 `BitsPerSample:[8]`、`SampleFormat:[1]`,geotiff 依值之型別寫入(`node_modules/geotiff/dist-module/geotiffwriter.js:316-317`),讀回值錯(輸入 1、2 讀回 63、128).主控裁示採 float32,已改宣告 32/3,見 R-WT | `src/writeTiff.mjs`;`test/unit-writeTiff.test.mjs` |
 | D12(已修,2026-10-14 run04,主控裁示採 (a)) | 原 `writeTiff` 只寫 `GeographicTypeGeoKey`(值為 `opt.typeGeoKey`),未寫 `GTModelTypeGeoKey` 與 `GTRasterTypeGeoKey`;geotiff 寫入端只在未給任何 CRS 鍵時才補(`geotiffwriter.js:476-483`).OGC GeoTIFF 1.1(19-008r4)Req 8.1 規定 SHALL 含 GTModelTypeGeoKey;Req 8.7/8.8 規定投影(1)須有 ProjectedCRSGeoKey、地理(2)須有 GeodeticCRSGeoKey.後果(實測):GDAL(QGIS)將輸出讀為無名稱之 ENGCRS,座標系統遺失;投影代碼(如 3826)被寫進 GeographicTypeGeoKey;另原點以 `(xmin, ymax)` 為格子角,像素中心偏離格點半格.已依 R-WT 之地理參照規則修正 | `src/writeTiff.mjs`;`test/unit-writeTiff.test.mjs` |
@@ -80,6 +93,7 @@
 | 1.1.7 | `writeTiff` 需 Node.js v20.16 以上之 20.x 或 v22.3 以上 | 改以 `process.getBuiltinModule('fs')` 取得 fs,使主入口不再靜態引用 Node 內建 |
 | 1.1.7 | `writeTiff` 輸出改為 float32 單波段(`BitsPerSample:[32]`、`SampleFormat:[3]`) | 原輸出之像素資料與檔頭不符而不可用(D11) |
 | 1.1.7 | `writeTiff` 新增 `opt.typeModel`(`'geographic'` 預設、`'projected'`),寫入 `GTModelTypeGeoKey`、`GTRasterTypeGeoKey: 1` 與對應之 CRS 鍵;原點改為左上格點各外推半格(像素中心即格點);無效 typeModel、投影缺代碼、原點參數無效皆 reject | 原輸出缺必備之 GTModelTypeGeoKey,GDAL 讀不出座標系統;投影代碼寫錯鍵;像素中心偏離格點半格(D12) |
+| 下一版 | `interp1` 之數據點與內插點改以有效數字判定:`Infinity`、`-Infinity`、`'Infinity'`、`'0x10'`、`'0b11'`、`'0o7'`、`'1e400'`、`'1e-400'`、包裝物件 `new Number(1)` 不再被當數字.內插點為此類值時,陣列／物件形式中該點改為略過(修前輸出如 `{ x: Infinity, y: null }`、`{ x: 16, y: null }`),單值形式改回 `{ err }`;數據點為此類值時改為略過(修前 `y` 為 `'0x10'` 時被讀為 16、`y` 為 `'Infinity'` 時內插值為 Infinity、輸出經 `cdbl` 變為 `Number.MAX_VALUE`).有效輸入之結果不變 | 對齊 wsemi 之「有效數字」定義(dspec〈輸入參數之檢測機制〉§3.1),避免以 `isnum`＋`toNumber` 把非預期值當數字交給 wsemi |
 
 ## 四、測試與指令對照
 
@@ -89,4 +103,5 @@
 | R-ENTRY-2、R-ENTRY-3、R-D9-a/b/c(產物;副本執行 gDistRollup) | `test/unit-entryDist.test.mjs` | `npx mocha test/unit-entryDist.test.mjs --timeout 180000` |
 | R-WT | `test/unit-writeTiff.test.mjs` | `npx mocha test/unit-writeTiff.test.mjs --timeout 180000` |
 | R-D9-a/c(邏輯)、importTurf | `test/unit-importTurf.test.mjs` | `npx mocha test/unit-importTurf.test.mjs --timeout 180000` |
+| R-I1 | `test/interp1.test.mjs`、`test/unit-interp1WsemiStrict.test.mjs`(工具:`test/tools/interp1Cases.mjs`、`wsemiInterp1Strict.mjs`、`hookWsemiStrict.mjs`、`registerWsemiStrict.mjs`、`runInterp1Child.mjs`) | `npx mocha --no-parallel test/interp1.test.mjs test/unit-interp1WsemiStrict.test.mjs --timeout 180000`;環境變數 `W_GIS_INTERP1_SRC=<interp1.mjs 路徑>` 可對照他版(修前碼) |
 | 全部 | — | `npm test` |
