@@ -2,24 +2,29 @@ import fs from 'fs'
 import path from 'path'
 import vm from 'vm'
 import assert from 'assert'
-import { spawn } from 'child_process'
-import getDistOpts from '../toolg/distConfig.mjs'
-import getIndexNames from '../toolg/getIndexNames.mjs'
-import { findBadWarns, getUmdExternals, checkMain, checkWorker } from '../toolg/checkDist.mjs'
+import { createRequire } from 'module'
+import runNode from './tools/runNode.mjs'
+import getIndexNames from './tools/getIndexNames.mjs'
 import convertCoordinate from '../src/convertCoordinate.mjs'
 import getCentroidMultiPolygon from '../src/getCentroidMultiPolygon.mjs'
 import interp2 from '../src/interp2.mjs'
 
 
-//由目前src以發布選項建出之產物, 對應規則帳本R-ENTRY-2、R-ENTRY-3、R-D9
+let require = createRequire(import.meta.url)
+
+
+//以副本並指定cwd執行toolg/gDistRollup.mjs後, 驗證其產出之dist, 對應規則帳本R-ENTRY-2、R-ENTRY-3、R-D9
 describe(`unit-entryDist`, function() {
 
-    let fdSrc = path.resolve('./src')
     let fdTmp = path.resolve('./test/_tmp/unit-entryDist')
+    let fdDist = path.resolve(fdTmp, 'dist')
+    let fpMain = path.resolve(fdDist, 'w-gis.umd.js')
+    let fpWorker = path.resolve(fdDist, 'interp2.wk.umd.js')
     let names = getIndexNames('./src/')
-    let { externalsMain, externalsWorker } = getDistOpts()
+    let externalsMain = ['@turf/turf'] //主產物UMD檔頭應有之外部清單(turf官方打包檔於前端另行注入)
+    let externalsWorker = ['worker_threads'] //rollupWorker之runin='both'自行注入
     let codeTurf = fs.readFileSync(path.resolve('./node_modules/@turf/turf/turf.min.js'), 'utf8')
-    let res = null
+    let buildOut = ''
     let codeMain = ''
 
     let pg = [[[0, 0], [2, 0], [2, 2], [0, 2]]]
@@ -29,23 +34,19 @@ describe(`unit-entryDist`, function() {
     //norm, vm內產生之物件與本realm之原型不同, 先以JSON正規化再比對
     let norm = (v) => JSON.parse(JSON.stringify(v))
 
-    function runChild(args, cwd) {
-        return new Promise((resolve, reject) => {
-            let se = ''
-            let cp = spawn(process.execPath, args, { cwd })
-            cp.stderr.on('data', (d) => {
-                se += d
-            })
-            cp.on('error', reject)
-            cp.on('close', (code) => {
-                if (code === 0) {
-                    resolve()
-                }
-                else {
-                    reject(new Error(`build exited with code ${code}: ${se.slice(-2000)}`))
-                }
-            })
-        })
+    //getUmdExternals, 解析UMD產物檔頭CommonJS分支之外部引用清單(檔頭至AMD判斷define.amd之前之require)
+    function getUmdExternals(code) {
+        let i = code.indexOf('define.amd')
+        if (i < 0) {
+            throw new Error('invalid umd code: define.amd not found')
+        }
+        let head = code.slice(0, i)
+        return [...head.matchAll(/require\((["'])([^"']+)\1\)/g)].map((m) => m[2])
+    }
+
+    //findBadWarns, 取出不得出現之建置訊息: 無法解析之引用(UNRESOLVED_IMPORT)與未給全域名之外部模組(MISSING_GLOBAL_NAME), 不比對警告總數(Browserslist過期等噪音會隨環境出現或消失)
+    function findBadWarns(out) {
+        return out.split(/\r?\n/).filter((m) => /could not be resolved|No name was provided for external module/.test(m))
     }
 
     //makeCtx, 以vm模擬UMD之全域分支執行環境: window為瀏覽器主執行緒(含可執行注入script之假DOM), 否則為worker(只有self)
@@ -99,12 +100,20 @@ describe(`unit-entryDist`, function() {
 
     before(async function() {
         this.timeout(180000)
+
+        //副本: 把src、toolg與package.json複製到暫存資料夾, 以其為cwd執行toolg/gDistRollup.mjs(腳本以cwd相對之./src、./dist運作; rollupFile自cwd讀package.json作banner, rollupWorker之temp-*.js亦落於cwd, 故不可以repo根為cwd)
         fs.rmSync(fdTmp, { recursive: true, force: true })
         fs.mkdirSync(fdTmp, { recursive: true })
         fs.copyFileSync(path.resolve('./package.json'), path.resolve(fdTmp, 'package.json'))
-        await runChild([path.resolve('./test/tools/buildDist.mjs'), fdSrc], fdTmp)
-        res = JSON.parse(fs.readFileSync(path.resolve(fdTmp, 'build-result.json'), 'utf8'))
-        codeMain = fs.readFileSync(res.fpMain, 'utf8')
+        fs.cpSync(path.resolve('./src'), path.resolve(fdTmp, 'src'), { recursive: true })
+        fs.cpSync(path.resolve('./toolg'), path.resolve(fdTmp, 'toolg'), { recursive: true })
+
+        let r = await runNode(['./toolg/gDistRollup.mjs'], fdTmp)
+        buildOut = r.out
+        if (r.code !== 0) {
+            throw new Error(`toolg/gDistRollup.mjs exited with code ${r.code}: ${r.out.slice(-2000)}`)
+        }
+        codeMain = fs.readFileSync(fpMain, 'utf8')
     })
 
     after(function() {
@@ -112,7 +121,7 @@ describe(`unit-entryDist`, function() {
     })
 
     it(`case1 should build without unresolved imports or missing global names (R-ENTRY-2)`, function() {
-        assert.strict.deepStrictEqual(findBadWarns(res.warns), [])
+        assert.strict.deepStrictEqual(findBadWarns(buildOut), [])
     })
 
     it(`case2 should declare exactly the configured externals in the main UMD header (R-ENTRY-2)`, function() {
@@ -120,11 +129,16 @@ describe(`unit-entryDist`, function() {
     })
 
     it(`case3 should require the main bundle with the index names and the same results as src (R-ENTRY-3)`, function() {
-        let r = checkMain({ fp: res.fpMain, names, externals: externalsMain })
-        assert.strict.deepStrictEqual(r.problems, [])
-        assert.strict.deepStrictEqual(r.mod.convertCoordinate('WGS84', 'TWD97TM2', [121, 24]), convertCoordinate('WGS84', 'TWD97TM2', [121, 24]))
-        assert.strict.deepStrictEqual(r.mod.getCentroidMultiPolygon(pg), getCentroidMultiPolygon(pg))
-        assert.strict.deepStrictEqual(r.mod.interp2(ps, p, { useSync: true }), interp2(ps, p, { useSync: true }))
+        let mod = require(fpMain)
+        assert.strict.deepStrictEqual(Object.keys(mod).sort(), [...names].sort())
+        for (let k of names) {
+            let want = k === 'importTurf' ? 'object' : 'function'
+            let got = mod[k] === null ? 'null' : typeof mod[k]
+            assert.strict.equal(got, want, `export ${k}`)
+        }
+        assert.strict.deepStrictEqual(mod.convertCoordinate('WGS84', 'TWD97TM2', [121, 24]), convertCoordinate('WGS84', 'TWD97TM2', [121, 24]))
+        assert.strict.deepStrictEqual(mod.getCentroidMultiPolygon(pg), getCentroidMultiPolygon(pg))
+        assert.strict.deepStrictEqual(mod.interp2(ps, p, { useSync: true }), interp2(ps, p, { useSync: true }))
     })
 
     it(`case4 should load the UMD global branch in a bare vm context with the index names (R-ENTRY-3)`, function() {
@@ -134,8 +148,12 @@ describe(`unit-entryDist`, function() {
     })
 
     it(`case5 should build the worker bundle with the configured externals and the same result as src interp2 (R-ENTRY-2, R-ENTRY-3)`, async function() {
-        let r = await checkWorker({ fp: res.fpWorker, externals: externalsWorker })
-        assert.strict.deepStrictEqual(r.problems, [])
+        assert.strict.deepStrictEqual(getUmdExternals(fs.readFileSync(fpWorker, 'utf8')).sort(), [...externalsWorker].sort())
+        let fun = require(fpWorker)
+        assert.strict.equal(typeof fun, 'function')
+        let expected = interp2(ps, p, { useSync: true })
+        let result = await fun(ps, p)
+        assert.strict.deepStrictEqual(result, expected)
     })
 
     it(`case6 should use the preloaded global turf in a worker-like context (R-D9-b)`, function() {
@@ -186,6 +204,10 @@ describe(`unit-entryDist`, function() {
         assert.strict.equal(g.importTurf, null)
         assert.strict.equal(warns.length, 1)
         assert.strict.ok(warns[0].includes('turf is unavailable'), warns[0])
+    })
+
+    it(`case11 should produce exactly dist/w-gis.umd.js, its sourcemap and dist/interp2.wk.umd.js, the latter referenced directly by downstream pages (R-ENTRY-2)`, function() {
+        assert.strict.deepStrictEqual(fs.readdirSync(fdDist).sort(), ['interp2.wk.umd.js', 'w-gis.umd.js', 'w-gis.umd.js.map'])
     })
 
 })

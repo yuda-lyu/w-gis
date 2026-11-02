@@ -42,6 +42,6 @@ npm i w-gis
 
 Add script for w-gis.
 ```alias
-<script src="https://cdn.jsdelivr.net/npm/w-gis@1.1.11/dist/w-gis.umd.js"></script>
+<script src="https://yuda-lyu.github.io/w-gis/dist/w-gis.umd.js"></script>
 
 ```

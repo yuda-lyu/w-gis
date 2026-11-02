@@ -6,7 +6,7 @@ import getFiles from 'w-package-tools/src/getFiles.mjs'
 /**
  * 取得主入口索引(src/WGis.mjs)應匯出之名單, 為src頂層檔案扣除索引自身與'_'開頭之內部檔
  *
- * 名單規則之單一出處(帳本R-ENTRY-1): gPackageIndex產生索引、測試核對索引與產物皆引用之, 不得另寫第二份
+ * 測試用之獨立判準(帳本R-ENTRY-1), 與toolg/gPackageIndex產生索引之規則各自成文, 以便核對索引與產物
  *
  * @param {String} [fd='./src/'] 輸入src資料夾字串, 預設'./src/'
  * @param {String} [fnIndex='WGis.mjs'] 輸入索引檔名字串, 預設'WGis.mjs'

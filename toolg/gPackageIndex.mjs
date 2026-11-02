@@ -1,6 +1,7 @@
 import fs from 'fs'
 import _ from 'lodash-es'
-import getIndexNames from './getIndexNames.mjs'
+import w from 'wsemi'
+import getFiles from 'w-package-tools/src/getFiles.mjs'
 
 
 let fd = './src/'
@@ -10,8 +11,21 @@ let fnIndex = 'WGis.mjs'
 function main() {
     //由src內取得指定函數檔案, 再自動產生WGeo.mjs, 供rollup編譯之用
 
-    //ns, 名單規則之單一出處為getIndexNames(帳本R-ENTRY-1), 測試亦引用之
-    let ns = getIndexNames(fd, fnIndex)
+    //getFiles, 只取頂層檔案(子資料夾kriging-*等為內部模組)
+    let ltfs = getFiles(fd)
+
+    //pull
+    _.pull(ltfs, fnIndex)
+
+    //filter
+    ltfs = _.filter(ltfs, (v) => {
+        return w.strleft(v, 1) !== '_'
+    })
+
+    //get names
+    let ns = _.map(ltfs, function(v) {
+        return v.replace('.mjs', '')
+    })
 
     //scs
     let scs = []
