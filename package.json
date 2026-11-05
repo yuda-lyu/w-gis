@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.1.18",
+  "version": "1.1.19",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^7.3.5",
@@ -10,7 +10,7 @@
     "json5": "^2.2.3",
     "polybooljs": "^1.2.2",
     "proj4": "^2.20.9",
-    "wsemi": "^1.9.49"
+    "wsemi": "^1.9.51"
   },
   "devDependencies": {
     "w-package-tools": "^1.1.23"
