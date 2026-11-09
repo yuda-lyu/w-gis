@@ -1,19 +1,19 @@
 {
   "name": "w-gis",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
-    "@turf/turf": "^7.3.5",
+    "@turf/turf": "^7.4.0",
     "d3-delaunay": "^6.0.4",
     "d3-tricontour": "^1.1.0",
     "geotiff": "^3.0.5",
     "json5": "^2.2.3",
     "polybooljs": "^1.2.2",
-    "proj4": "^2.20.9",
-    "wsemi": "^1.9.52"
+    "proj4": "^2.22.0",
+    "wsemi": "^1.9.54"
   },
   "devDependencies": {
-    "w-package-tools": "^1.1.23"
+    "w-package-tools": "^1.1.24"
   },
   "scripts": {
     "test": "mocha --parallel \"test/*.test.mjs\" --timeout 180000",

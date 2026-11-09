@@ -6,10 +6,10 @@
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-	var tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNwExports = {};
-	var tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNw = {
-	  get exports(){ return tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNwExports; },
-	  set exports(v){ tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNwExports = v; },
+	var tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNwExports = {};
+	var tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNw = {
+	  get exports(){ return tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNwExports; },
+	  set exports(v){ tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(commonjsGlobal,function(worker_threads){var eventemitter3Exports={};var eventemitter3={get exports(){return eventemitter3Exports;},set exports(v){eventemitter3Exports=v;}};(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
@@ -189,12 +189,12 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww$1=ww;return ww$1;});})(tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNw);var nw = tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkNwExports;
+	var ww$1=ww;return ww$1;});})(tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNw);var nw = tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkNwExports;
 
-	var tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWwExports = {};
-	var tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWw = {
-	  get exports(){ return tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWwExports; },
-	  set exports(v){ tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWwExports = v; },
+	var tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWwExports = {};
+	var tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWw = {
+	  get exports(){ return tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWwExports; },
+	  set exports(v){ tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWwExports = v; },
 	};
 
 	(function(module,exports){(function(global,factory){module.exports=factory();})(commonjsGlobal,function(){/**
@@ -207,7 +207,7 @@
 		   *    http://en.wikipedia.org/wiki/Base64
 		   *
 		   * @author Dan Kogai (https://github.com/dankogai)
-		   */const version='3.9.3';/**
+		   */const version='3.9.6';/**
 		   * @deprecated use lowercase `version`.
 		   */const VERSION=version;const _TD=typeof TextDecoder==='function'?new TextDecoder('utf-8',{ignoreBOM:true}):undefined;const _TE=typeof TextEncoder==='function'?new TextEncoder():undefined;const b64ch='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';const b64chs=Array.prototype.slice.call(b64ch);const b64tab=(a=>{let tab={};a.forEach((c,i)=>tab[c]=i);return tab;})(b64chs);const b64re=/^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;const _fromCC=String.fromCharCode.bind(String);const _U8Afrom=typeof Uint8Array.from==='function'?Uint8Array.from.bind(Uint8Array):it=>new Uint8Array(Array.prototype.slice.call(it,0));const _mkUriSafe=src=>src.replace(/=/g,'').replace(/[+\/]/g,m0=>m0=='+'?'-':'_');const _tidyB64=s=>s.replace(/[^A-Za-z0-9\+\/]/g,'');/**
 		   * polyfill version of `btoa`
@@ -216,7 +216,7 @@
 		   * does what `window.btoa` of web browsers do.
 		   * @param {String} bin binary string
 		   * @returns {string} Base64-encoded string
-		   */const _btoa=typeof btoa==='function'?bin=>btoa(bin):btoaPolyfill;const _fromUint8Array=typeof Uint8Array.prototype.toBase64==='function'?u8a=>u8a.toBase64():u8a=>{// cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
+		   */const _btoa=typeof btoa==='function'?bin=>btoa(bin):btoaPolyfill;const _fromUint8Array=typeof Uint8Array.prototype.toBase64==='function'?Function.prototype.call.bind(Uint8Array.prototype.toBase64):u8a=>{// cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
 	const maxargs=0x1000;let strs=[];for(let i=0,l=u8a.length;i<l;i+=maxargs){strs.push(_fromCC.apply(null,u8a.subarray(i,i+maxargs)));}return _btoa(strs.join(''));};/**
 		   * converts a Uint8Array to a Base64 string.
 		   * @param {boolean} [urlsafe] URL-and-filename-safe a la RFC4648 §5
@@ -262,7 +262,8 @@
 		   */const decode=src=>_decode(_unURI(src));/**
 		   * check if a value is a valid Base64 string
 		   * @param {String} src a value to check
-		    */const isValid=src=>{if(typeof src!=='string')return false;const s=src.replace(/\s+/g,'').replace(/={0,2}$/,'');return !/[^\s0-9a-zA-Z\+/]/.test(s)||!/[^\s0-9a-zA-Z\-_]/.test(s);};//
+		    */const isValid=src=>{if(typeof src!=='string')return false;const s=src.replace(/\s+/g,'').replace(/={0,2}$/,'');// a data length of 4n+1 cannot encode a whole number of bytes (#197)
+	if(s.length%4===1)return false;return !/[^\s0-9a-zA-Z\+/]/.test(s)||!/[^\s0-9a-zA-Z\-_]/.test(s);};//
 	const _noEnum=v=>{return {value:v,enumerable:false,writable:true,configurable:true};};/**
 		   * extend String.prototype with relevant methods
 		   */const extendString=function(){const _add=(name,body)=>Object.defineProperty(String.prototype,name,_noEnum(body));_add('fromBase64',function(){return decode(this);});_add('toBase64',function(urlsafe){return encode(this,urlsafe);});_add('toBase64URI',function(){return encode(this,true);});_add('toBase64URL',function(){return encode(this,true);});_add('toUint8Array',function(){return toUint8Array(this);});};/**
@@ -448,7 +449,7 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww$1=ww;return ww$1;});})(tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWw);var ww = tempTelkQ4ylMuQplaKIHWtKV0pQioBGs6EkWwExports;
+	var ww$1=ww;return ww$1;});})(tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWw);var ww = tempGycCesYDH8CieXCWQkwaDuwGBBmyB1IkWwExports;
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
