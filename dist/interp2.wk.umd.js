@@ -8,9 +8,9 @@
 		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 	}
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw$1 = {exports: {}};
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw$1 = {exports: {}};
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw=temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw$1.exports;var hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw;function requireTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw(){if(hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw)return temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw$1.exports;hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw=1;(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw,function(worker_threads){function getDefaultExportFromCjs(x){return x&&x.__esModule&&Object.prototype.hasOwnProperty.call(x,'default')?x['default']:x;}var eventemitter3={exports:{}};var hasRequiredEventemitter3;function requireEventemitter3(){if(hasRequiredEventemitter3)return eventemitter3.exports;hasRequiredEventemitter3=1;(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw=tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw$1.exports;var hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw;function requireTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw(){if(hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw)return tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw$1.exports;hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw=1;(function(module,exports){(function(global,factory){module.exports=factory(require$$0);})(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw,function(worker_threads){function getDefaultExportFromCjs(x){return x&&x.__esModule&&Object.prototype.hasOwnProperty.call(x,'default')?x['default']:x;}var eventemitter3={exports:{}};var hasRequiredEventemitter3;function requireEventemitter3(){if(hasRequiredEventemitter3)return eventemitter3.exports;hasRequiredEventemitter3=1;(function(module){var has=Object.prototype.hasOwnProperty,prefix='~';/**
 				     * Constructor to create a storage for our `EE` objects.
 				     * An `Events` instance is a plain object whose properties are event names.
 				     *
@@ -187,14 +187,14 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww_default=ww;return ww_default;});})(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw$1);return temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw$1.exports;}
+	var ww_default=ww;return ww_default;});})(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw$1);return tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw$1.exports;}
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNwExports = requireTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNw();
-	var nw = /*@__PURE__*/getDefaultExportFromCjs(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyNwExports);
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNwExports = requireTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNw();
+	var nw = /*@__PURE__*/getDefaultExportFromCjs(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjNwExports);
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw$1 = {exports: {}};
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw$1 = {exports: {}};
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw=temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw$1.exports;var hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw;function requireTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw(){if(hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw)return temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw$1.exports;hasRequiredTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw=1;(function(module,exports){(function(global,factory){module.exports=factory();})(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw,function(){/**
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw=tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw$1.exports;var hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw;function requireTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw(){if(hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw)return tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw$1.exports;hasRequiredTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw=1;(function(module,exports){(function(global,factory){module.exports=factory();})(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw,function(){/**
 			   *  base64.ts
 			   *
 			   *  Licensed under the BSD 3-Clause License.
@@ -446,10 +446,10 @@
 	//每支產物各註冊一次(runin為both者含兩個outer而註冊兩次), 只會把與本函式庫無關之宿主錯誤重印至stdout, 數量多時並觸發MaxListenersExceededWarning;
 	//宿主未捕捉錯誤之處置屬宿主(預設由Node印出並終止); worker之致命error與非主動exit已由wrapWorker之emitFatal整批reject pending;
 	//曾註冊吞噬型uncaughtException與unhandledRejection(只印不終止, 劫持宿主錯誤語意), 其後僅留uncaughtExceptionMonitor, 皆已移除, 勿再加回
-	var ww_default=ww;return ww_default;});})(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw$1);return temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw$1.exports;}
+	var ww_default=ww;return ww_default;});})(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw$1);return tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw$1.exports;}
 
-	var temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWwExports = requireTemp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWw();
-	var ww = /*@__PURE__*/getDefaultExportFromCjs(temp8CauohCbwh8PRp5DIrHoDGiwxyYvP1zyWwExports);
+	var tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWwExports = requireTempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWw();
+	var ww = /*@__PURE__*/getDefaultExportFromCjs(tempXxi9lcg7Sb8PKP4scy1zX5rbA5thUkWjWwExports);
 
 	function isWindow() {
 	  return typeof window !== 'undefined' && typeof window.document !== 'undefined';
