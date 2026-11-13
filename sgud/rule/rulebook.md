@@ -72,6 +72,22 @@
 - **盤點指令**:`git grep -n -E "interp1|arrGroupByMaxmin|arrLookupByMaxmin|strTruncate" -- src`;`npx mocha --no-parallel test/interp1.test.mjs test/unit-interp1WsemiStrict.test.mjs --timeout 180000`.
 - **測試**:`test/interp1.test.mjs` 案 7～19(有效數字字串、內插點／數據點無效值之略過與對位、單值無效、全無效);`test/unit-interp1WsemiStrict.test.mjs`(替身契約 4 案、真實與嚴格版 wsemi 下 109 案結果相同且不拋錯、交給 wsemi 之值皆為有限 number 3 案).
 
+### R-NN1 interp2NaturalNeighbor 之可內插範圍與 opt.limitInsideHull(2026-11-13,gis-hull;排程第 451 項,使用端 Gitea #139)
+
+- **事實(實測,2026-11-13,修前碼)**:實作之可內插範圍為「正規化正方形」(以 x、y 各自範圍中點為中心、邊長為兩者範圍較大者,`src/interp2Normalize.mjs:98-120` 之 `st`;`vbox = [0,0,scale,scale]` 裁切 Voronoi,`getNz` 只排除 vbox 外之點),非凸包.凸包外而正方形內之點得外推值,其值隨正方形大小(遠點增減)而變;正方形外為 null;共線 3 點、2 點之線上點與線外(正方形內)點皆有值(無二維三角剖分之退化輸入之副產物;≥3 個精確共線點時 d3-delaunay 另加約 1e-8 擾動,2 點時座標不被擾動);單一相異點(x、y 範圍皆為 0)不正規化而原值使用,裁切框仍為 `[0,0,scale,scale]`,故只在查詢座標落於其內時有值.原範例註解「內插點於原始點所形成最小凸多邊形之外, 故無法內插」把正方形外之 null 誤歸因於凸包.
+- **規則**:
+  - **R-NN1-a 凸包內之值不變**:有無 `limitInsideHull` 皆逐字等於修前值(任務不得改變);但凸包內靠近凸包邊界、原始點稀疏處,Voronoi 區塊延伸超出正方形而被裁切,其值與未裁切值有差異(實測:`(1050,201)` 距邊約 2.5,裁切 106.12、裁切框邊長放大為 21 倍後 141.56),此為既有行為,與選項無關,不在本規則修改範圍(見 L6).
+  - **R-NN1-b `opt.limitInsideHull`**(布林,B1:只收 `true`、`false`,其餘含 `'true'`、`1`、包裝物件視為未給;**預設 `true`**).`true` 時內插點須在原始點凸包內(含邊界,容許距離為正規化範圍 `scale` 之 1e-9 倍,以點至邊所在直線之外側距離計),否則 z 為 null 且不呼叫 `funInterpFragment(s)`;`false` 時凸包外而正方形內之點照舊計算(外推,不建議).
+  - **R-NN1-c 正方形外**恆為 null,不呼叫回呼(與選項無關).
+  - **R-NN1-d 退化凸包**:原始點不足 3 個相異點或全部共線(凸包寬度約 `4×面積/周長` 不大於容許距離;**寬度 ≤ 正方形邊長 1e-9 倍之非零面積凸包亦視為共線**,以免十進位小數之共線點因捨入誤差〔約 1e-16〕時而為共線時而為窄凸包)為無凸包面積,`true` 時除座標與原始點相同者(回傳該點 z)外皆 null.判定用自建凸包(`src/_makeHullTester.mjs`,monotone chain),**不用 d3-delaunay `hullPolygon()`**(共線時回傳帶約 1e-8 擾動之窄凸包,是否判為在內取決於偶然之量級).
+  - **R-NN1-d2 數值穩定**:凸包運算前先平移並縮放為以最大範圍為 1 之內部座標(面積以第 1 個頂點為基準),結果不受座標平移量與 `scale` 大小影響(外審 terra 實測:`scale: 1e-165` 面積下溢、`scale: 1e155` 外積溢位為 NaN 而被當成在內,座標平移 1e9 時以原座標計算之面積抵銷;皆已改);非有限數之原始點不參與凸包(修前碼對 `Infinity` 之原始點仍可內插),非有限數之查詢點與運算結果為 NaN 者一律判為在外(取反寫法 `!(c >= -tol)`);`getNz` 於 `limitInsideHull` 為 true 時,正規化後座標非有限數者先於已知點快取檢查即回 null(否則 `NaN-NaN` 鍵會誤中快取).
+  - **R-NN1-d3 既有行為,不改**:①已知點快取以正規化後座標之字串為鍵,查詢點與原始點於浮點上相等即回傳該原始點之 z(座標範圍達 1e16 以上時相對差 1e-16 之點即屬此,JSDoc(5) 已註明);②回傳之 z 經正規化往返而有浮點誤差(如 `0.1` → `0.09999999999999432`);③同座標多個原始點取最後一個;④有狀態之回呼(依呼叫次數或順序而變)因凸包外之點不再呼叫而結果隨之改變(JSDoc〈可內插範圍〉(2)、README 已註明).
+  - **R-NN1-e 說明**:`src/interp2NaturalNeighbor.mjs` JSDoc〈可內插範圍〉(1)~(5)、`@param opt.limitInsideHull`、範例註解;`src/interp2.mjs`(轉傳整份 opt,已註明)、`src/interp2Kriging.mjs`(不受限,已註明)、`src/interp2Normalize.mjs`(正方形說明)、README〈Notes〉〈Breaking changes〉.
+- **預設值之審定(`true`,破壞性變更)**:①該函數引為參考之 Tinfour 文件明載「It does not support extrapolation」,範例註解與被註解掉之 hullPolygon 程式亦顯示原意為凸包;②凸包外之值取決於正規化正方形(實測 `(600,500)` 於 10 點範例為 220.48,加 1 個遠點使正方形放大後為 147.55),無意義而不穩;③本套件既有 32 案(`interp2NaturalNeighbor`、`interp2`、`interp2Normalize`、`interp2Kriging` 測試)全數在預設 `true` 下通過,無任何測試把外推值當規格;④原則 14(不為舊行為留相容、品質優先),且非布林值視為未給時取 `true` 為失敗保守側(寧回 null 不回捏造值);⑤`false` 保留為明示取得外推值之出口(任務與 Gitea #139 要求有此選項).
+- **同型盤點**(指令:`git grep -n -E "interp2Normalize|\.voronoi\(|hullPolygon|interp2NaturalNeighbor" -- src`):已套 `src/interp2NaturalNeighbor.mjs`;`src/interp2.mjs` 轉傳整份 opt(同改:JSDoc 註明);`src/interp2Kriging.mjs` 用 `interp2Normalize` 僅作數值正規化、不裁切、凸包外與正方形外皆外推(不適用,JSDoc 註明,測試鎖定 `limitInsideHull` 對其無效);`src/interp2Grid.mjs`、`src/interp2Raster.mjs` 只經 `interp2Kriging`(不適用);`src/calcVoronoi.mjs:272-276` 之 `vbox` 為輸出 Voronoi 區塊之外框,非內插(不適用).
+- **盤點指令**:同上;`npx mocha --no-parallel test/unit-interp2NaturalNeighborHull.test.mjs test/unit-makeHullTester.test.mjs --timeout 180000`.環境變數 `W_GIS_SRC_DIR=<src 資料夾>` 可指定修前碼或變異碼對照(兩檔皆支援).
+- **測試**:`test/unit-interp2NaturalNeighborHull.test.mjs`(R-NN1-a~l:凸包內不變且等於修前值、凸包外、正方形外、邊界與浮點、回呼、非布林值、退化、三角形、scale 與座標尺度與順序與無效點、陣列逐點、以 turf 為獨立判準交叉、經 interp2 與 kriging;n 極端 scale 與座標〔1e-165、1e155、平移 ±1e9、範圍溢位、含 Infinity 之原始點〕;o 容許距離與極窄凸包之公開行為;p 有狀態回呼);`test/unit-makeHullTester.test.mjs`(R-NN1-m:凸包判定函數,含尺度與平移不變、非有限數、與 turf 隨機交叉);`test/unit-entryDist.test.mjs` 案 3、案 5(重建之主產物與 worker 產物亦具 `limitInsideHull` 行為).期望值取自修前碼之實測輸出.變異驗證(2026-11-13,11 個變異:移除凸包檢查、預設翻轉、容許距離 0 或 1e-6、退化回 true、邊界改排他、非布林值以真值判、回呼先於檢查、窄凸包寬度檢查移除、舊版凸包函數、移除非有限守門)皆被殺.
+
 ## 二、已知限制(文件化)
 
 | ID | 內容 | 落點 |
@@ -81,6 +97,8 @@
 | L3 | worker 產物以 blob URL 建立 Web Worker,頁面 CSP 須允許 `blob:`,否則呼叫 reject(值為 Event) | `src/interp2.mjs` JSDoc |
 | L4 | 頁面已有 AMD 載入器時,以 `<script>` 載入主產物得不到 `window['w-gis']`(UMD 慣例) | 本帳本 |
 | L5 | `interp1` 之 `opt.xMin`／`opt.xMax` 原樣交給 wsemi:`Infinity`、`-Infinity` 使 stairs 該側無界(最後一階延伸至無限,修前即如此)、`NaN` 使 stairs 結果全 null;wsemi 後續輪次若將此二鍵改以 `isenum` 判定,上述行為會變,屆時須重評(本輪不動) | `src/interp1.mjs`;`test/tools/interp1Cases.mjs` 案例「stairs xMax Infinity passes through」等 5 案(僅比對真實與嚴格版 wsemi 下結果一致,未釘死數值) |
+| L6 | `interp2NaturalNeighbor` 以正規化正方形裁切 Voronoi 區塊:凸包內靠近凸包邊界、原始點稀疏處之內插點,其區塊延伸超出正方形時被裁切,值與未裁切之理論值有差異(實測可差數十);任務要求凸包內之值不得改變,故未修;若日後要求精確自然鄰點值,須改為不裁切之區塊(如 Voronoi 外框取足夠大並處理多邊形運算之數值容許誤差),屬破壞性變更 | `src/interp2NaturalNeighbor.mjs` JSDoc〈可內插範圍〉(4);README〈Notes〉;R-NN1-a |
+| L7(已修,2026-11-13 gis-l7) | 原 `interp2NaturalNeighbor` 之 `funInterpFragments` 回呼收到之 `msg.funInv` 呼叫 `inv(vv, 2)`,而 `inv` 之 `dir` 只收 `'x'`、`'y'`、`'z'`,呼叫 `msg.funInv(...)` 即拋 TypeError,被 `addPoint` 之 try/catch 接住而該點回 null 並印出錯誤.根因(`git log -S`):初版(b967f01)之 `interp2Normalize` 以陣列 `st[0|1|2]` 為 x、y、z 而呼叫 `inv(vv, 2)`(2＝z 軸);後來(65d806d)把 `st` 改為以 `'x'`、`'y'`、`'z'` 為鍵,漏改此呼叫端(漏做:重構不完整).已改為 `inv(vv, 'z')`;`msg.funInv` 僅供讀取(如判斷或記錄):回呼回傳值仍須為正規化值,回傳 `msg.funInv(msg.v)` 會被再次還原(JSDoc 範例註解已載,測試鎖定).同類盤點:`git grep -n -E "\binv\(|\bnv\(" -- src` 全數站點之 `dir` 皆為字母鍵,無其他數字索引 | `src/interp2NaturalNeighbor.mjs:538-540`;`test/unit-interp2NaturalNeighborFunInv.test.mjs`(8 案;修前碼〔`inv(vv, 2)`〕與錯軸變異〔`'x'`、`'y'`〕皆 7 案紅、1 案綠〔`funInv(非數字)`回 null 之案修前即成立〕) |
 | D10 | 無 ESM 入口:Node ESM 須以 default 匯入主入口(`import gis from 'w-gis'`),具名匯入不可用 | `README.md` |
 | D11(已修,2026-10-14 run03) | 原 `writeTiff` 以 `Float32Array` 寫入卻宣告 `BitsPerSample:[8]`、`SampleFormat:[1]`,geotiff 依值之型別寫入(`node_modules/geotiff/dist-module/geotiffwriter.js:316-317`),讀回值錯(輸入 1、2 讀回 63、128).主控裁示採 float32,已改宣告 32/3,見 R-WT | `src/writeTiff.mjs`;`test/unit-writeTiff.test.mjs` |
 | D12(已修,2026-10-14 run04,主控裁示採 (a)) | 原 `writeTiff` 只寫 `GeographicTypeGeoKey`(值為 `opt.typeGeoKey`),未寫 `GTModelTypeGeoKey` 與 `GTRasterTypeGeoKey`;geotiff 寫入端只在未給任何 CRS 鍵時才補(`geotiffwriter.js:476-483`).OGC GeoTIFF 1.1(19-008r4)Req 8.1 規定 SHALL 含 GTModelTypeGeoKey;Req 8.7/8.8 規定投影(1)須有 ProjectedCRSGeoKey、地理(2)須有 GeodeticCRSGeoKey.後果(實測):GDAL(QGIS)將輸出讀為無名稱之 ENGCRS,座標系統遺失;投影代碼(如 3826)被寫進 GeographicTypeGeoKey;另原點以 `(xmin, ymax)` 為格子角,像素中心偏離格點半格.已依 R-WT 之地理參照規則修正 | `src/writeTiff.mjs`;`test/unit-writeTiff.test.mjs` |
@@ -94,6 +112,7 @@
 | 1.1.7 | `writeTiff` 輸出改為 float32 單波段(`BitsPerSample:[32]`、`SampleFormat:[3]`) | 原輸出之像素資料與檔頭不符而不可用(D11) |
 | 1.1.7 | `writeTiff` 新增 `opt.typeModel`(`'geographic'` 預設、`'projected'`),寫入 `GTModelTypeGeoKey`、`GTRasterTypeGeoKey: 1` 與對應之 CRS 鍵;原點改為左上格點各外推半格(像素中心即格點);無效 typeModel、投影缺代碼、原點參數無效皆 reject | 原輸出缺必備之 GTModelTypeGeoKey,GDAL 讀不出座標系統;投影代碼寫錯鍵;像素中心偏離格點半格(D12) |
 | 下一版 | `interp1` 之數據點與內插點改以有效數字判定:`Infinity`、`-Infinity`、`'Infinity'`、`'0x10'`、`'0b11'`、`'0o7'`、`'1e400'`、`'1e-400'`、包裝物件 `new Number(1)` 不再被當數字.內插點為此類值時,陣列／物件形式中該點改為略過(修前輸出如 `{ x: Infinity, y: null }`、`{ x: 16, y: null }`),單值形式改回 `{ err }`;數據點為此類值時改為略過(修前 `y` 為 `'0x10'` 時被讀為 16、`y` 為 `'Infinity'` 時內插值為 Infinity、輸出經 `cdbl` 變為 `Number.MAX_VALUE`).有效輸入之結果不變 | 對齊 wsemi 之「有效數字」定義(dspec〈輸入參數之檢測機制〉§3.1),避免以 `isnum`＋`toNumber` 把非預期值當數字交給 wsemi |
+| 下一版 | `interp2NaturalNeighbor`(含 `interp2` 之 `method: 'naturalNeighbor'`)新增 `opt.limitInsideHull`,**預設 `true`**:凸包外(而正方形內)之內插點由外推值改為 `z: null`,且不呼叫 `funInterpFragment(s)`;原始點不足 3 個相異點或全部共線時,除座標與原始點相同者外皆 null(修前為退化輸入之副產物數字,非有意之內插).`{ limitInsideHull: false }` 可取回修前之值.凸包內與正方形外之值不變 | 外推值取決於正規化正方形之大小而不穩定,與函數引用之 Tinfour 文件(不支援外推)及範例註解之原意不符;原則 14(使用端 Gitea #139) |
 
 ## 四、測試與指令對照
 
@@ -104,4 +123,6 @@
 | R-WT | `test/unit-writeTiff.test.mjs` | `npx mocha test/unit-writeTiff.test.mjs --timeout 180000` |
 | R-D9-a/c(邏輯)、importTurf | `test/unit-importTurf.test.mjs` | `npx mocha test/unit-importTurf.test.mjs --timeout 180000` |
 | R-I1 | `test/interp1.test.mjs`、`test/unit-interp1WsemiStrict.test.mjs`(工具:`test/tools/interp1Cases.mjs`、`wsemiInterp1Strict.mjs`、`hookWsemiStrict.mjs`、`registerWsemiStrict.mjs`、`runInterp1Child.mjs`) | `npx mocha --no-parallel test/interp1.test.mjs test/unit-interp1WsemiStrict.test.mjs --timeout 180000`;環境變數 `W_GIS_INTERP1_SRC=<interp1.mjs 路徑>` 可對照他版(修前碼) |
+| R-NN1(a~l 為 `interp2NaturalNeighbor`;m 為凸包判定函數) | `test/unit-interp2NaturalNeighborHull.test.mjs`、`test/unit-makeHullTester.test.mjs` | `npx mocha --no-parallel test/unit-interp2NaturalNeighborHull.test.mjs test/unit-makeHullTester.test.mjs --timeout 180000`;`W_GIS_SRC_DIR=<src 資料夾>` 可對照修前碼或變異碼 |
+| L7(`msg.funInv`,已修) | `test/unit-interp2NaturalNeighborFunInv.test.mjs` | `npx mocha --no-parallel test/unit-interp2NaturalNeighborFunInv.test.mjs --timeout 180000`;`W_GIS_SRC_DIR=<src 資料夾>` 可對照修前碼或變異碼 |
 | 全部 | — | `npm test` |

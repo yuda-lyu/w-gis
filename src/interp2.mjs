@@ -12,6 +12,9 @@ import interp2Kriging from './interp2Kriging.mjs'
  * 該產物無法由bundler(例如webpack以web為target)打包, 因其Node分支須外部引用worker_threads;
  * 於瀏覽器以blob URL建立Web Worker, 故頁面若設CSP, 須允許blob:(script-src或worker-src), 否則呼叫會reject
  *
+ * 可內插範圍: method='naturalNeighbor'時, 內插點須位於原始點x與y範圍較大者為邊長之正方形內, 且預設(opt.limitInsideHull為true)須位於原始點凸包內, 否則z為null, 詳見interp2NaturalNeighbor;
+ * method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計算(外推)
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} psSrc 輸入點陣列，為[{x:x1,y:y1},{x:x2,y:y2},...]點物件之陣列
@@ -28,6 +31,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * @param {Number} [opt.sigma2=0] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數alpha數值，預設100
  * @param {Boolean} [opt.returnWithVariogram=false] (僅舊invall引擎參數，因interp2之kriging固定走friedrich故不生效，friedrich無半變異圖) 輸入是否回傳擬合半變異數結果布林值，預設false
+ * @param {Boolean} [opt.limitInsideHull=true] 輸入若method='naturalNeighbor'時，是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點z為null，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響)，僅收true與false，其他值視為未給，method='kriging'時無效，預設true
  * @param {Boolean} [opt.useSync=false] 輸入是否使用同步函數布林值，預設false
  * @returns {Promise|Array|Object} 回傳Promise或點物件陣列或點物件，若useSync=false則回傳Promise，resolve為回傳點物件陣列或點物件，reject為失敗訊息，若useSync=true則回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example

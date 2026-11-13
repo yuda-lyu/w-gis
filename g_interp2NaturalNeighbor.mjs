@@ -43,11 +43,29 @@ p = {
 }
 let funInterpFragmentNoUse = (msg) => {
     // console.log('funInterpFragmentNoUse', msg)
-    return msg.v //預設回傳msg.v, 此處因內插點於原始點所形成最小凸多邊形之外, 故無法內插, 亦不會呼叫funInterpFragment
+    return msg.v //預設回傳msg.v, 此處因內插點於原始點範圍之正方形外(亦於原始點所形成最小凸多邊形之外), 故無法內插, 亦不會呼叫funInterpFragment
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
 console.log(r)
 // => { x: 1243, y: 1207, z: null }
+
+ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+p = {
+    x: 600,
+    y: 500,
+}
+r = interp2NaturalNeighbor(ps, p)
+console.log(r)
+// => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點所形成最小凸多邊形之外(y最大之原始點為371), 故無法內插
+
+ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+p = {
+    x: 600,
+    y: 500,
+}
+r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })
+console.log(r)
+// => { x: 600, y: 500, z: 220.47540877342678 } //limitInsideHull為false, 內插點於凸包外但在正方形內(y範圍為-378至752), 故計算外推值, 此值受正方形大小影響
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -58,7 +76,7 @@ let funInterpFragments = (msg) => {
     // console.log('funInterpFragments', msg)
     // let vt = msg.ps[0].v + msg.ps[1].v + msg.ps[2].v
     // console.log('vt', vt)
-    // let vv = msg.funInv(msg.v) //因msg.v有正規化, 若要自行計算最終內插值須自行調用msg.funInv
+    // let vv = msg.funInv(msg.v) //因msg.v有正規化, 若要自行計算最終內插值須自行調用msg.funInv(僅供讀取, 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z)
     // console.log('vv', vv)
     // console.log('msg.v', msg.v)
     return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)

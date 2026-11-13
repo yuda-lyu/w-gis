@@ -12,6 +12,8 @@
 | 瀏覽器端取得 turf(注入、宿主還原、失敗降級、worker 全域) | 完成;已知限制見帳本 | R-D9-a/b/c | `test/unit-importTurf.test.mjs`、`test/unit-entryDist.test.mjs` 案 6～10 |
 | `writeTiff`(Node 專用,float32 單波段,地理參照) | 完成 | R-WT | `test/unit-writeTiff.test.mjs` |
 | `interp1` 交給 wsemi 之數據點與內插點先清理為有效數字(`isenum`＋`Number()`),內插點以純數字陣列交付;無效值由本套件略過或回 `{ err }`,處置寫於 JSDoc;有效輸入結果與修前逐字相同;已以「第 3 輪嚴格版」wsemi 替身前瞻驗證 | 完成(2026-11-02 r3gis);wsemi 依賴 `^1.9.44` | R-I1 | `test/interp1.test.mjs`、`test/unit-interp1WsemiStrict.test.mjs` |
+| `interp2NaturalNeighbor` 可內插範圍之說明(正規化正方形、凸包、外推之性質)與 `opt.limitInsideHull`(布林,預設 `true`:凸包外回 null 且不呼叫 `funInterpFragment(s)`;`false` 取回外推值);凸包判定為自建 `src/_makeHullTester.mjs`;JSDoc 與 README〈Notes〉〈Breaking changes〉已寫明;同型盤點:`interp2`(轉傳,已註明)、`interp2Kriging`(不受限,已註明)、`interp2Normalize`(正方形說明)、`interp2Grid`／`interp2Raster`(只走 kriging)、`calcVoronoi`(非內插),見帳本 R-NN1 | 完成(2026-11-13 gis-hull,未發布);預設 `true` 為破壞性變更 | R-NN1 | `test/unit-interp2NaturalNeighborHull.test.mjs`、`test/unit-makeHullTester.test.mjs` |
+| `interp2NaturalNeighbor` 之 `funInterpFragments` 回呼收到之 `msg.funInv`(將正規化 z 還原為原始 z 之尺度,僅供讀取;回傳值仍須為正規化值):原內部呼叫 `inv(vv, 2)` 拋 TypeError(`st` 改以字母為鍵時漏改),已改 `inv(vv, 'z')` | 完成(2026-11-13 gis-l7,未發布);L7 已修 | L7 | `test/unit-interp2NaturalNeighborFunInv.test.mjs` |
 | 其餘等值線、內插、多邊形運算等函數 | 既有 | — | `test/<函數名>.test.mjs` |
 
 ## 二、發布與建置(`toolg/`)
@@ -22,7 +24,7 @@
 ## 三、已知缺口與待辦
 
 - `toolg/gDocsExams.mjs`(主控未提交之批次改動)改呼叫 `w-package-tools/src/genDocsExams.mjs`;本機已安裝之 w-package-tools 1.1.21 無此檔,執行得 `ERR_MODULE_NOT_FOUND`.待上游新版安裝後方可執行(非本套件問題).
-- 已知限制 L1～L4、L5、D10 見帳本第二節,未修.L5:`interp1` 之 `opt.xMin`／`opt.xMax` 原樣交給 wsemi(`Infinity` 使 stairs 該側無界);wsemi 後續輪次若改收緊須重評.
+- 已知限制 L1～L4、L5、L6、D10 見帳本第二節,未修;L7 已修(見上表與帳本).L6:`interp2NaturalNeighbor` 凸包內靠凸包邊界之點因 Voronoi 區塊被正方形裁切,值可與未裁切者不同(任務限制凸包內之值不得改,故未修).L5:`interp1` 之 `opt.xMin`／`opt.xMax` 原樣交給 wsemi(`Infinity` 使 stairs 該側無界);wsemi 後續輪次若改收緊須重評.
 - `arrGroupByMaxmin`、`arrLookupByMaxmin`、`strTruncate`:本套件 `src/` 內 0 站點(2026-11-02 盤點,指令見 R-I1),本輪無須處理.
 - `src/ptsXtoArr.mjs`、`src/ptsXYtoArr.mjs` 仍以 `isnum`＋`toNumber` 判定(公開模組,供 `calcDelaunay`、`calcVoronoi`、`interp2NaturalNeighbor`、`interp2Kriging` 使用),不屬本輪範圍;`interp1` 已不再使用.
 
@@ -30,4 +32,6 @@
 
 - 2026-11-02(任務 20261102075126 gis267):`npm test` 全套綠(案數見該任務報告);以套件根依 `script.txt` 序實跑 cleanFolder→jsdoc→gDocsExams→convertTurfCode→gDistRollup:`dist/w-gis.umd.js` 與 `.map` 與改前位元組相同,63 個匯出同名同型,`dist/interp2.wk.umd.js` 僅隨機暫存識別字不同;gDocsExams 因上列缺口未能執行.
 - 2026-11-02(任務 20261102171617 r3gis):`npm test` 全套 439 passing、0 failing(含新增 20 案);`interp1` 修前修後 109 案差分:有效輸入 77 案 0 差異,含無效值 32 案中 24 案依 R-I1 改變、8 案(非數字之無效內插點)不變;嚴格版替身下修後碼 0 差異、交給 wsemi 之值 0 違規.
+- 2026-11-13(任務 20261113225446 gis-hull,未提交未發布):`npm test` 全套 504 passing、0 failing(新增 `unit-interp2NaturalNeighborHull` 52 案、`unit-makeHullTester` 13 案;`unit-entryDist` 案 3、案 5 增對重建產物之 `limitInsideHull` 斷言);新測試對修前碼 30 案紅(其餘 22 案為凸包內與 `false` 之修前值,確為修前實測值);11 個變異皆被殺;外審 terra(max)一位提 12 條,皆屬實或部分屬實、0 誤報,已改程式、文件與測試(R-NN1-d2、d3).
+- 2026-11-13(任務 20261113225446 gis-l7,未提交未發布):`npm test` 全套 512 passing、0 failing(較 gis-hull 輪之 504 增 `unit-interp2NaturalNeighborFunInv` 8 案);修 L7(`msg.funInv`);新測試對修前碼與錯軸變異各 7 案紅.
 - `package.json` 版本:1.1.13(本輪未改;`wsemi` 依賴由 `^1.9.42` 升至 `^1.9.44`,`package-lock.json` 同步).

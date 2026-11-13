@@ -1,0 +1,10 @@
+# 回饋(feedback)
+
+任務中發現之自有套件、全域技能、全域設定之調整與抽提提案;一條一列,只增不改(處置結果另記一列,寫明承接哪一列).回饋是紀錄與提案,實際修改走全域設定 §5.2、§13 之通報管道.
+
+| 日期 | 類別 | 對象 | 內容 | 依據 |
+|---|---|---|---|---|
+| 2026-11-13 | 自有套件 | w-gis(本套件) | `interp2NaturalNeighbor` 之 `funInterpFragments` 回呼收到之 `msg.funInv` 內部呼叫 `inv(vv, 2)`,而 `interp2Normalize` 之 `inv` 的 `dir` 只收 `'x'`、`'y'`、`'z'`,故呼叫 `msg.funInv(...)` 必拋 TypeError、該點回 null 並 `console.log` 錯誤;一行可修(改為 `'z'`),不屬 gis-hull 任務範圍(修了會改變該路徑之輸出),待主控排另案 | `src/interp2NaturalNeighbor.mjs` 之 `funInv` 定義處;實測 `funInterpFragments: (msg) => msg.funInv(msg.v)` 得 `TypeError: Cannot read properties of undefined (reading 'range')`、結果 `z: null`;帳本 L7 |
+| 2026-11-13 | 自有套件 | wsemi `isbol` 與 dspec〈輸入參數之檢測機制〉§3.3 B1、§10.2 | `isbol(new Boolean(true))`、`isbol(new Boolean(false))` 皆回 `true`(包裝物件),與 B1「包裝物件無效」不符;以 `isbol` 判 opt 旗標再 `if (v)` 取值時,`new Boolean(false)` 為真值而被當成 `true`.本套件新選項改以 `typeof v === 'boolean'` 判定;§10.2 載「opt 之布林旗標用 `isbol`」之現況需與 B1 之共用檢測函數(§7)對齊時一併處理 | 本機 wsemi 1.9.59:`import isbol from 'wsemi/src/isbol.mjs'` 對 `[true,false,'true',1,0,null,undefined,new Boolean(true)]` 回 `[true,true,false,false,false,false,false,true]`;`src/interp2NaturalNeighbor.mjs` 之 `limitInsideHull` 解析 |
+| 2026-11-13 | 全域技能 | role-coder-for-test(變異驗證) | 補一條:變異「把容許誤差改為 0」在只用整數或可精確表示之座標的測試下必然存活;須另備「十進位小數之邊上點」使浮點誤差顯形,否則該變異無法被殺;並建議明寫「存活之變異要找能區分它之輸入,不得靠放寬變異」 | 本任務 `unit-interp2NaturalNeighborHull.test.mjs`:第一版 53 案全綠而變異 M3(容許距離 0)存活,補「凸包各邊上之十進位小數點」案後被殺;見 `sgud/exp/experience.md` gis-hull 節 |
+| 2026-11-13 | 自有套件 | w-gis(本套件) | 處置(承接上列「`funInv` 內部呼叫 `inv(vv, 2)`」一列):已修為 `inv(vv, 'z')`(gis-l7);根因為 `interp2Normalize` 之 `st` 由陣列索引改為字母鍵時漏改此呼叫端;已補 8 案測試(`test/unit-interp2NaturalNeighborFunInv.test.mjs`),帳本 L7 標已修;無需另通報 | `src/interp2NaturalNeighbor.mjs:538-540`;`git log -S"inv(vv, 2)"` → b967f01(加入)與 65d806d(`st` 改為字母鍵);測試輸出 `tmp/quiet-run/*gis-l7-*.log` |

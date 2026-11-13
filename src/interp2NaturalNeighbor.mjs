@@ -14,6 +14,7 @@ import haskey from 'wsemi/src/haskey.mjs'
 import ptsXYtoArr from './ptsXYtoArr.mjs'
 import ptsXYZtoArr from './ptsXYZtoArr.mjs'
 import interp2Normalize from './interp2Normalize.mjs'
+import _makeHullTester from './_makeHullTester.mjs'
 import getAreaPolygon from './getAreaPolygon.mjs'
 import intersectPolygon from './intersectPolygon.mjs'
 import { Delaunay } from 'd3-delaunay'
@@ -40,6 +41,15 @@ import { Delaunay } from 'd3-delaunay'
  * online test
  * https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voronoi-diagram/
  *
+ * 可內插範圍:
+ * 自然鄰點內插僅對被原始點包圍之內插點有定義, 不支援外推(見上列Tinfour文件);
+ * 本函數將原始點正規化至正方形(以x與y範圍之中點為中心, 邊長為x與y範圍較大者, 即interp2Normalize回傳之st; x與y範圍皆為0者不正規化), 並以該正方形裁切Voronoi區塊, 故:
+ * (1)內插點位於該正方形外(x或y超出)者, 回傳z為null, 且不呼叫funInterpFragment與funInterpFragments;
+ * (2)opt.limitInsideHull為true(預設)時, 另要求內插點位於原始點之凸包(convex hull, 含邊界)內, 凸包外者回傳z為null, 且不呼叫funInterpFragment與funInterpFragments(正方形檢查先於凸包檢查), 邊界容許距離為正方形邊長之1e-9倍(凸包外側距離在此內者視為在內); 原始點少於3個相異點或全部共線(無凸包面積, 凸包寬度不大於正方形邊長之1e-9倍者視為共線)時, 除與原始點座標相同者外, 所有內插點皆回傳z為null; 正規化後座標非有限數(原始座標範圍溢位)者無法判斷, 亦回傳z為null; 回呼函數若有狀態(依呼叫次數或順序而變), 因凸包外之點不再呼叫, 其呼叫次數與順序隨之改變;
+ * (3)opt.limitInsideHull為false時, 位於凸包外而在正方形內之內插點仍會計算, 但屬外推: 其值取決於正方形之大小(即原始點x與y範圍較大者), 增減遠處之原始點可能改變結果, 不建議使用;
+ * (4)凸包內之內插點若其Voronoi區塊延伸超出正方形(多見於靠近凸包邊界而原始點稀疏處), 該區塊亦被裁切, 其值可與未裁切之理論值有差異, 此與opt.limitInsideHull無關;
+ * (5)內插點與原始點座標相同(正規化後浮點相等)者回傳該原始點之z(經正規化往返, 浮點可有極小誤差; 同座標有多個原始點者取最後一個)
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2NaturalNeighbor.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} psSrc 輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列
@@ -49,6 +59,7 @@ import { Delaunay } from 'd3-delaunay'
  * @param {String} [opt.keyY='y'] 輸入點物件之y欄位字串，為座標，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z欄位字串，為觀測值，預設'z'
  * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
+ * @param {Boolean} [opt.limitInsideHull=true] 輸入是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點回傳z為null且不呼叫funInterpFragment與funInterpFragments，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響，詳見上列可內插範圍)，僅收true與false，其他值視為未給，預設true
  * @returns {Array|Object} 回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example
  *
@@ -94,11 +105,29 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * let funInterpFragmentNoUse = (msg) => {
  *     // console.log('funInterpFragmentNoUse', msg)
- *     return msg.v //預設回傳msg.v, 此處因內插點於原始點所形成最小凸多邊形之外, 故無法內插, 亦不會呼叫funInterpFragment
+ *     return msg.v //預設回傳msg.v, 此處因內插點於原始點範圍之正方形外(亦於原始點所形成最小凸多邊形之外), 故無法內插, 亦不會呼叫funInterpFragment
  * }
  * r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
  * console.log(r)
  * // => { x: 1243, y: 1207, z: null }
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * p = {
+ *     x: 600,
+ *     y: 500,
+ * }
+ * r = interp2NaturalNeighbor(ps, p)
+ * console.log(r)
+ * // => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點所形成最小凸多邊形之外(y最大之原始點為371), 故無法內插
+ *
+ * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
+ * p = {
+ *     x: 600,
+ *     y: 500,
+ * }
+ * r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })
+ * console.log(r)
+ * // => { x: 600, y: 500, z: 220.47540877342678 } //limitInsideHull為false, 內插點於凸包外但在正方形內(y範圍為-378至752), 故計算外推值, 此值受正方形大小影響
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -108,6 +137,7 @@ import { Delaunay } from 'd3-delaunay'
  * let funInterpFragments = (msg) => {
  *     // console.log('funInterpFragments', msg)
  *     // let v = ps[0].v + ps[1].v + ps[2].v
+ *     // let vv = msg.funInv(msg.v) //msg.v為正規化後之值, msg.funInv可將正規化值還原為原始z之尺度(僅供讀取, 如判斷或記錄), 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z
  *     return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
  * }
  * r = interp2NaturalNeighbor(ps, p, { funInterpFragments })
@@ -225,6 +255,12 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     }
     scale = cdbl(scale)
 
+    //limitInsideHull, 僅收布林值true與false(包裝物件與'true'、1等皆視為未給), 預設true
+    let limitInsideHull = get(opt, 'limitInsideHull')
+    if (typeof limitInsideHull !== 'boolean') {
+        limitInsideHull = true
+    }
+
     //funInterpFragment
     let funInterpFragment = get(opt, 'funInterpFragment')
     let useFunInterpFragment = isfun(funInterpFragment)
@@ -283,9 +319,11 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     //intDny
     let intDny = Delaunay.from(psSrcOri, d => d.x, d => d.y) //x,y已經被正規化
 
-    // //hpg, 原始數據形成最外框邊界
-    // let hpg = intDny.hullPolygon()
-    // // console.log('intDny.hullPolygon', hpg)
+    //isInsideHull, 判斷已正規化之點是否位於原始點凸包內(含邊界), 僅limitInsideHull為true時建立, 容許距離為正規化範圍scale之1e-9倍
+    let isInsideHull = null
+    if (limitInsideHull) {
+        isInsideHull = _makeHullTester(psSrc, 1e-9 * scale) //x,y已經被正規化
+    }
 
     //vbox
     let vbox = [0, 0, scale, scale]
@@ -498,7 +536,7 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
                     v: vt,
                     indTar,
                     funInv: (vv) => {
-                        return inv(vv, 2)
+                        return inv(vv, 'z') //msg.v為正規化後之z, 以z軸還原; interp2Normalize之st以'x'、'y'、'z'為鍵(原以索引2呼叫, 於st改為鍵後漏改)
                     },
                 })
             }
@@ -537,6 +575,11 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     //getNz
     let getNz = (nx, ny, indTar) => {
 
+        //check, limitInsideHull為true時正規化後座標非有限數(原始座標範圍溢位等)者無法判斷是否於凸包內, 視為無法內插, 且須先於已知點快取檢查(NaN-NaN等鍵會誤中快取)
+        if (isInsideHull !== null && (!Number.isFinite(nx) || !Number.isFinite(ny))) {
+            return null
+        }
+
         //check
         let k = `${nx}-${ny}` //x,y已經被正規化
         if (haskey(kpKnown, k)) {
@@ -545,6 +588,11 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
         //check
         if (nx < vbox[0] || nx > vbox[2] || ny < vbox[1] || ny > vbox[3]) {
+            return null
+        }
+
+        //check, limitInsideHull為true時凸包外之點不內插, 亦不呼叫funInterpFragment與funInterpFragments
+        if (isInsideHull !== null && !isInsideHull(nx, ny)) {
             return null
         }
 

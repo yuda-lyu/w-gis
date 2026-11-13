@@ -23,6 +23,8 @@ import { GaussianProcess, Exponential, SquaredExp } from './kriging-friedrich/in
  *
  * 若是Node.js端使用須更高計算速度，可使用w-kriging: https://github.com/yuda-lyu/w-kriging
  *
+ * 內插點不受原始點凸包與正規化範圍(以x與y範圍較大者為邊長之正方形)限制，凸包外與正方形外之內插點皆會計算(外推)，此與interp2NaturalNeighbor之可內插範圍不同
+ *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Kriging.test.mjs Github}
  * @memberOf w-gis
  * @param {Array} psSrc 輸入二維座標加觀測數據點陣列，為[{x:x1,y:y1,z:z1},{x:x2,y:y2,z:z2},...]點物件之陣列

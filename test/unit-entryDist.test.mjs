@@ -139,6 +139,12 @@ describe(`unit-entryDist`, function() {
         assert.strict.deepStrictEqual(mod.convertCoordinate('WGS84', 'TWD97TM2', [121, 24]), convertCoordinate('WGS84', 'TWD97TM2', [121, 24]))
         assert.strict.deepStrictEqual(mod.getCentroidMultiPolygon(pg), getCentroidMultiPolygon(pg))
         assert.strict.deepStrictEqual(mod.interp2(ps, p, { useSync: true }), interp2(ps, p, { useSync: true }))
+        //R-NN1: 重建之主產物亦具凸包限制(預設true: 凸包外而正方形內之點為null; false: 計算外推值), 且與src一致
+        let pOut = { x: 600, y: 500 }
+        assert.strict.deepStrictEqual(mod.interp2(ps, pOut, { useSync: true }), { x: 600, y: 500, z: null })
+        assert.strict.deepStrictEqual(mod.interp2(ps, pOut, { useSync: true, limitInsideHull: true }), { x: 600, y: 500, z: null })
+        assert.strict.deepStrictEqual(mod.interp2(ps, pOut, { useSync: true, limitInsideHull: false }), interp2(ps, pOut, { useSync: true, limitInsideHull: false }))
+        assert.strict.equal(typeof mod.interp2(ps, pOut, { useSync: true, limitInsideHull: false }).z, 'number')
     })
 
     it(`case4 should load the UMD global branch in a bare vm context with the index names (R-ENTRY-3)`, function() {
@@ -154,6 +160,10 @@ describe(`unit-entryDist`, function() {
         let expected = interp2(ps, p, { useSync: true })
         let result = await fun(ps, p)
         assert.strict.deepStrictEqual(result, expected)
+        //R-NN1: worker產物亦具凸包限制並傳遞limitInsideHull
+        let pOut = { x: 600, y: 500 }
+        assert.strict.deepStrictEqual(await fun(ps, pOut), { x: 600, y: 500, z: null })
+        assert.strict.deepStrictEqual(await fun(ps, pOut, { limitInsideHull: false }), interp2(ps, pOut, { useSync: true, limitInsideHull: false }))
     })
 
     it(`case6 should use the preloaded global turf in a worker-like context (R-D9-b)`, function() {
