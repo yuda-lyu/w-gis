@@ -13,7 +13,7 @@ import normalizeArray from './normalizeArray.mjs'
  * 內插用正規化數據
  *
  * x與y使用同一網格尺寸縮放: 以各自範圍之中點為中心, 以x與y範圍較大者為邊長, 故正規化後之x與y皆落於[0,scale]之正方形內(範圍較小者之軸不會充滿[0,scale]; x與y範圍皆為0者不縮放而原值回傳), 回傳之st記錄此正方形之範圍;
- * 此正方形即interp2NaturalNeighbor之Voronoi裁切範圍(正方形外之內插點無法內插), 詳見interp2NaturalNeighbor之可內插範圍
+ * interp2NaturalNeighbor只以此正規化處理z與回呼之正規化值, 其Voronoi區塊不裁切於此正方形, 可內插範圍以原始點凸包為準(詳見interp2NaturalNeighbor之可內插範圍)
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Normalize.test.mjs Github}
  * @memberOf w-gis

@@ -12,7 +12,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p)
 console.log(r)
-// => { x: 243, y: 207, z: 97.29447682486813 }
+// => { x: 243, y: 207, z: 97.29447682486816 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -30,11 +30,11 @@ p = {
 }
 let funInterpFragment = (msg) => {
     // console.log('funInterpFragment', msg)
-    return msg.v //預設回傳msg.v, 三角形三角點各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+    return msg.v //預設回傳msg.v, 各自然鄰點之v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragment })
 console.log(r)
-// => { x: 243, y: 207, z: 97.29447682486813 }
+// => { x: 243, y: 207, z: 97.29447682486816 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -43,7 +43,7 @@ p = {
 }
 let funInterpFragmentNoUse = (msg) => {
     // console.log('funInterpFragmentNoUse', msg)
-    return msg.v //預設回傳msg.v, 此處因內插點於原始點範圍之正方形外(亦於原始點所形成最小凸多邊形之外), 故無法內插, 亦不會呼叫funInterpFragment
+    return msg.v //預設回傳msg.v, 此處因內插點於原始點凸包之外(預設limitInsideHull為true), 故無法內插, 亦不會呼叫funInterpFragment
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
 console.log(r)
@@ -65,7 +65,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })
 console.log(r)
-// => { x: 600, y: 500, z: 220.47540877342678 } //limitInsideHull為false, 內插點於凸包外但在正方形內(y範圍為-378至752), 故計算外推值, 此值受正方形大小影響
+// => { x: 600, y: 500, z: 232.1044309757165 } //limitInsideHull為false, 內插點於凸包外, 投影至最近凸包邊(537,368)-(1151,371), 以兩端點線性內插(外推)
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -79,11 +79,11 @@ let funInterpFragments = (msg) => {
     // let vv = msg.funInv(msg.v) //因msg.v有正規化, 若要自行計算最終內插值須自行調用msg.funInv(僅供讀取, 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z)
     // console.log('vv', vv)
     // console.log('msg.v', msg.v)
-    return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+    return msg.v //預設回傳msg.v, 各自然鄰點為msg.ps, 各點v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和
 }
 r = interp2NaturalNeighbor(ps, p, { funInterpFragments })
 console.log(r)
-// => { x: 243, y: 207, z: 97.29447682486813 }
+// => { x: 243, y: 207, z: 97.29447682486816 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -92,7 +92,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p)
 console.log(r)
-// => { x: 283, y: 207, z: 114.43040421951908 }
+// => { x: 283, y: 207, z: 114.43040421951918 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -110,7 +110,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
 console.log(r)
-// => { a: 243, b: 207, c: 97.29447682486813 }
+// => { a: 243, b: 207, c: 97.29447682486816 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = [
@@ -126,8 +126,8 @@ p = [
 r = interp2NaturalNeighbor(ps, p)
 console.log(r)
 // => [
-//   { x: 243, y: 207, z: 97.29447682486813 },
-//   { x: 283, y: 207, z: 114.43040421951908 }
+//   { x: 243, y: 207, z: 97.29447682486816 },
+//   { x: 283, y: 207, z: 114.43040421951918 }
 // ]
 
 ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
@@ -137,7 +137,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p)
 console.log(r)
-// => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }
+// => { x: 0.000243, y: 0.000207, z: 97.29447682486817 }
 
 ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 p = {
@@ -146,7 +146,7 @@ p = {
 }
 r = interp2NaturalNeighbor(ps, p, { scale: 1000 })
 console.log(r)
-// => { x: 243, y: 207, z: 97.29447682486855 }
+// => { x: 243, y: 207, z: 97.29447682486816 } //權重不受scale影響(幾何運算於內部座標進行)
 
 
 //node g_interp2NaturalNeighbor.mjs

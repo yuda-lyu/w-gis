@@ -10359,7 +10359,7 @@ Infinity、-Infinity、NaN、'Infinity'、'0x10'、'0b11'、'0o7'、'1e400'(超�
 <p>另有Web Worker版產物dist/interp2.wk.umd.js(於Node使用worker_threads、於瀏覽器使用Web Worker), 供瀏覽器以script載入(掛於window['interp2'])或Node直接使用, 不支援同步模式;
 該產物無法由bundler(例如webpack以web為target)打包, 因其Node分支須外部引用worker_threads;
 於瀏覽器以blob URL建立Web Worker, 故頁面若設CSP, 須允許blob:(script-src或worker-src), 否則呼叫會reject</p>
-<p>可內插範圍: method='naturalNeighbor'時, 內插點須位於原始點x與y範圍較大者為邊長之正方形內, 且預設(opt.limitInsideHull為true)須位於原始點凸包內, 否則z為null, 詳見interp2NaturalNeighbor;
+<p>可內插範圍: method='naturalNeighbor'時, 預設(opt.limitInsideHull為true)內插點須位於原始點凸包內(含邊上與容許值內), 否則z為null; opt.limitInsideHull為false時凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(外推), 詳見interp2NaturalNeighbor;
 method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計算(外推)</p>
 <p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs">Github</a></p></li></ul></dd>
     
@@ -10414,7 +10414,7 @@ method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計�
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p)console.log(r)// => { x: 243, y: 207, z: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 283,    y: 207,}r = await interp2(ps, p)console.log(r)// => { x: 283, y: 207, z: 114.43040421951908 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1160,    y: 380,}r = await interp2(ps, p)console.log(r)// => { x: 1160, y: 380, z: null }ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]p = {    a: 243,    b: 207,}r = await interp2(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })console.log(r)// => { a: 243, b: 207, c: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = [    {        x: 243,        y: 207,    },    {        x: 283,        y: 207,    },]r = await interp2(ps, p)console.log(r)// => [//   { x: 243, y: 207, z: 97.29447682486813 },//   { x: 283, y: 207, z: 114.43040421951908 }// ]ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p, { method: 'kriging' }) //method='kriging'走interp2Kriging, 默認friedrich引擎console.log(r)// => { x: 243, y: 207, z: 97.49846235108123 }ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]p = {    x: 0.000243,    y: 0.000207,}r = await interp2(ps, p)console.log(r)// => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p, { scale: 1000 })console.log(r)// => { x: 243, y: 207, z: 97.29447682486855 }//for interp2.wk.umd.jsps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式console.log(r)// => { x: 243, y: 207, z: 97.29447682486813 }</code></pre>
+    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p)console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 283,    y: 207,}r = await interp2(ps, p)console.log(r)// => { x: 283, y: 207, z: 114.43040421951918 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1160,    y: 380,}r = await interp2(ps, p)console.log(r)// => { x: 1160, y: 380, z: null }ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]p = {    a: 243,    b: 207,}r = await interp2(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })console.log(r)// => { a: 243, b: 207, c: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = [    {        x: 243,        y: 207,    },    {        x: 283,        y: 207,    },]r = await interp2(ps, p)console.log(r)// => [//   { x: 243, y: 207, z: 97.29447682486816 },//   { x: 283, y: 207, z: 114.43040421951918 }// ]ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p, { method: 'kriging' }) //method='kriging'走interp2Kriging, 默認friedrich引擎console.log(r)// => { x: 243, y: 207, z: 97.49846235108123 }ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]p = {    x: 0.000243,    y: 0.000207,}r = await interp2(ps, p)console.log(r)// => { x: 0.000243, y: 0.000207, z: 97.29447682486817 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = await interp2(ps, p, { scale: 1000 })console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }//for interp2.wk.umd.jsps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }</code></pre>
 
 
 
@@ -11059,7 +11059,7 @@ method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計�
                 </td>
             
 
-            <td class="description last"><p>輸入若method='naturalNeighbor'時，是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點z為null，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響)，僅收true與false，其他值視為未給，method='kriging'時無效，預設true</p></td>
+            <td class="description last"><p>輸入若method='naturalNeighbor'時，是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點z為null，false代表凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(屬外推，不受正規化正方形限制)，僅收true與false，其他值視為未給，method='kriging'時無效，預設true</p></td>
         </tr>
 
     
@@ -12364,7 +12364,7 @@ method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計�
     <dd class="tag-description"><ul class="dummy"><li><p>克利金法(Kriging)內外插點數值</p>
 <p>克利金法計算與實際運算瓶頸問題可詳見: https://github.com/lvisei/web-developer-resources/blob/master/webassembly/kriging.md</p>
 <p>若是Node.js端使用須更高計算速度，可使用w-kriging: https://github.com/yuda-lyu/w-kriging</p>
-<p>內插點不受原始點凸包與正規化範圍(以x與y範圍較大者為邊長之正方形)限制，凸包外與正方形外之內插點皆會計算(外推)，此與interp2NaturalNeighbor之可內插範圍不同</p>
+<p>內插點不受原始點凸包與正規化範圍(以x與y範圍較大者為邊長之正方形)限制，凸包外與正方形外之內插點皆以kriging計算(外推)，此與interp2NaturalNeighbor之可內插範圍(預設凸包外為null，limitInsideHull為false時凸包外投影至最近凸包邊)不同</p>
 <p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Kriging.test.mjs">Github</a></p></li></ul></dd>
     
 
@@ -13096,34 +13096,48 @@ method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計�
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>自然鄰點內插法(Natural Neighbor Interpolation)內插點數值</p>
+    <dd class="tag-description"><ul class="dummy"><li><p>自然鄰點內插法(Natural Neighbor Interpolation, Sibson)內插點數值</p>
+<p>A stable and fast implementation of natural neighbor interpolation(Liang &amp; Hale, 2010, CWP-657)
+https://cwp.mines.edu/wp-content/uploads/sites/112/2018/09/cwp-657.pdf</p>
 <p>A Fast and Accurate Algorithm for Natural Neighbor Interpolation
 https://gwlucastrig.github.io/TinfourDocs/NaturalNeighborTinfourAlgorithm/index.html</p>
 <p>An Introduction to Natural Neighbor Interpolation
 https://gwlucastrig.github.io/TinfourDocs/NaturalNeighborIntro/index.html</p>
 <p>[wiki]Natural neighbor interpolation
 https://en.wikipedia.org/wiki/Natural_neighbor_interpolation</p>
-<p>Natural neighbor interpolation
-https://observablehq.com/@karlerss/natural-neighbor-interpolation</p>
-<p>d3-delaunay
-https://github.com/d3/d3-delaunay</p>
-<p>online test
-https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voronoi-diagram/</p>
+<p>delaunator
+https://github.com/mapbox/delaunator</p>
+<p>robust-predicates
+https://github.com/mourner/robust-predicates</p>
+<p>算法:
+(1)幾何運算於內部座標進行: 原始座標經2之冪次縮放(使正方形邊長介於0.5與1, 正方形同interp2Normalize: 以x與y範圍之中點為中心, 邊長為x與y範圍較大者)及平移(僅當相減不捨入時), 兩者皆不捨入, 故三角網、判定式與權重等同以原始座標計算, 與opt.scale無關(interp2Normalize之正規化只用於z與回呼之正規化值); 一次建立Delaunay三角網(delaunator), 並以穩健判定式(robust-predicates之incircle)檢查各內部邊, 違反Delaunay條件者翻邊修正(delaunator之incircle為一般浮點);
+delaunator之結果有反向(折疊)之三角形(極小群時可發生)而簡單翻邊修復不了, 或有原始點未入網(delaunator略過相距2^-52內之近乎重合點)時, 改以掃描線法(僅用精確orient2d)重建後再翻邊;
+(2)每個內插點以最近原始點周圍之三角形及包含內插點之三角形為起點廣度搜尋衝突三角形(外接圓嚴格包含內插點者; 以incircle判定, 三角形方向以orient2d定), 由其聯集(空腔)之邊界得有序之自然鄰點v0...vm-1;
+(3)以內插點為原點, Ck為內插點、vk、vk+1之外心, 鄰點vk之被奪多邊形為Ck-1、繞vk之各衝突三角形之外心、Ck, 以鞋帶式求面積, 權重為各面積除以總和; 不計內插點與空腔內部邊之外心, 不取Voronoi多邊形、不作多邊形交集、不裁切;
+(4)每點檢查: 權重皆為有限數; 空腔邊界為單一封閉迴圈且各衝突三角形之三頂點皆在邊界上; 各被奪面積不小於負之容許值(總面積之1e-12倍, 容許值內之負值視為0); 局部座標偏離|Σwi(pi-x)|除以Σwi|pi-x|(局部尺度)不大於1e-12(內插點夾於極近兩點之間時, 新區塊極狹長, 浮點外心之誤差相對於區塊寬度可使權重失準, 由此攔下); 條件估計8×機器精度×衝突三角形外接圓半徑平方和÷總面積不大於1e-12(原始點呈極狹長之帶狀時衝突三角形狹長而外心極遠, 由此攔下);
+空腔結構不符者該點回傳z為null; 面積或權重之檢查不過者改以有理數(BigInt)精確算法重算(回呼之method為'sibsonExact'; 新區塊極狹長, 如內插點位於極近之兩原始點之間時, 浮點外心之誤差相對於面積可超過容許值), 仍不過(或執行環境不支援BigInt)則該點回傳z為null;
+回傳null者皆不呼叫funInterpFragment與funInterpFragments, 並呼叫opt.funInterpError告知原因(未給opt.funInterpError時以console.warn彙總一次, 只含點數與原因代碼), 不輸出未通過檢查之值</p>
 <p>可內插範圍:
-自然鄰點內插僅對被原始點包圍之內插點有定義, 不支援外推(見上列Tinfour文件);
-本函數將原始點正規化至正方形(以x與y範圍之中點為中心, 邊長為x與y範圍較大者, 即interp2Normalize回傳之st; x與y範圍皆為0者不正規化), 並以該正方形裁切Voronoi區塊, 故:
-(1)內插點位於該正方形外(x或y超出)者, 回傳z為null, 且不呼叫funInterpFragment與funInterpFragments;
-(2)opt.limitInsideHull為true(預設)時, 另要求內插點位於原始點之凸包(convex hull, 含邊界)內, 凸包外者回傳z為null, 且不呼叫funInterpFragment與funInterpFragments(正方形檢查先於凸包檢查), 邊界容許距離為正方形邊長之1e-9倍(凸包外側距離在此內者視為在內); 原始點少於3個相異點或全部共線(無凸包面積, 凸包寬度不大於正方形邊長之1e-9倍者視為共線)時, 除與原始點座標相同者外, 所有內插點皆回傳z為null; 正規化後座標非有限數(原始座標範圍溢位)者無法判斷, 亦回傳z為null; 回呼函數若有狀態(依呼叫次數或順序而變), 因凸包外之點不再呼叫, 其呼叫次數與順序隨之改變;
-(3)opt.limitInsideHull為false時, 位於凸包外而在正方形內之內插點仍會計算, 但屬外推: 其值取決於正方形之大小(即原始點x與y範圍較大者), 增減遠處之原始點可能改變結果, 不建議使用;
-(4)凸包內之內插點若其Voronoi區塊延伸超出正方形(多見於靠近凸包邊界而原始點稀疏處), 該區塊亦被裁切, 其值可與未裁切之理論值有差異, 此與opt.limitInsideHull無關;
-(5)內插點與原始點座標相同(正規化後浮點相等)者回傳該原始點之z(經正規化往返, 浮點可有極小誤差; 同座標有多個原始點者取最後一個)</p>
+(1)凸包內(不含邊上): Sibson自然鄰點內插, 回呼之method為'sibson'(或備援之'sibsonExact'); area與areaTotal為未裁切之被奪面積與內插點新區塊面積(正規化座標單位, 即座標為0至scale者之面積), 靠近凸包邊時新區塊很大, areaTotal可極大(極端之scale或極靠近凸包邊時可下溢為0或溢位為Infinity, areaRatio不受影響);
+(2)凸包邊上, 或位於凸包外而至凸包之(歐氏)距離不大於正方形邊長之1e-9倍者(容許值; 1.1.27以至各邊所在直線之外側距離判定, 於銳角頂點之外會容許遠大於容許值之點, 已改): 取最近凸包邊兩端點, 依內插點於該邊之投影位置線性分配權重, method為'hullEdge'; 此為凸包內Sibson權重於凸包邊上之極限, 故凸包內外連續; 與opt.limitInsideHull無關;
+(3)凸包外(超出容許值): opt.limitInsideHull為true(預設)時回傳z為null, 且不呼叫funInterpFragment與funInterpFragments; 為false時投影至最近之凸包邊(線段), 依投影位置給該邊兩端點線性權重(投影落於端點者只給該端點權重1), method為'projection', 不受正規化正方形之限制; 此屬外推, 其值只取決於最近凸包邊之兩端點;
+(4)內插點與原始點座標相同(浮點相等)者: 該原始點權重1, method為'vertex', 仍呼叫funInterpFragment與funInterpFragments; 回傳z為該原始點之z經正規化往返(浮點可有極小誤差);
+(5)原始點座標相同(浮點相等)者只保留輸入順序最後一個參與內插(同1.1.27「同座標有多個原始點者取最後一個」), 其餘不會出現在回呼中; 座標不同者(含極近者)皆參與內插;
+(6)原始點不足3個相異點或全部共線(凸包寬度不大於正方形邊長之1e-9倍): opt.limitInsideHull為true時除與原始點座標相同者外皆回傳z為null(同1.1.27); 為false時沿原始點所在直線線性內插(直線取x或y範圍較大之軸上兩端點之連線; 內插點與原始點皆投影至該直線, 取前後兩投影位置之原始點依位置線性分配權重, 投影位置相同之原始點均分, 超出兩端者取端點; 只有1個相異點時為該點), method為'line';
+(7)原始點之座標範圍溢位或含非有限數(如Infinity)、或內插點之內部座標非有限數者無法判斷, 回傳z為null, 並呼叫opt.funInterpError;
+(8)內插點重複(座標相同)者各自計算, 各indTar皆呼叫回呼; 回呼回傳值影響該點之z, 有狀態之回呼(依呼叫次數或順序而變)其結果隨呼叫順序而變;
+(9)回呼之ps只列權重大於0之原始點(故可只有1個, 如與原始點同座標或投影落於凸包頂點); 線性權重之method('vertex'、'hullEdge'、'projection'、'line')無面積可言, area等於areaRatio, areaTotal為1;
+(10)indSrc為psSrc中x、y、z皆為數字之有效點依原順序之指標, indTar為psTar中x、y皆為數字之有效點依原順序之指標(同1.1.27);
+(11)凸包內外之判定: 由最近原始點周圍之三角形以精確orient2d走訪至包含內插點之三角形, 走出凸包邊者為凸包外, 恰在凸包邊上者為凸包邊上; 凸包外者之容許值以至最近凸包邊(線段)之歐氏距離判定; 無凸包面積(共線)之判定同1.1.27(_makeHullTester);
+(12)翻邊修正達上限仍有違反Delaunay條件之邊(精確判定下不應發生)時, 除與原始點同座標者外一律回傳null並呼叫opt.funInterpError(reason為'triangulationNotDelaunay'); 回呼函數拋錯時該點回傳null並以console.log輸出錯誤(同1.1.27); funInterpFragment或funInterpFragments回傳非有限數(含NaN、Infinity、null、字串)時該點回傳null(1.1.27會輸出NaN、Infinity或把null當0加總);
+(13)內部座標之絕對值超過1e100(遠在凸包外)之內插點直接投影(同(3)), 不經三角網走訪(免判定式運算溢位)</p>
 <p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2NaturalNeighbor.test.mjs">Github</a></p></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="interp2NaturalNeighbor.mjs.html">interp2NaturalNeighbor.mjs</a>, <a href="interp2NaturalNeighbor.mjs.html#line211">line 211</a>
+        <a href="interp2NaturalNeighbor.mjs.html">interp2NaturalNeighbor.mjs</a>, <a href="interp2NaturalNeighbor.mjs.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -13170,7 +13184,7 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 243, y: 207, z: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1243,    y: 1207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 1243, y: 1207, z: null }ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}let funInterpFragment = (msg) => {    // console.log('funInterpFragment', msg)    return msg.v //預設回傳msg.v, 三角形三角點各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)}r = interp2NaturalNeighbor(ps, p, { funInterpFragment })console.log(r)// => { x: 243, y: 207, z: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1243,    y: 1207,}let funInterpFragmentNoUse = (msg) => {    // console.log('funInterpFragmentNoUse', msg)    return msg.v //預設回傳msg.v, 此處因內插點於原始點範圍之正方形外(亦於原始點所形成最小凸多邊形之外), 故無法內插, 亦不會呼叫funInterpFragment}r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })console.log(r)// => { x: 1243, y: 1207, z: null }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 600,    y: 500,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點所形成最小凸多邊形之外(y最大之原始點為371), 故無法內插ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 600,    y: 500,}r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })console.log(r)// => { x: 600, y: 500, z: 220.47540877342678 } //limitInsideHull為false, 內插點於凸包外但在正方形內(y範圍為-378至752), 故計算外推值, 此值受正方形大小影響ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}let funInterpFragments = (msg) => {    // console.log('funInterpFragments', msg)    // let v = ps[0].v + ps[1].v + ps[2].v    // let vv = msg.funInv(msg.v) //msg.v為正規化後之值, msg.funInv可將正規化值還原為原始z之尺度(僅供讀取, 如判斷或記錄), 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z    return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)}r = interp2NaturalNeighbor(ps, p, { funInterpFragments })console.log(r)// => { x: 243, y: 207, z: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 283,    y: 207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 283, y: 207, z: 114.43040421951908 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1160,    y: 380,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 1160, y: 380, z: null }ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]p = {    a: 243,    b: 207,}r = interp2NaturalNeighbor(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })console.log(r)// => { a: 243, b: 207, c: 97.29447682486813 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = [    {        x: 243,        y: 207,    },    {        x: 283,        y: 207,    },]r = interp2NaturalNeighbor(ps, p)console.log(r)// => [//   { x: 243, y: 207, z: 97.29447682486813 },//   { x: 283, y: 207, z: 114.43040421951908 }// ]ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]p = {    x: 0.000243,    y: 0.000207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2NaturalNeighbor(ps, p, { scale: 1000 })console.log(r)// => { x: 243, y: 207, z: 97.29447682486855 }</code></pre>
+    <pre class="prettyprint"><code>let pslet plet rps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1243,    y: 1207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 1243, y: 1207, z: null }ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}let funInterpFragment = (msg) => {    // console.log('funInterpFragment', msg)    return msg.v //預設回傳msg.v, 各自然鄰點之v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和}r = interp2NaturalNeighbor(ps, p, { funInterpFragment })console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1243,    y: 1207,}let funInterpFragmentNoUse = (msg) => {    // console.log('funInterpFragmentNoUse', msg)    return msg.v //預設回傳msg.v, 此處因內插點於原始點凸包之外(預設limitInsideHull為true), 故無法內插, 亦不會呼叫funInterpFragment}r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })console.log(r)// => { x: 1243, y: 1207, z: null }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 600,    y: 500,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點凸包之外(y最大之原始點為371), 故無法內插ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 600,    y: 500,}r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })console.log(r)// => { x: 600, y: 500, z: 232.1044309757165 } //limitInsideHull為false, 內插點於凸包外, 投影至最近凸包邊(537,368)-(1151,371), 以兩端點線性內插(外推)ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}let funInterpFragments = (msg) => {    // console.log('funInterpFragments', msg)    // let vv = msg.funInv(msg.v) //msg.v為正規化後之值, msg.funInv可將正規化值還原為原始z之尺度(僅供讀取, 如判斷或記錄), 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z    return msg.v //預設回傳msg.v, 各自然鄰點為msg.ps, 各點v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和}r = interp2NaturalNeighbor(ps, p, { funInterpFragments })console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 283,    y: 207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 283, y: 207, z: 114.43040421951918 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 1160,    y: 380,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 1160, y: 380, z: null }ps = [{ a: 243, b: 206, c: 95 }, { a: 233, b: 225, c: 146 }, { a: 21, b: 325, c: 22 }, { a: 953, b: 28, c: 223 }, { a: 1092, b: 290, c: 39 }, { a: 744, b: 200, c: 191 }, { a: 174, b: 3, c: 22 }, { a: 537, b: 368, c: 249 }, { a: 1151, b: 371, c: 86 }, { a: 814, b: 252, c: 125 }]p = {    a: 243,    b: 207,}r = interp2NaturalNeighbor(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })console.log(r)// => { a: 243, b: 207, c: 97.29447682486816 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = [    {        x: 243,        y: 207,    },    {        x: 283,        y: 207,    },]r = interp2NaturalNeighbor(ps, p)console.log(r)// => [//   { x: 243, y: 207, z: 97.29447682486816 },//   { x: 283, y: 207, z: 114.43040421951918 }// ]ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]p = {    x: 0.000243,    y: 0.000207,}r = interp2NaturalNeighbor(ps, p)console.log(r)// => { x: 0.000243, y: 0.000207, z: 97.29447682486817 }ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]p = {    x: 243,    y: 207,}r = interp2NaturalNeighbor(ps, p, { scale: 1000 })console.log(r)// => { x: 243, y: 207, z: 97.29447682486816 } //權重不受scale影響(幾何運算於內部座標進行)</code></pre>
 
 
 
@@ -13495,7 +13509,7 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
                 </td>
             
 
-            <td class="description last"><p>輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1</p></td>
+            <td class="description last"><p>輸入正規化範圍數值，正規化為0至scale之間，影響回呼之v、z、area、areaTotal與funInv所用之正規化值；權重與可否內插不受scale影響(幾何運算於內部座標進行)，非正數或非有限數視為未給，預設1</p></td>
         </tr>
 
     
@@ -13535,7 +13549,127 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
                 </td>
             
 
-            <td class="description last"><p>輸入是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點回傳z為null且不呼叫funInterpFragment與funInterpFragments，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響，詳見上列可內插範圍)，僅收true與false，其他值視為未給，預設true</p></td>
+            <td class="description last"><p>輸入是否只內插位於原始點凸包內(含邊上與容許值內)之內插點布林值，true代表凸包外之內插點回傳z為null且不呼叫funInterpFragment與funInterpFragments，false代表凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(屬外推，不受正規化正方形限制，詳見上列可內插範圍)，僅收true與false，其他值視為未給，預設true</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funInterpFragment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入各原始點貢獻之回呼函數，輸入物件{v,area,areaTotal,areaRatio,z,indSrc,indTar,method}，v為areaRatio*z(z為正規化值)，回傳值為該原始點之貢獻(正規化值)，預設null</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funInterpFragments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入內插點之回呼函數，輸入物件{ps,v,indTar,method,funInv}，ps為各原始點貢獻之陣列，v為其v之總和，funInv可將正規化值還原為原始z之尺度(僅供讀取)，回傳值為內插點之正規化值，預設null</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funInterpError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>null</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>輸入內插點無法內插(未通過檢查或座標非有限數)時之回呼函數，輸入物件{indTar,x,y,reason}，x與y為原始座標，reason為原因字串，未給時以console.warn彙總，預設null</p></td>
         </tr>
 
     
@@ -13610,7 +13744,7 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
     <dt class="tag-description">Description:</dt>
     <dd class="tag-description"><ul class="dummy"><li><p>內插用正規化數據</p>
 <p>x與y使用同一網格尺寸縮放: 以各自範圍之中點為中心, 以x與y範圍較大者為邊長, 故正規化後之x與y皆落於[0,scale]之正方形內(範圍較小者之軸不會充滿[0,scale]; x與y範圍皆為0者不縮放而原值回傳), 回傳之st記錄此正方形之範圍;
-此正方形即interp2NaturalNeighbor之Voronoi裁切範圍(正方形外之內插點無法內插), 詳見interp2NaturalNeighbor之可內插範圍</p>
+interp2NaturalNeighbor只以此正規化處理z與回呼之正規化值, 其Voronoi區塊不裁切於此正方形, 可內插範圍以原始點凸包為準(詳見interp2NaturalNeighbor之可內插範圍)</p>
 <p>Unit Test: <a href="https://github.com/yuda-lyu/w-gis/blob/master/test/interp2Normalize.test.mjs">Github</a></p></li></ul></dd>
     
 
@@ -22007,7 +22141,7 @@ https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voro
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Fri Nov 13 2026 23:45:01 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 14 2026 19:18:57 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

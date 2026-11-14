@@ -12,7 +12,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * 該產物無法由bundler(例如webpack以web為target)打包, 因其Node分支須外部引用worker_threads;
  * 於瀏覽器以blob URL建立Web Worker, 故頁面若設CSP, 須允許blob:(script-src或worker-src), 否則呼叫會reject
  *
- * 可內插範圍: method='naturalNeighbor'時, 內插點須位於原始點x與y範圍較大者為邊長之正方形內, 且預設(opt.limitInsideHull為true)須位於原始點凸包內, 否則z為null, 詳見interp2NaturalNeighbor;
+ * 可內插範圍: method='naturalNeighbor'時, 預設(opt.limitInsideHull為true)內插點須位於原始點凸包內(含邊上與容許值內), 否則z為null; opt.limitInsideHull為false時凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(外推), 詳見interp2NaturalNeighbor;
  * method='kriging'時不受凸包與正方形限制, 凸包外之內插點皆計算(外推)
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2.test.mjs Github}
@@ -31,7 +31,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * @param {Number} [opt.sigma2=0] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數sigma2數值，預設0
  * @param {Number} [opt.alpha=100] (僅舊invall引擎之半變異圖擬合參數，因interp2之kriging固定走friedrich故不生效) 輸入自動擬合參數alpha數值，預設100
  * @param {Boolean} [opt.returnWithVariogram=false] (僅舊invall引擎參數，因interp2之kriging固定走friedrich故不生效，friedrich無半變異圖) 輸入是否回傳擬合半變異數結果布林值，預設false
- * @param {Boolean} [opt.limitInsideHull=true] 輸入若method='naturalNeighbor'時，是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點z為null，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響)，僅收true與false，其他值視為未給，method='kriging'時無效，預設true
+ * @param {Boolean} [opt.limitInsideHull=true] 輸入若method='naturalNeighbor'時，是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點z為null，false代表凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(屬外推，不受正規化正方形限制)，僅收true與false，其他值視為未給，method='kriging'時無效，預設true
  * @param {Boolean} [opt.useSync=false] 輸入是否使用同步函數布林值，預設false
  * @returns {Promise|Array|Object} 回傳Promise或點物件陣列或點物件，若useSync=false則回傳Promise，resolve為回傳點物件陣列或點物件，reject為失敗訊息，若useSync=true則回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example
@@ -47,7 +47,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = await interp2(ps, p)
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486813 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -56,7 +56,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = await interp2(ps, p)
  * console.log(r)
- * // => { x: 283, y: 207, z: 114.43040421951908 }
+ * // => { x: 283, y: 207, z: 114.43040421951918 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -74,7 +74,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = await interp2(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
  * console.log(r)
- * // => { a: 243, b: 207, c: 97.29447682486813 }
+ * // => { a: 243, b: 207, c: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = [
@@ -90,8 +90,8 @@ import interp2Kriging from './interp2Kriging.mjs'
  * r = await interp2(ps, p)
  * console.log(r)
  * // => [
- * //   { x: 243, y: 207, z: 97.29447682486813 },
- * //   { x: 283, y: 207, z: 114.43040421951908 }
+ * //   { x: 243, y: 207, z: 97.29447682486816 },
+ * //   { x: 283, y: 207, z: 114.43040421951918 }
  * // ]
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
@@ -110,7 +110,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = await interp2(ps, p)
  * console.log(r)
- * // => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }
+ * // => { x: 0.000243, y: 0.000207, z: 97.29447682486817 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -119,7 +119,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = await interp2(ps, p, { scale: 1000 })
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486855 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  * //for interp2.wk.umd.js
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
@@ -129,7 +129,7 @@ import interp2Kriging from './interp2Kriging.mjs'
  * }
  * r = interp2(ps, p, { useSync: true }) //使用interp2.wk.umd.js則不支援sync模式
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486813 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  */
 function interp2(psSrc, psTar, opt = {}) {

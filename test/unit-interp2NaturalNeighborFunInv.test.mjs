@@ -12,6 +12,12 @@ let interp2NaturalNeighbor = (await import(pathToFileURL(path.join(dirSrc, 'inte
 //原始點: z範圍22~249(range 227), x範圍21~1151(min 21), y範圍3~371; 正規化後y之min為-378(正方形), 故x、y、z三軸之min各為21、-378、22
 let ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
 
+//approx, 期望值為有理數精確解(以原始輸入計算, 見test/interp2NaturalNeighbor.test.mjs之說明); 本函數之z經正規化往返而有末位誤差, 以相對1e-12比對
+let approx = (a, b, msg) => {
+    assert.strict.equal(typeof a, 'number', msg)
+    assert.ok(Math.abs(a - b) <= 1e-12 * Math.max(1, Math.abs(b)), `${msg || ''} ${a} vs ${b}`)
+}
+
 //捕捉console.log(修前碼於funInv拋錯時, addPoint之catch會console.log錯誤並使該點回傳null)
 let withConsoleCaptured = (fn) => {
     let logs = []
@@ -41,7 +47,8 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
             },
         }))
         assert.strict.deepStrictEqual(logs, [])
-        assert.strict.deepStrictEqual(r, { x: 243, y: 207, z: 97.29447682486813 }) //JSDoc範例值
+        assert.strict.deepStrictEqual([r.x, r.y], [243, 207])
+        approx(r.z, 97.29447682486817) //有理數精確解(JSDoc範例)
         assert.strict.deepStrictEqual(vvs, [r.z])
     })
 
@@ -56,7 +63,8 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
             },
         }))
         assert.strict.deepStrictEqual(logs, [])
-        assert.strict.deepStrictEqual(r.map(v => v.z), [97.29447682486813, 114.43040421951908, 193.6150805720754, 136.28667176072523]) //修前(未傳回呼)之實測值
+        let zs = [97.29447682486817, 114.43040421951916, 193.6150805720753, 136.2866717607253] //有理數精確解
+        r.forEach((v, i) => approx(v.z, zs[i], `i=${i}`))
         assert.strict.deepStrictEqual(r.map((v, i) => vvs[i]), r.map(v => v.z))
     })
 
@@ -88,7 +96,7 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
             },
         }))
         assert.strict.deepStrictEqual(logs, [])
-        assert.strict.deepStrictEqual(r, { x: 243, y: 207, z: 97.29447682486855 }) //JSDoc範例值(scale 1000)
+        approx(r.z, 97.29447682486817) //有理數精確解(scale 1000; 權重與scale無關)
         assert.strict.equal(vv, r.z)
     })
 
@@ -118,7 +126,7 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
         }))
         assert.strict.deepStrictEqual(logs, [])
         assert.strict.deepStrictEqual(got, [null, null, null])
-        assert.strict.equal(r.z, 97.29447682486813)
+        approx(r.z, 97.29447682486817)
     })
 
     //spec: JSDoc範例註解「回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z」: 回傳值被視為正規化值而以z軸(range 227, min 22)再還原一次
@@ -131,7 +139,7 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
             },
         }))
         assert.strict.deepStrictEqual(logs, [])
-        assert.strict.equal(vv, 97.29447682486813)
+        approx(vv, 97.29447682486817)
         assert.ok(Math.abs(r.z - (vv * 227 + 22)) < 1e-9, `r.z=${r.z}`)
     })
 
@@ -147,7 +155,7 @@ describe(`interp2NaturalNeighbor funInterpFragments之msg.funInv(L7)`, function(
         }))
         assert.strict.deepStrictEqual(logs, [])
         assert.strict.equal(vv, r.z)
-        assert.strict.equal(r.z, 97.29447682486813)
+        approx(r.z, 97.29447682486817)
     })
 
 })

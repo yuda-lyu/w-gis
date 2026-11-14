@@ -47,8 +47,6 @@
         <article>
             <pre class="prettyprint source linenums"><code>import get from 'lodash-es/get.js'
 import each from 'lodash-es/each.js'
-import map from 'lodash-es/map.js'
-import sum from 'lodash-es/sum.js'
 import size from 'lodash-es/size.js'
 import isNumber from 'lodash-es/isNumber.js'
 import isestr from 'wsemi/src/isestr.mjs'
@@ -57,18 +55,209 @@ import isearr from 'wsemi/src/isearr.mjs'
 import isnum from 'wsemi/src/isnum.mjs'
 import isfun from 'wsemi/src/isfun.mjs'
 import cdbl from 'wsemi/src/cdbl.mjs'
-import haskey from 'wsemi/src/haskey.mjs'
+import Delaunator from 'delaunator'
+import { orient2d, incircle } from 'robust-predicates'
 import ptsXYtoArr from './ptsXYtoArr.mjs'
 import ptsXYZtoArr from './ptsXYZtoArr.mjs'
 import interp2Normalize from './interp2Normalize.mjs'
 import _makeHullTester from './_makeHullTester.mjs'
-import getAreaPolygon from './getAreaPolygon.mjs'
-import intersectPolygon from './intersectPolygon.mjs'
-import { Delaunay } from 'd3-delaunay'
+
+
+//容許值
+let TOL_HULL = 1e-9 //凸包外側容許距離, 為正規化範圍(正方形邊長)之倍數, 與1.1.27相同
+let TOL_NEG_AREA = 1e-12 //被奪面積不得小於負之總面積此倍數
+let TOL_LC = 1e-12 //局部座標偏離|Σwi(pi-x)|除以Σwi|pi-x|(局部尺度)之上限
+let TOL_COND = 1e-12 //浮點面積之條件估計(8倍機器精度乘衝突三角形外接圓半徑平方和, 除以總面積)之上限
+let EPS = Math.pow(2, -52)
+
+
+//_signs, robust-predicates之正負號慣例以實測校正(不依賴文件), 首次呼叫時計算
+let _signs = null
+let getSigns = () => {
+    if (_signs !== null) {
+        return _signs
+    }
+    let o = Math.sign(orient2d(0, 0, 1, 0, 0, 1)) //數學座標(y向上)逆時針之三點
+    let oCw = Math.sign(orient2d(0, 0, 0, 1, 1, 0)) //順時針之三點
+    let iIn = Math.sign(incircle(0, 0, 1, 0, 0, 1, 0.25, 0.25)) //逆時針三角形, 點在外接圓內
+    let iOut = Math.sign(incircle(0, 0, 1, 0, 0, 1, 2, 2)) //逆時針三角形, 點在外接圓外
+    let iInCw = Math.sign(incircle(0, 0, 0, 1, 1, 0, 0.25, 0.25)) //順時針三角形, 點在外接圓內
+    let ok = o !== 0 &amp;&amp; oCw === -o &amp;&amp; iIn !== 0 &amp;&amp; iOut === -iIn &amp;&amp; iInCw === -iIn
+    _signs = {
+        ok,
+        inside: iIn * o, //方向為s(orient2d之符號)之三角形, 點嚴格在其外接圓內 &lt;=> sign(incircle)*s === inside
+    }
+    return _signs
+}
+
+
+//---------------------------------------------------------------- 有理數(BigInt)精確運算, 供備援(浮點結果未通過檢查時)
+
+//BN, BigInt常數於首次走備援時才建立(不用BigInt字面值, 使不支援BigInt之環境仍可載入本套件; 該環境走到備援時以例外告知)
+let BN = null
+let initBig = () => {
+    if (BN === null) {
+        BN = { n0: BigInt(0), n1: BigInt(1), n2: BigInt(2), n32: BigInt(32), n52: BigInt(52) }
+    }
+}
+
+
+let _dv = null
+let decompDouble = (x) => {
+    //回傳[整數尾數(含號), 指數], x = 尾數 * 2^指數
+    if (x === 0) {
+        return [BN.n0, 0]
+    }
+    if (_dv === null) {
+        _dv = new DataView(new ArrayBuffer(8))
+    }
+    _dv.setFloat64(0, x)
+    let hi = _dv.getUint32(0)
+    let lo = _dv.getUint32(4)
+    let neg = (hi >>> 31) === 1
+    let ex = (hi >>> 20) &amp; 0x7ff
+    let mant = (BigInt(hi &amp; 0xfffff) &lt;&lt; BN.n32) | BigInt(lo)
+    let e
+    if (ex === 0) {
+        e = -1074
+    }
+    else {
+        mant |= (BN.n1 &lt;&lt; BN.n52)
+        e = ex - 1075
+    }
+    return [neg ? -mant : mant, e]
+}
+
+let toBigScaled = (vals) => {
+    //一組有限double轉為同一比例2^K之整數(精確)
+    let ds = vals.map(decompDouble)
+    let K = 0
+    for (let d of ds) {
+        if (d[0] !== BN.n0 &amp;&amp; -d[1] > K) {
+            K = -d[1]
+        }
+    }
+    let ints = ds.map((d) => (d[0] === BN.n0 ? BN.n0 : d[0] &lt;&lt; BigInt(d[1] + K)))
+    return { K, ints }
+}
+
+let bgcd = (a, b) => {
+    if (a &lt; BN.n0) {
+        a = -a
+    }
+    if (b &lt; BN.n0) {
+        b = -b
+    }
+    while (b !== BN.n0) {
+        let t = a % b
+        a = b
+        b = t
+    }
+    return a
+}
+
+let qnorm = (n, d) => {
+    if (d &lt; BN.n0) {
+        n = -n
+        d = -d
+    }
+    let g = bgcd(n, d)
+    if (g > BN.n1) {
+        n /= g
+        d /= g
+    }
+    return [n, d]
+}
+
+let qadd = (a, b) => {
+    return qnorm(a[0] * b[1] + b[0] * a[1], a[1] * b[1])
+}
+
+let bitLen = (x) => {
+    return x.toString(2).length
+}
+
+let ldexp = (v, e) => {
+    while (e > 1000) {
+        v *= Math.pow(2, 1000)
+        e -= 1000
+    }
+    while (e &lt; -1000) {
+        v *= Math.pow(2, -1000)
+        e += 1000
+    }
+    return v * Math.pow(2, e)
+}
+
+let ratToNumber = (n, d) => {
+    //有理數n/d轉double(先取約80位元之商再轉)
+    if (d === BN.n0) {
+        return NaN
+    }
+    if (n === BN.n0) {
+        return 0
+    }
+    let neg = false
+    if (n &lt; BN.n0) {
+        n = -n
+        neg = !neg
+    }
+    if (d &lt; BN.n0) {
+        d = -d
+        neg = !neg
+    }
+    let sh = bitLen(d) - bitLen(n) + 80
+    let q = sh >= 0 ? (n &lt;&lt; BigInt(sh)) / d : n / (d &lt;&lt; BigInt(-sh))
+    let v = ldexp(Number(q), -sh)
+    return neg ? -v : v
+}
+
+let ccOriginBig = (A, B) => {
+    //過原點與A、B之圓心, 齊次座標[X,Y,W]
+    let a2 = A[0] * A[0] + A[1] * A[1]
+    let b2 = B[0] * B[0] + B[1] * B[1]
+    let W = BN.n2 * (A[0] * B[1] - A[1] * B[0])
+    let X = a2 * B[1] - b2 * A[1]
+    let Y = b2 * A[0] - a2 * B[0]
+    return [X, Y, W]
+}
+
+let cc3Big = (A, B, C) => {
+    //過A、B、C之圓心, 齊次座標[X,Y,W]
+    let bx = B[0] - A[0]
+    let by = B[1] - A[1]
+    let cx = C[0] - A[0]
+    let cy = C[1] - A[1]
+    let b2 = bx * bx + by * by
+    let c2 = cx * cx + cy * cy
+    let W = BN.n2 * (bx * cy - by * cx)
+    let X = A[0] * W + (b2 * cy - c2 * by)
+    let Y = A[1] * W + (c2 * bx - b2 * cx)
+    return [X, Y, W]
+}
+
+let area2Big = (poly) => {
+    //齊次座標多邊形之2倍有號面積(有理數[分子,分母])
+    let n = poly.length
+    let D = BN.n1
+    for (let v of poly) {
+        D *= v[2]
+    }
+    let num = BN.n0
+    for (let i = 0; i &lt; n; i++) {
+        let P = poly[i]
+        let Q = poly[(i + 1) % n]
+        num += (P[0] * Q[1] - Q[0] * P[1]) * (D / (P[2] * Q[2]))
+    }
+    return qnorm(num, D)
+}
 
 
 /**
- * 自然鄰點內插法(Natural Neighbor Interpolation)內插點數值
+ * 自然鄰點內插法(Natural Neighbor Interpolation, Sibson)內插點數值
+ *
+ * A stable and fast implementation of natural neighbor interpolation(Liang &amp; Hale, 2010, CWP-657)
+ * https://cwp.mines.edu/wp-content/uploads/sites/112/2018/09/cwp-657.pdf
  *
  * A Fast and Accurate Algorithm for Natural Neighbor Interpolation
  * https://gwlucastrig.github.io/TinfourDocs/NaturalNeighborTinfourAlgorithm/index.html
@@ -79,23 +268,35 @@ import { Delaunay } from 'd3-delaunay'
  * [wiki]Natural neighbor interpolation
  * https://en.wikipedia.org/wiki/Natural_neighbor_interpolation
  *
- * Natural neighbor interpolation
- * https://observablehq.com/@karlerss/natural-neighbor-interpolation
+ * delaunator
+ * https://github.com/mapbox/delaunator
  *
- * d3-delaunay
- * https://github.com/d3/d3-delaunay
+ * robust-predicates
+ * https://github.com/mourner/robust-predicates
  *
- * online test
- * https://cartography-playground.gitlab.io/playgrounds/triangulation-delaunay-voronoi-diagram/
+ * 算法:
+ * (1)幾何運算於內部座標進行: 原始座標經2之冪次縮放(使正方形邊長介於0.5與1, 正方形同interp2Normalize: 以x與y範圍之中點為中心, 邊長為x與y範圍較大者)及平移(僅當相減不捨入時), 兩者皆不捨入, 故三角網、判定式與權重等同以原始座標計算, 與opt.scale無關(interp2Normalize之正規化只用於z與回呼之正規化值); 一次建立Delaunay三角網(delaunator), 並以穩健判定式(robust-predicates之incircle)檢查各內部邊, 違反Delaunay條件者翻邊修正(delaunator之incircle為一般浮點);
+ * delaunator之結果有反向(折疊)之三角形(極小群時可發生)而簡單翻邊修復不了, 或有原始點未入網(delaunator略過相距2^-52內之近乎重合點)時, 改以掃描線法(僅用精確orient2d)重建後再翻邊;
+ * (2)每個內插點以最近原始點周圍之三角形及包含內插點之三角形為起點廣度搜尋衝突三角形(外接圓嚴格包含內插點者; 以incircle判定, 三角形方向以orient2d定), 由其聯集(空腔)之邊界得有序之自然鄰點v0...vm-1;
+ * (3)以內插點為原點, Ck為內插點、vk、vk+1之外心, 鄰點vk之被奪多邊形為Ck-1、繞vk之各衝突三角形之外心、Ck, 以鞋帶式求面積, 權重為各面積除以總和; 不計內插點與空腔內部邊之外心, 不取Voronoi多邊形、不作多邊形交集、不裁切;
+ * (4)每點檢查: 權重皆為有限數; 空腔邊界為單一封閉迴圈且各衝突三角形之三頂點皆在邊界上; 各被奪面積不小於負之容許值(總面積之1e-12倍, 容許值內之負值視為0); 局部座標偏離|Σwi(pi-x)|除以Σwi|pi-x|(局部尺度)不大於1e-12(內插點夾於極近兩點之間時, 新區塊極狹長, 浮點外心之誤差相對於區塊寬度可使權重失準, 由此攔下); 條件估計8×機器精度×衝突三角形外接圓半徑平方和÷總面積不大於1e-12(原始點呈極狹長之帶狀時衝突三角形狹長而外心極遠, 由此攔下);
+ * 空腔結構不符者該點回傳z為null; 面積或權重之檢查不過者改以有理數(BigInt)精確算法重算(回呼之method為'sibsonExact'; 新區塊極狹長, 如內插點位於極近之兩原始點之間時, 浮點外心之誤差相對於面積可超過容許值), 仍不過(或執行環境不支援BigInt)則該點回傳z為null;
+ * 回傳null者皆不呼叫funInterpFragment與funInterpFragments, 並呼叫opt.funInterpError告知原因(未給opt.funInterpError時以console.warn彙總一次, 只含點數與原因代碼), 不輸出未通過檢查之值
  *
  * 可內插範圍:
- * 自然鄰點內插僅對被原始點包圍之內插點有定義, 不支援外推(見上列Tinfour文件);
- * 本函數將原始點正規化至正方形(以x與y範圍之中點為中心, 邊長為x與y範圍較大者, 即interp2Normalize回傳之st; x與y範圍皆為0者不正規化), 並以該正方形裁切Voronoi區塊, 故:
- * (1)內插點位於該正方形外(x或y超出)者, 回傳z為null, 且不呼叫funInterpFragment與funInterpFragments;
- * (2)opt.limitInsideHull為true(預設)時, 另要求內插點位於原始點之凸包(convex hull, 含邊界)內, 凸包外者回傳z為null, 且不呼叫funInterpFragment與funInterpFragments(正方形檢查先於凸包檢查), 邊界容許距離為正方形邊長之1e-9倍(凸包外側距離在此內者視為在內); 原始點少於3個相異點或全部共線(無凸包面積, 凸包寬度不大於正方形邊長之1e-9倍者視為共線)時, 除與原始點座標相同者外, 所有內插點皆回傳z為null; 正規化後座標非有限數(原始座標範圍溢位)者無法判斷, 亦回傳z為null; 回呼函數若有狀態(依呼叫次數或順序而變), 因凸包外之點不再呼叫, 其呼叫次數與順序隨之改變;
- * (3)opt.limitInsideHull為false時, 位於凸包外而在正方形內之內插點仍會計算, 但屬外推: 其值取決於正方形之大小(即原始點x與y範圍較大者), 增減遠處之原始點可能改變結果, 不建議使用;
- * (4)凸包內之內插點若其Voronoi區塊延伸超出正方形(多見於靠近凸包邊界而原始點稀疏處), 該區塊亦被裁切, 其值可與未裁切之理論值有差異, 此與opt.limitInsideHull無關;
- * (5)內插點與原始點座標相同(正規化後浮點相等)者回傳該原始點之z(經正規化往返, 浮點可有極小誤差; 同座標有多個原始點者取最後一個)
+ * (1)凸包內(不含邊上): Sibson自然鄰點內插, 回呼之method為'sibson'(或備援之'sibsonExact'); area與areaTotal為未裁切之被奪面積與內插點新區塊面積(正規化座標單位, 即座標為0至scale者之面積), 靠近凸包邊時新區塊很大, areaTotal可極大(極端之scale或極靠近凸包邊時可下溢為0或溢位為Infinity, areaRatio不受影響);
+ * (2)凸包邊上, 或位於凸包外而至凸包之(歐氏)距離不大於正方形邊長之1e-9倍者(容許值; 1.1.27以至各邊所在直線之外側距離判定, 於銳角頂點之外會容許遠大於容許值之點, 已改): 取最近凸包邊兩端點, 依內插點於該邊之投影位置線性分配權重, method為'hullEdge'; 此為凸包內Sibson權重於凸包邊上之極限, 故凸包內外連續; 與opt.limitInsideHull無關;
+ * (3)凸包外(超出容許值): opt.limitInsideHull為true(預設)時回傳z為null, 且不呼叫funInterpFragment與funInterpFragments; 為false時投影至最近之凸包邊(線段), 依投影位置給該邊兩端點線性權重(投影落於端點者只給該端點權重1), method為'projection', 不受正規化正方形之限制; 此屬外推, 其值只取決於最近凸包邊之兩端點;
+ * (4)內插點與原始點座標相同(浮點相等)者: 該原始點權重1, method為'vertex', 仍呼叫funInterpFragment與funInterpFragments; 回傳z為該原始點之z經正規化往返(浮點可有極小誤差);
+ * (5)原始點座標相同(浮點相等)者只保留輸入順序最後一個參與內插(同1.1.27「同座標有多個原始點者取最後一個」), 其餘不會出現在回呼中; 座標不同者(含極近者)皆參與內插;
+ * (6)原始點不足3個相異點或全部共線(凸包寬度不大於正方形邊長之1e-9倍): opt.limitInsideHull為true時除與原始點座標相同者外皆回傳z為null(同1.1.27); 為false時沿原始點所在直線線性內插(直線取x或y範圍較大之軸上兩端點之連線; 內插點與原始點皆投影至該直線, 取前後兩投影位置之原始點依位置線性分配權重, 投影位置相同之原始點均分, 超出兩端者取端點; 只有1個相異點時為該點), method為'line';
+ * (7)原始點之座標範圍溢位或含非有限數(如Infinity)、或內插點之內部座標非有限數者無法判斷, 回傳z為null, 並呼叫opt.funInterpError;
+ * (8)內插點重複(座標相同)者各自計算, 各indTar皆呼叫回呼; 回呼回傳值影響該點之z, 有狀態之回呼(依呼叫次數或順序而變)其結果隨呼叫順序而變;
+ * (9)回呼之ps只列權重大於0之原始點(故可只有1個, 如與原始點同座標或投影落於凸包頂點); 線性權重之method('vertex'、'hullEdge'、'projection'、'line')無面積可言, area等於areaRatio, areaTotal為1;
+ * (10)indSrc為psSrc中x、y、z皆為數字之有效點依原順序之指標, indTar為psTar中x、y皆為數字之有效點依原順序之指標(同1.1.27);
+ * (11)凸包內外之判定: 由最近原始點周圍之三角形以精確orient2d走訪至包含內插點之三角形, 走出凸包邊者為凸包外, 恰在凸包邊上者為凸包邊上; 凸包外者之容許值以至最近凸包邊(線段)之歐氏距離判定; 無凸包面積(共線)之判定同1.1.27(_makeHullTester);
+ * (12)翻邊修正達上限仍有違反Delaunay條件之邊(精確判定下不應發生)時, 除與原始點同座標者外一律回傳null並呼叫opt.funInterpError(reason為'triangulationNotDelaunay'); 回呼函數拋錯時該點回傳null並以console.log輸出錯誤(同1.1.27); funInterpFragment或funInterpFragments回傳非有限數(含NaN、Infinity、null、字串)時該點回傳null(1.1.27會輸出NaN、Infinity或把null當0加總);
+ * (13)內部座標之絕對值超過1e100(遠在凸包外)之內插點直接投影(同(3)), 不經三角網走訪(免判定式運算溢位)
  *
  * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/interp2NaturalNeighbor.test.mjs Github}
  * @memberOf w-gis
@@ -105,8 +306,11 @@ import { Delaunay } from 'd3-delaunay'
  * @param {String} [opt.keyX='x'] 輸入點物件之x欄位字串，為座標，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件之y欄位字串，為座標，預設'y'
  * @param {String} [opt.keyZ='z'] 輸入點物件之z欄位字串，為觀測值，預設'z'
- * @param {Number} [opt.scale=1] 輸入正規化範圍數值，因處理多邊形時有數值容許誤差，故須通過縮放值域來減少問題，預設1是正規化0至1之間，使用scaleXY則是正規化為0至scaleXY之間，預設1
- * @param {Boolean} [opt.limitInsideHull=true] 輸入是否只內插位於原始點凸包內(含邊界)之內插點布林值，true代表凸包外之內插點回傳z為null且不呼叫funInterpFragment與funInterpFragments，false代表凸包外而在正方形內之內插點仍計算(屬外推，值受正方形大小影響，詳見上列可內插範圍)，僅收true與false，其他值視為未給，預設true
+ * @param {Number} [opt.scale=1] 輸入正規化範圍數值，正規化為0至scale之間，影響回呼之v、z、area、areaTotal與funInv所用之正規化值；權重與可否內插不受scale影響(幾何運算於內部座標進行)，非正數或非有限數視為未給，預設1
+ * @param {Boolean} [opt.limitInsideHull=true] 輸入是否只內插位於原始點凸包內(含邊上與容許值內)之內插點布林值，true代表凸包外之內插點回傳z為null且不呼叫funInterpFragment與funInterpFragments，false代表凸包外之內插點投影至最近凸包邊並以該邊兩端點線性內插(屬外推，不受正規化正方形限制，詳見上列可內插範圍)，僅收true與false，其他值視為未給，預設true
+ * @param {Function} [opt.funInterpFragment=null] 輸入各原始點貢獻之回呼函數，輸入物件{v,area,areaTotal,areaRatio,z,indSrc,indTar,method}，v為areaRatio*z(z為正規化值)，回傳值為該原始點之貢獻(正規化值)，預設null
+ * @param {Function} [opt.funInterpFragments=null] 輸入內插點之回呼函數，輸入物件{ps,v,indTar,method,funInv}，ps為各原始點貢獻之陣列，v為其v之總和，funInv可將正規化值還原為原始z之尺度(僅供讀取)，回傳值為內插點之正規化值，預設null
+ * @param {Function} [opt.funInterpError=null] 輸入內插點無法內插(未通過檢查或座標非有限數)時之回呼函數，輸入物件{indTar,x,y,reason}，x與y為原始座標，reason為原因字串，未給時以console.warn彙總，預設null
  * @returns {Array|Object} 回傳點物件陣列或點物件，若發生錯誤則回傳錯誤訊息物件
  * @example
  *
@@ -121,7 +325,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p)
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486813 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -139,11 +343,11 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * let funInterpFragment = (msg) => {
  *     // console.log('funInterpFragment', msg)
- *     return msg.v //預設回傳msg.v, 三角形三角點各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+ *     return msg.v //預設回傳msg.v, 各自然鄰點之v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和
  * }
  * r = interp2NaturalNeighbor(ps, p, { funInterpFragment })
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486813 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -152,7 +356,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * let funInterpFragmentNoUse = (msg) => {
  *     // console.log('funInterpFragmentNoUse', msg)
- *     return msg.v //預設回傳msg.v, 此處因內插點於原始點範圍之正方形外(亦於原始點所形成最小凸多邊形之外), 故無法內插, 亦不會呼叫funInterpFragment
+ *     return msg.v //預設回傳msg.v, 此處因內插點於原始點凸包之外(預設limitInsideHull為true), 故無法內插, 亦不會呼叫funInterpFragment
  * }
  * r = interp2NaturalNeighbor(ps, p, { funInterpFragment: funInterpFragmentNoUse })
  * console.log(r)
@@ -165,7 +369,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p)
  * console.log(r)
- * // => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點所形成最小凸多邊形之外(y最大之原始點為371), 故無法內插
+ * // => { x: 600, y: 500, z: null } //預設limitInsideHull為true, 此處因內插點於原始點凸包之外(y最大之原始點為371), 故無法內插
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -174,7 +378,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p, { limitInsideHull: false })
  * console.log(r)
- * // => { x: 600, y: 500, z: 220.47540877342678 } //limitInsideHull為false, 內插點於凸包外但在正方形內(y範圍為-378至752), 故計算外推值, 此值受正方形大小影響
+ * // => { x: 600, y: 500, z: 232.1044309757165 } //limitInsideHull為false, 內插點於凸包外, 投影至最近凸包邊(537,368)-(1151,371), 以兩端點線性內插(外推)
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: null, y: 201, z: 122 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -183,13 +387,12 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * let funInterpFragments = (msg) => {
  *     // console.log('funInterpFragments', msg)
- *     // let v = ps[0].v + ps[1].v + ps[2].v
  *     // let vv = msg.funInv(msg.v) //msg.v為正規化後之值, msg.funInv可將正規化值還原為原始z之尺度(僅供讀取, 如判斷或記錄), 回傳值仍須為正規化值, 若回傳msg.funInv(msg.v)會被再次還原而得錯誤之z
- *     return msg.v //預設回傳msg.v, 三角形三角點為msg.ps, 各點v為rA*z, 故三點之rA合為1, 指定內插值z為三角點v之總和(v1,v2,v3)
+ *     return msg.v //預設回傳msg.v, 各自然鄰點為msg.ps, 各點v為areaRatio*z, 各點areaRatio合為1, 內插值z為各點v之總和
  * }
  * r = interp2NaturalNeighbor(ps, p, { funInterpFragments })
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486813 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -198,7 +401,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p)
  * console.log(r)
- * // => { x: 283, y: 207, z: 114.43040421951908 }
+ * // => { x: 283, y: 207, z: 114.43040421951918 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -216,7 +419,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p, { keyX: 'a', keyY: 'b', keyZ: 'c' })
  * console.log(r)
- * // => { a: 243, b: 207, c: 97.29447682486813 }
+ * // => { a: 243, b: 207, c: 97.29447682486816 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = [
@@ -232,8 +435,8 @@ import { Delaunay } from 'd3-delaunay'
  * r = interp2NaturalNeighbor(ps, p)
  * console.log(r)
  * // => [
- * //   { x: 243, y: 207, z: 97.29447682486813 },
- * //   { x: 283, y: 207, z: 114.43040421951908 }
+ * //   { x: 243, y: 207, z: 97.29447682486816 },
+ * //   { x: 283, y: 207, z: 114.43040421951918 }
  * // ]
  *
  * ps = [{ x: 0.000243, y: 0.000206, z: 95 }, { x: 0.000233, y: 0.000225, z: 146 }, { x: 0.000021, y: 0.000325, z: 22 }, { x: 0.000953, y: 0.000028, z: 223 }, { x: 0.001092, y: 0.00029, z: 39 }, { x: 0.000744, y: 0.000200, z: 191 }, { x: 0.000174, y: 0.000003, z: 22 }, { x: 0.000537, y: 0.000368, z: 249 }, { x: 0.001151, y: 0.000371, z: 86 }, { x: 0.000814, y: 0.000252, z: 125 }]
@@ -243,7 +446,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p)
  * console.log(r)
- * // => { x: 0.000243, y: 0.000207, z: 97.2944768248678 }
+ * // => { x: 0.000243, y: 0.000207, z: 97.29447682486817 }
  *
  * ps = [{ x: 243, y: 206, z: 95 }, { x: 233, y: 225, z: 146 }, { x: 21, y: 325, z: 22 }, { x: 953, y: 28, z: 223 }, { x: 1092, y: 290, z: 39 }, { x: 744, y: 200, z: 191 }, { x: 174, y: 3, z: 22 }, { x: 537, y: 368, z: 249 }, { x: 1151, y: 371, z: 86 }, { x: 814, y: 252, z: 125 }]
  * p = {
@@ -252,7 +455,7 @@ import { Delaunay } from 'd3-delaunay'
  * }
  * r = interp2NaturalNeighbor(ps, p, { scale: 1000 })
  * console.log(r)
- * // => { x: 243, y: 207, z: 97.29447682486855 }
+ * // => { x: 243, y: 207, z: 97.29447682486816 } //權重不受scale影響(幾何運算於內部座標進行)
  *
  */
 function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
@@ -297,8 +500,8 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
 
     //scale
     let scale = get(opt, 'scale')
-    if (!isnum(scale)) {
-        scale = 1
+    if (!isnum(scale) || !(Number(scale) > 0) || !Number.isFinite(Number(scale))) {
+        scale = 1 //非數字、非正數或非有限數(cdbl會把Infinity轉為最大值)視為未給(K3; 原交給interp2Normalize而拋錯)
     }
     scale = cdbl(scale)
 
@@ -316,6 +519,18 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
     let funInterpFragments = get(opt, 'funInterpFragments')
     let useFunInterpFragments = isfun(funInterpFragments)
 
+    //funInterpError
+    let funInterpError = get(opt, 'funInterpError')
+    let useFunInterpError = isfun(funInterpError)
+
+    //signs
+    let signs = getSigns()
+    if (!signs.ok) {
+        return {
+            err: 'robust-predicates returns unexpected signs'
+        }
+    }
+
     //keyInd
     let keyInd = 'ind'
 
@@ -328,7 +543,6 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
             err: 'psSrc has no effective data'
         }
     }
-    // console.log('ptsXYZtoArr psSrc', psSrc)
 
     //ptsXYtoArr
     psTar = ptsXYtoArr(psTar, { keyX, keyY, keyInd })
@@ -339,345 +553,1265 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
             err: 'psTar has no effective data'
         }
     }
-    // console.log('ptsXYtoArr psTar', psTar)
+
+    //psRaw, 原始座標(正規化前)
+    let psRaw = psSrc
 
     //interp2Normalize
     let itnm = interp2Normalize(psSrc, { keyInd, scale })
-    // console.log('itnm.st', itnm.st)
-    // console.log('itnm.psMinMax', itnm.psMinMax)
-    psSrc = itnm.ps //複寫正規化數據
-    let nv = itnm.nv
+    psSrc = itnm.ps //複寫正規化數據, z供內插(正規化值)
     let inv = itnm.inv
-    // console.log('interp2Normalize psSrc', psSrc)
+    let st = itnm.st
 
-    //psSrcItr
-    let psSrcItr = [...psSrc]
+    //toUX, toUY, 內部座標u=(v-t)*f, 平移t與縮放f之運算皆不捨入(精確), 故三角網、判定式與權重等同以原始座標計算, 與opt.scale無關:
+    //f為2之冪次, 使正方形邊長(x與y範圍較大者rg)於內部座標為side=rg*f(介於0.5與1); 範圍為0(全部同點)時f為1;
+    //t為原始點中絕對值最小之座標, 僅當全部原始點同號且最大絕對值不大於其2倍時採用(此時v-t由Sterbenz引理精確), 否則t為0(此時座標絕對值小於2倍範圍, 不平移亦無溢位之虞);
+    //凸包範圍內之內插點同樣精確對應, 範圍外者之捨入僅及於該內插點本身之座標
+    //f拆為兩個2之冪次f1、f2依序相乘(範圍為次正規數或極大時單一2^e會溢位), 乘法仍精確
+    let rg = st.x.range
+    let srcBroken = !Number.isFinite(rg)
+    let f1 = 1
+    let f2 = 1
+    if (rg > 0 &amp;&amp; !srcBroken) {
+        let e = -Math.ceil(Math.log2(rg))
+        let e1 = Math.trunc(e / 2)
+        f1 = Math.pow(2, e1)
+        f2 = Math.pow(2, e - e1)
+        if (!(f1 > 0) || !Number.isFinite(f1) || !(f2 > 0) || !Number.isFinite(f2)) {
+            f1 = 1
+            f2 = 1
+        }
+    }
+    let side = rg > 0 &amp;&amp; !srcBroken ? (rg * f1) * f2 : 1
+    let shiftOf = (key) => {
+        let mn = Infinity
+        let mx = -Infinity
+        for (let p of psRaw) {
+            mn = Math.min(mn, p[key])
+            mx = Math.max(mx, p[key])
+        }
+        if (mn > 0 &amp;&amp; mx &lt;= 2 * mn) {
+            return mn
+        }
+        if (mx &lt; 0 &amp;&amp; mn >= 2 * mx) {
+            return mx
+        }
+        return 0
+    }
+    let tx = shiftOf('x')
+    let ty = shiftOf('y')
+    let toUX = (x) => ((x - tx) * f1) * f2
+    let toUY = (y) => ((y - ty) * f1) * f2
 
-    //psSrcOri
-    let psSrcOri = [...psSrc]
+    //reps, 去除同座標原始點(保留最後一個); kpSrc, 內部座標鍵->原始點指標
+    let kpSrc = new Map()
+    let nSrc = psRaw.length
+    let usx = new Float64Array(nSrc)
+    let usy = new Float64Array(nSrc)
+    for (let i = 0; i &lt; nSrc; i++) {
+        let ux = toUX(psRaw[i].x)
+        let uy = toUY(psRaw[i].y)
+        usx[i] = ux
+        usy[i] = uy
+        if (!Number.isFinite(ux) || !Number.isFinite(uy)) {
+            srcBroken = true
+        }
+        kpSrc.set(`${ux}|${uy}`, i) //後者覆蓋前者
+    }
+    let reps = [...kpSrc.values()].sort((a, b) => a - b) //各相異座標之代表原始點(最後一個), 依指標排序
+    let nRep = reps.length
 
-    //kpKnown
-    let kpKnown = {}
-    each(psSrc, (v) => {
-        let k = `${v.x}-${v.y}` //x,y已經被正規化
-        kpKnown[k] = v.z //x,y,z已經被正規化
-    })
-
-    //intDny
-    let intDny = Delaunay.from(psSrcOri, d => d.x, d => d.y) //x,y已經被正規化
-
-    //isInsideHull, 判斷已正規化之點是否位於原始點凸包內(含邊界), 僅limitInsideHull為true時建立, 容許距離為正規化範圍scale之1e-9倍
-    let isInsideHull = null
-    if (limitInsideHull) {
-        isInsideHull = _makeHullTester(psSrc, 1e-9 * scale) //x,y已經被正規化
+    //X, Y, 三角網頂點座標(頂點編號為reps之位置)
+    let X = new Float64Array(nRep)
+    let Y = new Float64Array(nRep)
+    for (let k = 0; k &lt; nRep; k++) {
+        X[k] = usx[reps[k]]
+        Y[k] = usy[reps[k]]
     }
 
-    //vbox
-    let vbox = [0, 0, scale, scale]
+    //hullTest, 凸包含邊界與容許值之判定(同1.1.27), 亦用於判定是否無凸包面積
+    let hullTest = () => false
+    let degenerate = true
+    if (!srcBroken &amp;&amp; nRep >= 3) {
+        let pts = []
+        for (let k = 0; k &lt; nRep; k++) {
+            pts.push({ x: X[k], y: Y[k] })
+        }
+        hullTest = _makeHullTester(pts, TOL_HULL * side)
+        degenerate = !hullTest(X[0], Y[0]) //有凸包面積時原始點必判為在內, 恆為false者即不足3點或共線
+    }
 
-    //iniVor
-    let iniVor = intDny.voronoi(vbox)
-    // console.log('iniVor', iniVor)
+    //三角網
+    let triangles = null
+    let halfedges = null
+    let hull = null
+    let nT = 0
+    let triSign = 0 //各三角形orient2d之符號
+    let badTri = null
+    let delaunayOk = true
+    let inEdge = null
+    let triSource = '' //'delaunator'或'sweep'
+    let next = (e) => (e % 3 === 2 ? e - 2 : e + 1)
+    let prev = (e) => (e % 3 === 0 ? e + 2 : e - 1)
 
-    //addPointCore
-    let addPointCore = (data, x, y, indTar) => {
+    //orientV, 三頂點之方向(精確)
+    let orientV = (i, j, k) => Math.sign(orient2d(X[i], Y[i], X[j], Y[j], X[k], Y[k]))
 
-        //psSrcTemp
-        let psSrcTemp = [...psSrc]
+    //triOrient, 三角形方向
+    let triOrient = (t) => {
+        return orientV(triangles[3 * t], triangles[3 * t + 1], triangles[3 * t + 2])
+    }
 
-        //newItem
-        let newItem = { x, y, z: 0 } //x,y,z已經被正規化
-
-        //push
-        psSrcTemp.push(newItem)
-        data.push(newItem)
-
-        //postVor
-        let postVor = Delaunay.from(psSrcTemp, d => d.x, d => d.y).voronoi(vbox) //x,y已經被正規化
-        // console.log('postVor', postVor)
-
-        //newIdx
-        let newIdx = psSrcTemp.length - 1
-        // console.log('newIdx', newIdx)
-
-        //pgsQuery
-        let pgsQuery = postVor.cellPolygon(newIdx)
-        // console.log('pgsQuery', pgsQuery)
-
-        //areaQuery
-        let areaQuery = getAreaPolygon(pgsQuery)
-        // console.log('areaQuery', areaQuery)
-
-        //newPointVal
-        let newPointVal = null
-        if (true) {
-
-            //neighborIndices
-            let neighborIndices = []
-            // for (let i of postVor.delaunay.neighbors(newIdx)) { //因為postVor.delaunay.neighbors是generator, 考慮要支援ie11得使用while與next讀取
-            //     neighborIndices.push(i)
-            // }
-            let sq = postVor.delaunay.neighbors(newIdx)
-            // console.log(`sq`, sq)
-            let next = sq.next()
-            while (!next.done) {
-                let v = next.value
-                neighborIndices.push(v)
-                next = sq.next()
+    //buildSweep, 掃描線法建網(備援): 依x再y排序後逐點加入, 連接其可見之凸包邊; 僅用精確orient2d, 必得有效之三角網(非Delaunay, 之後翻邊); 全部共線時回傳null
+    let buildSweep = () => {
+        let order = []
+        for (let k = 0; k &lt; nRep; k++) {
+            order.push(k)
+        }
+        order.sort((i, j) => (X[i] - X[j]) || (Y[i] - Y[j]))
+        let p0 = order[0]
+        let p1 = order[1]
+        let m = 2
+        while (m &lt; nRep &amp;&amp; orientV(p0, p1, order[m]) === 0) {
+            m++
+        }
+        if (m >= nRep) {
+            return null
+        }
+        let pm = order[m]
+        let S = orientV(p0, p1, pm)
+        let tri = []
+        let he = []
+        let hn = new Int32Array(nRep).fill(-1) //凸包上之下一頂點(凸包邊之方向同三角形方向)
+        let hp = new Int32Array(nRep).fill(-1)
+        let hE = new Int32Array(nRep).fill(-1) //由該頂點出發之凸包半邊
+        //共線之前段c0...c(m-1)與pm成扇形: (ci, ci+1, pm)
+        for (let i = 0; i &lt; m - 1; i++) {
+            let t = tri.length
+            tri.push(order[i], order[i + 1], pm)
+            he.push(-1, -1, -1)
+            if (i > 0) {
+                he[t + 2] = t - 2
+                he[t - 2] = t + 2
             }
-            // console.log('neighborIndices', neighborIndices)
-
-            //subValues
-            let subValues = map(neighborIndices, (idx) => {
-                // console.log('idx', idx)
-
-                //pgs1, pgs2
-                let pgs1 = [pgsQuery]
-                let pgs2 = [iniVor.cellPolygon(idx)]
-                // console.log('pgs1', pgs1, 'pgs2', pgs2)
-
-                //intersect
-                let pgsInts = []
-                try {
-                    pgsInts = intersectPolygon(pgs1, pgs2)
-                    // console.log('pgsInts', pgsInts)
-                }
-                catch (err) {
-                    //console.log('pgs1', pgs1)
-                    //console.log('pgs2', pgs2)
-                    //console.log(err)
-                }
-
-                //areaInts
-                let areaInts = 0
-                if (size(pgsInts) === 1) {
-                    try {
-                        areaInts = getAreaPolygon(pgsInts[0])
-                        //console.log('getAreaPolygon',d3.getAreaPolygon(is.regions[0]),getAreaPolygon(is.regions[0]))
+            hn[order[i]] = order[i + 1]
+            hp[order[i + 1]] = order[i]
+            hE[order[i]] = t
+        }
+        let tLast = tri.length - 3
+        hn[order[m - 1]] = pm
+        hp[pm] = order[m - 1]
+        hE[order[m - 1]] = tLast + 1
+        hn[pm] = order[0]
+        hp[order[0]] = pm
+        hE[pm] = 2
+        let last = pm
+        let isVis = (u, q) => orientV(u, hn[u], q) === -S //凸包邊u->hn[u]自q可見(q嚴格在外側)
+        for (let k = m + 1; k &lt; nRep; k++) {
+            let q = order[k]
+            let start = -1
+            if (isVis(last, q)) {
+                start = last
+            }
+            else if (isVis(hp[last], q)) {
+                start = hp[last]
+            }
+            else {
+                let u = hn[last]
+                let g = 0
+                while (u !== last &amp;&amp; g++ &lt;= nRep) {
+                    if (isVis(u, q)) {
+                        start = u
+                        break
                     }
-                    catch (err) {
-                        console.log('pgsInts', pgsInts)
-                        console.log(err)
+                    u = hn[u]
+                }
+            }
+            if (start === -1) {
+                return null //q晚於全部已加入之點, 必在凸包外, 不應發生
+            }
+            let g = 0
+            while (isVis(hp[start], q) &amp;&amp; g++ &lt;= nRep) {
+                start = hp[start]
+            }
+            let u = start
+            let prevT = -1
+            let firstT = -1
+            g = 0
+            while (isVis(u, q) &amp;&amp; g++ &lt;= nRep) {
+                let v = hn[u]
+                let e = hE[u]
+                let t = tri.length
+                tri.push(v, u, q) //方向同S
+                he.push(e, -1, -1)
+                he[e] = t
+                if (prevT >= 0) {
+                    he[t + 1] = prevT + 2
+                    he[prevT + 2] = t + 1
+                }
+                else {
+                    firstT = t
+                }
+                prevT = t
+                u = v
+            }
+            hn[start] = q
+            hp[q] = start
+            hE[start] = firstT + 1
+            hn[q] = u
+            hp[u] = q
+            hE[q] = prevT + 2
+            last = q
+        }
+        let hullArr = []
+        let u = last
+        let g = 0
+        do {
+            hullArr.push(u)
+            u = hn[u]
+        } while (u !== last &amp;&amp; g++ &lt;= nRep)
+        return { tri: Uint32Array.from(tri), he: Int32Array.from(he), hull: Uint32Array.from(hullArr), S }
+    }
+
+    //conflict, 點(qx,qy)是否嚴格在三角形t之外接圓內(精確): 1內, 0在圓上, -1外, -2退化三角形
+    let conflict = (t, qx, qy) => {
+        if (badTri[t] === 1) {
+            return -2
+        }
+        let a = triangles[3 * t]
+        let b = triangles[3 * t + 1]
+        let c = triangles[3 * t + 2]
+        let s = Math.sign(incircle(X[a], Y[a], X[b], Y[b], X[c], Y[c], qx, qy)) * triSign
+        if (s === 0) {
+            return 0
+        }
+        return s === signs.inside ? 1 : -1
+    }
+
+    //flip, 翻轉半邊a所在之內部邊: a(pr->pl), al(pl->p0), ar(p0->pr) | b(pl->pr), br(pr->p1), bl(p1->pl) => a(p1->pl), b(p0->pr), ar(p0->p1), bl(p1->p0)
+    let link = (a, b) => {
+        halfedges[a] = b
+        if (b !== -1) {
+            halfedges[b] = a
+        }
+    }
+    let flip = (a) => {
+        let b = halfedges[a]
+        let ar = prev(a)
+        let bl = prev(b)
+        let p0 = triangles[ar]
+        let p1 = triangles[bl]
+        triangles[a] = p1
+        triangles[b] = p0
+        let hbl = halfedges[bl]
+        let har = halfedges[ar]
+        link(a, hbl)
+        link(b, har)
+        link(ar, bl)
+    }
+
+    //建網: 先以delaunator; 其結果有反向三角形(簡單翻邊修復不了)或有原始點未入網時, 改以掃描線法重建
+    if (!srcBroken &amp;&amp; !degenerate) {
+
+        //delaunator建網
+        let coords = new Float64Array(2 * nRep)
+        for (let k = 0; k &lt; nRep; k++) {
+            coords[2 * k] = X[k]
+            coords[2 * k + 1] = Y[k]
+        }
+        let dny = new Delaunator(coords)
+        triangles = dny.triangles
+        halfedges = dny.halfedges
+        hull = dny.hull
+        nT = triangles.length / 3
+        triSource = 'delaunator'
+        let useSweep = nT === 0
+        if (!useSweep) {
+
+            //triSign, 三角形之方向(多數者)
+            let nPos = 0
+            let nNeg = 0
+            for (let t = 0; t &lt; nT; t++) {
+                let o = triOrient(t)
+                if (o > 0) {
+                    nPos++
+                }
+                else if (o &lt; 0) {
+                    nNeg++
+                }
+            }
+            triSign = nPos >= nNeg ? 1 : -1
+
+            //修復反向三角形: delaunator之incircle為一般浮點, 極小群可誤翻非凸四邊形而產生反向(折疊)之三角形;
+            //對反向三角形之各內部邊, 若翻邊後兩三角形皆為正向(精確orient2d)即翻之, 重複至無反向或無可翻者
+            let isOk = (i, j, k) => orientV(i, j, k) === triSign
+            for (let round = 0; round &lt; 100; round++) {
+                let changed = false
+                for (let t = 0; t &lt; nT; t++) {
+                    if (triOrient(t) === triSign) {
+                        continue
+                    }
+                    for (let j = 0; j &lt; 3; j++) {
+                        let a = 3 * t + j
+                        let b = halfedges[a]
+                        if (b &lt; 0) {
+                            continue
+                        }
+                        let p0 = triangles[prev(a)]
+                        let pr = triangles[a]
+                        let pl = triangles[next(a)]
+                        let p1 = triangles[prev(b)]
+                        if (isOk(p1, pl, p0) &amp;&amp; isOk(p0, pr, p1)) {
+                            flip(a)
+                            changed = true
+                            break
+                        }
                     }
                 }
-
-                return {
-                    ia: areaInts,
-                    idx,
+                if (!changed) {
+                    break
                 }
-            })
-            // console.log('subValues', subValues)
-
-            //check
-            if (true) {
-
-                //n
-                let n = size(subValues)
-
-                //ias
-                let ias = map(subValues, 'ia')
-
-                //r
-                let r = sum(ias)
-
-                //check
-                if (r !== areaQuery) {
-                    // console.log(`ia總和有時會不等於areaQuery`)
-                    //ia總和有時會不等於areaQuery
-
-                    if (areaQuery > 0 &amp;&amp; r > 0) {
-                        // console.log(`若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery`)
-                        //若ia總和與areaQuery都>0, 則調整各ia使其總和縮放至areaQuery
-                        let s = areaQuery / r
-                        subValues = map(subValues, (sv) => {
-                            sv.ia *= s
-                            return sv
-                        })
-                    }
-                    else if (areaQuery === 0 &amp;&amp; r > 0) {
-                        // console.log(`若areaQuery為0且ia總和>0, 則使用ia總和為areaQuery`)
-                        //若areaQuery為0且ia總和>0, 則使用ia總和為areaQuery
-                        areaQuery = r
-                    }
-                    else if (areaQuery > 0 &amp;&amp; r === 0) {
-                        // console.log(`若areaQuery>0且ia總和=0, 則假設各ia為平分areaQuery`)
-                        //若areaQuery>0且ia總和=0, 則假設各ia為平分areaQuery
-                        let s = areaQuery / n
-                        subValues = map(subValues, (sv) => {
-                            sv.ia = s
-                            return sv
-                        })
-                    }
-                    else {
-                        console.log('areaQuery', areaQuery)
-                        console.log('sum(ias)', r)
-                        throw new Error('areaQuery!==sum(ias) &amp;&amp; (areaQuery&lt;0 or sum(ias)&lt;0)')
-                    }
-
-                }
-                else if (areaQuery === 0) {
-                    // console.log(`若areaQuery=0且ia總和=0, 則假設areaQuery為1, 而各ia為平分1`)
-                    //若areaQuery=ia總和=0, 則假設areaQuery為1, 而各ia為平分1
-                    areaQuery = 1
-                    let s = 1 / n
-                    subValues = map(subValues, (sv) => {
-                        sv.ia = s
-                        return sv
-                    })
-                }
-                else if (areaQuery &lt; 0) {
-                    // console.log(`若areaQuery=ia總和&lt;0, 則報錯`)
-                    //若areaQuery=ia總和&lt;0, 則報錯
-                    console.log('areaQuery', areaQuery)
-                    console.log('sum(ias)', r)
-                    throw new Error('areaQuery&lt;0 &amp;&amp; sum(ias)&lt;0')
-                }
-
             }
 
-            //newPointVals
-            let newPointVals = []
-            each(subValues, (o) => {
-
-                //rA, z, v
-                let rA = (o.ia / areaQuery)
-                let z = data[o.idx].z //x,y,z已經被正規化
-                let v = rA * z
-                // console.log('subValue', 'rA', rA, 'o.idx', o.idx, 'z', z, 'v', v)
-
-                //useFunInterpFragment
-                if (useFunInterpFragment) {
-                    v = funInterpFragment({
-                        v,
-                        area: o.ia,
-                        areaTotal: areaQuery,
-                        areaRatio: rA,
-                        z,
-                        indSrc: o.idx,
-                        indTar,
-                        // data,
-                    })
+            //仍有反向或面積為0之三角形(不成平面分割), 或有原始點未入網(delaunator略過相距2^-52內之近乎重合點)時, 改以掃描線法重建
+            let used = new Uint8Array(nRep)
+            for (let t = 0; t &lt; nT; t++) {
+                if (triOrient(t) !== triSign) {
+                    useSweep = true
                 }
-
-                //p
-                let p = {
-                    v,
-                    area: o.ia,
-                    areaTotal: areaQuery,
-                    areaRatio: rA,
-                    z,
-                    indSrc: o.idx,
-                    indTar,
-                }
-
-                //push
-                newPointVals.push(p)
-
-            })
-
-            //newPointVal
-            let vt = sum(map(newPointVals, 'v'))
-            if (useFunInterpFragments) {
-                vt = funInterpFragments({
-                    ps: newPointVals,
-                    v: vt,
-                    indTar,
-                    funInv: (vv) => {
-                        return inv(vv, 'z') //msg.v為正規化後之z, 以z軸還原; interp2Normalize之st以'x'、'y'、'z'為鍵(原以索引2呼叫, 於st改為鍵後漏改)
-                    },
-                })
+                used[triangles[3 * t]] = 1
+                used[triangles[3 * t + 1]] = 1
+                used[triangles[3 * t + 2]] = 1
             }
-            newPointVal = vt
-
-            // if (isNaN(newPointVal)) {
-            //     console.log('isNaN(newPointVal)', subValues, 'areaQuery', areaQuery)
-            // }
-            // console.log(`areaQuery[${areaQuery}] > 0`, 'newPointVal', newPointVal)
+            for (let k = 0; k &lt; nRep; k++) {
+                if (used[k] !== 1) {
+                    useSweep = true
+                }
+            }
 
         }
+        if (useSweep) {
+            let sw = buildSweep()
+            if (sw === null) {
+                degenerate = true
+            }
+            else {
+                triangles = sw.tri
+                halfedges = sw.he
+                hull = sw.hull
+                nT = triangles.length / 3
+                triSign = sw.S
+                triSource = 'sweep'
+            }
+        }
 
-        //update newPointVal
-        data[data.length - 1].z = newPointVal //x,y,z已經被正規化
+    }
+    //檢查與翻邊修正
+    if (triangles !== null &amp;&amp; !degenerate) {
 
-        return newPointVal
+        //badTri, 仍為反向或面積為0之三角形(掃描線法不會產生); 有者三角網不成平面分割, 一律不內插(明確告知)
+        badTri = new Uint8Array(nT)
+        for (let t = 0; t &lt; nT; t++) {
+            if (triOrient(t) !== triSign) {
+                badTri[t] = 1
+                delaunayOk = false
+            }
+        }
+
+        //翻邊修正(Lawson flip), 以穩健incircle判定內部邊是否違反Delaunay條件
+        let stack = []
+        for (let e = 0; e &lt; halfedges.length; e++) {
+            if (halfedges[e] > e) {
+                stack.push(e)
+            }
+        }
+        let nFlip = 0
+        let capFlip = (triSource === 'sweep' ? nRep * nRep : 20 * halfedges.length) + 1000 //Lawson翻邊於精確判定下必終止(至多O(n^2)次), 上限僅防無窮迴圈
+        while (stack.length > 0) {
+            let a = stack.pop()
+            let b = halfedges[a]
+            if (b &lt; 0) {
+                continue
+            }
+            let A = (a / 3) | 0
+            let B = (b / 3) | 0
+            if (badTri[A] === 1 || badTri[B] === 1) {
+                continue
+            }
+            let p1 = triangles[prev(b)]
+            if (conflict(A, X[p1], Y[p1]) !== 1) {
+                continue
+            }
+            flip(a) //兩三角形皆正向且p1嚴格在A之外接圓內時四邊形必為凸, 翻邊後仍皆正向
+            stack.push(a, next(a), b, next(b))
+            nFlip++
+            if (nFlip > capFlip) {
+                delaunayOk = false
+                break
+            }
+        }
+
+        //複驗: 不得仍有違反Delaunay條件之內部邊
+        if (delaunayOk) {
+            for (let e = 0; e &lt; halfedges.length; e++) {
+                let b = halfedges[e]
+                if (b > e) {
+                    let p1 = triangles[prev(b)]
+                    if (conflict((e / 3) | 0, X[p1], Y[p1]) === 1) {
+                        delaunayOk = false
+                        break
+                    }
+                }
+            }
+        }
+
+        //inEdge, 各頂點之一個入邊(終點為該頂點之半邊), 凸包頂點優先取凸包邊, 繞行時可走遍其周圍三角形(有原始點未入網時已改以掃描線法建網, 故各頂點皆有入邊)
+        inEdge = new Int32Array(nRep).fill(-1)
+        for (let e = 0; e &lt; halfedges.length; e++) {
+            let v = triangles[next(e)]
+            if (halfedges[e] === -1 || inEdge[v] === -1) {
+                inEdge[v] = e
+            }
+        }
+
     }
 
-    //addPoint
-    let addPoint = (data, x, y, indTar) => {
+    //暫存陣列(以戳記區分各內插點, 免每點配置)
+    let tested = nT > 0 ? new Int32Array(nT) : null
+    let inC = nT > 0 ? new Int32Array(nT) : null
+    let ocStamp = nT > 0 ? new Int32Array(nT) : null
+    let ocx = nT > 0 ? new Float64Array(nT) : null
+    let ocy = nT > 0 ? new Float64Array(nT) : null
+    let vStamp = nRep > 0 ? new Int32Array(nRep) : null
+    let vEdge = nRep > 0 ? new Int32Array(nRep) : null
+    let stamp = 0
 
-        //r
-        let r
+    //nearest, 最近之入網頂點(貪婪走訪, Delaunay三角網上必得最近點)
+    let lastV = triangles !== null &amp;&amp; nT > 0 ? triangles[0] : 0
+    let nearest = (qx, qy) => {
+        let d2 = (v) => {
+            let dx = X[v] - qx
+            let dy = Y[v] - qy
+            return dx * dx + dy * dy
+        }
+        let v = lastV
+        let dv = d2(v)
+        let guard = 0
+        while (guard++ &lt;= nRep) {
+            let best = v
+            let db = dv
+            let e0 = inEdge[v]
+            let e = e0
+            do {
+                let u = triangles[e]
+                let du = d2(u)
+                if (du &lt; db) {
+                    best = u
+                    db = du
+                }
+                let out = next(e)
+                let e2 = halfedges[out]
+                if (e2 === -1) {
+                    let w = triangles[prev(e)]
+                    let dw = d2(w)
+                    if (dw &lt; db) {
+                        best = w
+                        db = dw
+                    }
+                    break
+                }
+                e = e2
+            } while (e !== e0)
+            if (best === v) {
+                break
+            }
+            v = best
+            dv = db
+        }
+        lastV = v
+        return v
+    }
+
+    //walk, 由三角形t0走訪至包含(qx,qy)之三角形(精確orient2d)
+    let walk = (t0, qx, qy) => {
+        let t = t0
+        let cap = 3 * nT + 10
+        for (let step = 0; step &lt; cap; step++) {
+            let moved = false
+            let nZero = 0
+            let eZero = -1
+            for (let j = 0; j &lt; 3; j++) {
+                let e = 3 * t + ((j + step) % 3)
+                let a = triangles[e]
+                let b = triangles[next(e)]
+                let s = Math.sign(orient2d(X[a], Y[a], X[b], Y[b], qx, qy)) * triSign //>0代表在該邊之內側
+                if (Number.isNaN(s)) {
+                    return { where: 'fail' } //NaN(運算溢位), 不得視為在內
+                }
+                if (s &lt; 0) {
+                    let opp = halfedges[e]
+                    if (opp === -1) {
+                        return { where: 'outside', e }
+                    }
+                    t = (opp / 3) | 0
+                    moved = true
+                    break
+                }
+                if (s === 0) {
+                    nZero++
+                    eZero = e
+                }
+            }
+            if (!moved) {
+                if (nZero >= 2) {
+                    //恰為頂點: 兩條為0之邊之共同頂點
+                    for (let j = 0; j &lt; 3; j++) {
+                        let v = triangles[3 * t + j]
+                        if (X[v] === qx &amp;&amp; Y[v] === qy) {
+                            return { where: 'vertex', v }
+                        }
+                    }
+                    return { where: 'fail' }
+                }
+                if (nZero === 1 &amp;&amp; halfedges[eZero] === -1) {
+                    return { where: 'onHull', e: eZero, t }
+                }
+                return { where: 'inside', t }
+            }
+        }
+        return { where: 'fail' }
+    }
+
+    //bfsConflict, 由種子廣度搜尋衝突三角形
+    let bfsConflict = (qx, qy, i0, tq) => {
+        stamp++
+        let tris = []
+        let bad = false
+        let tryAdd = (t) => {
+            if (tested[t] === stamp) {
+                return
+            }
+            tested[t] = stamp
+            let c = conflict(t, qx, qy)
+            if (c === -2) {
+                bad = true
+            }
+            else if (c === 1) {
+                inC[t] = stamp
+                tris.push(t)
+            }
+        }
+        //種子: 最近原始點周圍之三角形
+        let e0 = inEdge[i0]
+        let e = e0
+        do {
+            tryAdd((e / 3) | 0)
+            let e2 = halfedges[next(e)]
+            if (e2 === -1) {
+                break
+            }
+            e = e2
+        } while (e !== e0)
+        //種子: 包含內插點之三角形(必為衝突三角形)
+        if (tq >= 0) {
+            tryAdd(tq)
+        }
+        for (let k = 0; k &lt; tris.length; k++) {
+            let t = tris[k]
+            for (let j = 0; j &lt; 3; j++) {
+                let opp = halfedges[3 * t + j]
+                if (opp !== -1) {
+                    tryAdd((opp / 3) | 0)
+                }
+            }
+        }
+        return { tris, bad }
+    }
+
+    //buildCavity, 由衝突三角形(inC須為當前戳記)求空腔之有序邊界與各邊界頂點之扇形三角形
+    let buildCavity = (tris) => {
+        if (tris.length === 0) {
+            return { ok: false, reason: 'noConflictTriangle' }
+        }
+        let bnd = []
+        for (let t of tris) {
+            for (let j = 0; j &lt; 3; j++) {
+                let e = 3 * t + j
+                let opp = halfedges[e]
+                if (opp === -1 || inC[(opp / 3) | 0] !== stamp) {
+                    bnd.push(e)
+                }
+            }
+        }
+        if (bnd.length &lt; 3) {
+            return { ok: false, reason: 'boundaryLessThan3' }
+        }
+        for (let e of bnd) {
+            let a = triangles[e]
+            if (vStamp[a] === stamp) {
+                return { ok: false, reason: 'vertexTwiceOnBoundary' }
+            }
+            vStamp[a] = stamp
+            vEdge[a] = e
+        }
+        //起點取編號最小之頂點, 使結果與搜尋順序無關
+        let eStart = bnd[0]
+        for (let e of bnd) {
+            if (triangles[e] &lt; triangles[eStart]) {
+                eStart = e
+            }
+        }
+        let edges = []
+        let e = eStart
+        while (true) {
+            edges.push(e)
+            if (edges.length > bnd.length) {
+                return { ok: false, reason: 'boundaryLoop' }
+            }
+            let b = triangles[next(e)]
+            if (vStamp[b] !== stamp) {
+                return { ok: false, reason: 'openBoundary' }
+            }
+            e = vEdge[b]
+            if (e === eStart) {
+                break
+            }
+        }
+        if (edges.length !== bnd.length) {
+            return { ok: false, reason: 'multipleBoundaryLoops' }
+        }
+        let m = edges.length
+        let verts = new Array(m)
+        for (let k = 0; k &lt; m; k++) {
+            verts[k] = triangles[edges[k]]
+        }
+        //fans: 頂點vk之扇形由入邊e(k-1)所在三角形起, 繞vk至含e(k)之三角形
+        let fans = new Array(m)
+        let used = 0
+        for (let k = 0; k &lt; m; k++) {
+            let eIn = edges[(k + m - 1) % m]
+            let eOut = edges[k]
+            let fan = []
+            let inc = eIn
+            let g = 0
+            while (true) {
+                fan.push((inc / 3) | 0)
+                let out = next(inc)
+                if (out === eOut) {
+                    break
+                }
+                let opp = halfedges[out]
+                if (opp === -1) {
+                    return { ok: false, reason: 'fanHitsHull' }
+                }
+                inc = opp
+                if (inC[(inc / 3) | 0] !== stamp) {
+                    return { ok: false, reason: 'fanLeavesCavity' }
+                }
+                if (++g > tris.length) {
+                    return { ok: false, reason: 'fanLoop' }
+                }
+            }
+            used += fan.length
+            fans[k] = fan
+        }
+        if (used !== 3 * tris.length) {
+            return { ok: false, reason: 'interiorVertexInCavity' } //每個衝突三角形之三頂點須皆在邊界上
+        }
+        return { ok: true, verts, fans }
+    }
+
+    //lcDeviation, 局部座標偏離|Σwi(pi-x)|除以Σwi|pi-x|(權重加權之鄰點距離, 即局部尺度);
+    //以局部尺度正規化, 使夾於極近兩點間之內插點(新區塊極狹長, 浮點外心之誤差相對於區塊寬度可達數成)之權重分配錯誤亦顯現(若除以最遠鄰點距離, 沿極短方向之錯誤被稀釋而測不出);
+    //浮點權重之絕對誤差約為機器精度, 故內插點極靠近原始點(距離小於約局部間距之1e-4倍)時亦可能不過而改走精確算法(只影響速度)
+    let lcDeviation = (qx, qy, verts, ws) => {
+        let sx = 0
+        let sy = 0
+        let sd = 0
+        for (let k = 0; k &lt; verts.length; k++) {
+            let dx = X[verts[k]] - qx
+            let dy = Y[verts[k]] - qy
+            sx += ws[k] * dx
+            sy += ws[k] * dy
+            sd += ws[k] * Math.hypot(dx, dy)
+        }
+        return Math.hypot(sx, sy) / sd
+    }
+
+    //checkAndWeigh, 由各被奪面積(有號)求權重並檢查; 回傳{ok,reason,ws,areas,total}
+    let checkAndWeigh = (qx, qy, verts, areas) => {
+        let m = verts.length
+        let total = 0
+        for (let k = 0; k &lt; m; k++) {
+            total += areas[k]
+        }
+        let sgn = Math.sign(total)
+        if (!Number.isFinite(total) || sgn === 0) {
+            return { ok: false, reason: 'totalAreaNotFinite' }
+        }
+        let absTotal = Math.abs(total)
+        let pos = new Array(m)
+        let tot2 = 0
+        for (let k = 0; k &lt; m; k++) {
+            let a = areas[k] * sgn
+            if (!(a >= -TOL_NEG_AREA * absTotal)) { //含NaN
+                return { ok: false, reason: 'negativeArea' }
+            }
+            pos[k] = a > 0 ? a : 0
+            tot2 += pos[k]
+        }
+        let ws = new Array(m)
+        for (let k = 0; k &lt; m; k++) {
+            let w = pos[k] / tot2
+            if (!Number.isFinite(w)) {
+                return { ok: false, reason: 'weightNotFinite' }
+            }
+            ws[k] = w
+        }
+        let dev = lcDeviation(qx, qy, verts, ws)
+        if (!(dev &lt;= TOL_LC)) { //含NaN
+            return { ok: false, reason: 'localCoordinateDeviation' }
+        }
+        return { ok: true, ws, areas: pos, total: tot2 }
+    }
+
+    //areasFloat, Liang &amp; Hale之外心多邊形面積(以內插點為原點, 鞋帶式以原點為基準)
+    let areasFloat = (qx, qy, cav) => {
+        let { verts, fans } = cav
+        let m = verts.length
+        //外心皆以「最長邊之對角頂點」為基準點、兩鄰邊向量由原座標直接相減求之: 三角形有極短邊(兩點極近)時外積仍精確, 免大數相消(基準點取法影響末位, 不影響數學值);
+        //新區塊極狹長時(內插點夾於極近兩點之間), 外心座標之浮點誤差相對於區塊寬度仍可能過大, 由checkAndWeigh之局部座標檢查攔下而改以精確算法
+        let ccOff = (ux, uy, vx, vy) => {
+            let u2 = ux * ux + uy * uy
+            let v2 = vx * vx + vy * vy
+            let d = 2 * (ux * vy - uy * vx)
+            return [(u2 * vy - v2 * uy) / d, (v2 * ux - u2 * vx) / d]
+        }
+        let cx = new Array(m)
+        let cy = new Array(m)
+        for (let k = 0; k &lt; m; k++) {
+            //Ck: 過原點(內插點)、vk、vk+1之圓心
+            let a = verts[k]
+            let b = verts[(k + 1) % m]
+            let ax = X[a] - qx
+            let ay = Y[a] - qy
+            let bx = X[b] - qx
+            let by = Y[b] - qy
+            let dx = X[b] - X[a]
+            let dy = Y[b] - Y[a]
+            let la = ax * ax + ay * ay //邊(原點,vk), 對角vk+1
+            let lb = bx * bx + by * by //邊(原點,vk+1), 對角vk
+            let ld = dx * dx + dy * dy //邊(vk,vk+1), 對角原點
+            let o
+            if (ld >= la &amp;&amp; ld >= lb) {
+                o = ccOff(ax, ay, bx, by) //基準點為原點
+            }
+            else if (lb >= la) {
+                o = ccOff(-ax, -ay, dx, dy) //基準點為vk
+                o[0] += ax
+                o[1] += ay
+            }
+            else {
+                o = ccOff(-bx, -by, -dx, -dy) //基準點為vk+1
+                o[0] += bx
+                o[1] += by
+            }
+            cx[k] = o[0]
+            cy[k] = o[1]
+        }
+        let rho2 = 0 //各衝突三角形(既有三角網)外接圓半徑平方之和
+        let oc = (t) => {
+            if (ocStamp[t] !== stamp) {
+                ocStamp[t] = stamp
+                let i0 = triangles[3 * t]
+                let i1 = triangles[3 * t + 1]
+                let i2 = triangles[3 * t + 2]
+                let e2 = (i, j) => (X[j] - X[i]) * (X[j] - X[i]) + (Y[j] - Y[i]) * (Y[j] - Y[i])
+                let l0 = e2(i1, i2) //對角i0
+                let l1 = e2(i2, i0) //對角i1
+                let l2 = e2(i0, i1) //對角i2
+                let ia = i0
+                let ib = i1
+                let ic = i2
+                if (l1 > l0 &amp;&amp; l1 >= l2) {
+                    ia = i1
+                    ib = i2
+                    ic = i0
+                }
+                else if (l2 > l0 &amp;&amp; l2 > l1) {
+                    ia = i2
+                    ib = i0
+                    ic = i1
+                }
+                let o = ccOff(X[ib] - X[ia], Y[ib] - Y[ia], X[ic] - X[ia], Y[ic] - Y[ia])
+                rho2 += o[0] * o[0] + o[1] * o[1] //外接圓半徑平方(條件估計用)
+                ocx[t] = (X[ia] - qx) + o[0]
+                ocy[t] = (Y[ia] - qy) + o[1]
+            }
+        }
+        let areas = new Array(m)
+        for (let k = 0; k &lt; m; k++) {
+            //多邊形: C(k-1), O(fan...), C(k)
+            let km = (k + m - 1) % m
+            let px = cx[km]
+            let py = cy[km]
+            let s = 0
+            for (let t of fans[k]) {
+                oc(t)
+                s += px * ocy[t] - ocx[t] * py
+                px = ocx[t]
+                py = ocy[t]
+            }
+            s += px * cy[k] - cx[k] * py
+            s += cx[k] * cy[km] - cx[km] * cy[k] //閉合
+            areas[k] = s / 2
+        }
+        return { areas, rho2 }
+    }
+
+    //areasExact, 同上之有理數精確算法; 回傳{ok,reason,ws,areas,total}
+    let areasExact = (qx, qy, cav) => {
+        initBig()
+        let { verts, fans } = cav
+        let m = verts.length
+        let vals = [qx, qy]
+        for (let v of verts) {
+            vals.push(X[v], Y[v])
+        }
+        let { K, ints } = toBigScaled(vals)
+        let Qx = ints[0]
+        let Qy = ints[1]
+        let P = new Map()
+        for (let k = 0; k &lt; m; k++) {
+            P.set(verts[k], [ints[2 + 2 * k] - Qx, ints[3 + 2 * k] - Qy])
+        }
+        let C = []
+        for (let k = 0; k &lt; m; k++) {
+            let c = ccOriginBig(P.get(verts[k]), P.get(verts[(k + 1) % m]))
+            if (c[2] === BN.n0) {
+                return { ok: false, reason: 'exact:collinearWithBoundaryEdge' }
+            }
+            C.push(c)
+        }
+        let O = new Map()
+        let areas = []
+        let tot = [BN.n0, BN.n1]
+        for (let k = 0; k &lt; m; k++) {
+            let poly = [C[(k + m - 1) % m]]
+            for (let t of fans[k]) {
+                if (!O.has(t)) {
+                    let A = P.get(triangles[3 * t])
+                    let B = P.get(triangles[3 * t + 1])
+                    let Cc = P.get(triangles[3 * t + 2])
+                    if (A === undefined || B === undefined || Cc === undefined) {
+                        return { ok: false, reason: 'exact:vertexNotOnBoundary' }
+                    }
+                    let o = cc3Big(A, B, Cc)
+                    if (o[2] === BN.n0) {
+                        return { ok: false, reason: 'exact:degenerateTriangle' }
+                    }
+                    O.set(t, o)
+                }
+                poly.push(O.get(t))
+            }
+            poly.push(C[k])
+            let a = area2Big(poly)
+            areas.push(a)
+            tot = qadd(tot, a)
+        }
+        if (tot[0] === BN.n0) {
+            return { ok: false, reason: 'exact:zeroTotalArea' }
+        }
+        let sgnTot = tot[0] > BN.n0 ? BN.n1 : -BN.n1
+        let ws = []
+        let ar = []
+        let scl = BN.n2 * (BN.n1 &lt;&lt; BigInt(2 * K)) //2倍面積且整數座標為2^K倍
+        for (let k = 0; k &lt; m; k++) {
+            let a = areas[k]
+            if (a[0] * sgnTot &lt; BN.n0) {
+                return { ok: false, reason: 'exact:negativeArea' }
+            }
+            ws.push(ratToNumber(a[0] * tot[1], a[1] * tot[0]))
+            ar.push(Math.abs(ratToNumber(a[0], a[1] * scl)))
+        }
+        let total = Math.abs(ratToNumber(tot[0], tot[1] * scl))
+        //檢查(同浮點)
+        for (let k = 0; k &lt; m; k++) {
+            if (!Number.isFinite(ws[k])) {
+                return { ok: false, reason: 'exact:weightNotFinite' }
+            }
+        }
+        let dev = lcDeviation(qx, qy, verts, ws)
+        if (!(dev &lt;= TOL_LC)) {
+            return { ok: false, reason: 'exact:localCoordinateDeviation' }
+        }
+        return { ok: true, ws, areas: ar, total }
+    }
+
+    //sibsonAt, 凸包內之Sibson權重; 空腔結構不符者不輸出(回傳fail, 由呼叫端回null並告知); 浮點面積未通過數值檢查者改以有理數精確算法重算, 仍不過亦不輸出
+    let sibsonAt = (qx, qy, i0, tq) => {
+        let r = bfsConflict(qx, qy, i0, tq)
+        let cav = r.bad ? { ok: false, reason: 'degenerateTriangle' } : buildCavity(r.tris)
+        if (!cav.ok) {
+            return { fail: `cavity:${cav.reason}` }
+        }
+        let fa = areasFloat(qx, qy, cav)
+        let c = checkAndWeigh(qx, qy, cav.verts, fa.areas)
+        if (c.ok) {
+            //條件估計: 既有三角網有狹長三角形(如極狹長之點群)時其外心極遠, 外心座標之浮點誤差(約機器精度乘外接圓半徑)乘多邊形之邊長, 相對於總面積可超過容許值而局部座標檢查測不出; 估計值超過容許值者改以精確算法
+            let errEst = 8 * EPS * fa.rho2 / c.total
+            if (errEst &lt;= TOL_COND) {
+                return { method: 'sibson', vs: cav.verts, ws: c.ws, areas: c.areas, total: c.total }
+            }
+            c = { ok: false, reason: 'illConditioned' }
+        }
+        let ex
         try {
-            r = addPointCore(data, x, y, indTar)
+            ex = areasExact(qx, qy, cav)
         }
         catch (err) {
-            console.log(err)
-            r = null
-            data.pop()
+            ex = { ok: false, reason: 'exact:unavailable' } //如執行環境不支援BigInt
+        }
+        if (!ex.ok) {
+            return { fail: `${c.reason}/${ex.reason}` }
+        }
+        return { method: 'sibsonExact', vs: cav.verts, ws: ex.ws, areas: ex.areas, total: ex.total }
+    }
+
+    //projT, 點q於線段ab上之投影參數(夾於0至1); 先以邊之最大分量縮放再平方, 免極短邊(如長度1e-170)之平方下溢為0而使參數錯為0
+    let projT = (a, b, qx, qy) => {
+        let dx = X[b] - X[a]
+        let dy = Y[b] - Y[a]
+        let s = Math.max(Math.abs(dx), Math.abs(dy))
+        if (!(s > 0)) {
+            return 0
+        }
+        let ux = dx / s
+        let uy = dy / s
+        let t = (((qx - X[a]) * ux + (qy - Y[a]) * uy) / (ux * ux + uy * uy)) / s
+        if (!(t > 0)) {
+            t = 0 //含NaN
+        }
+        if (t > 1) {
+            t = 1
+        }
+        return t
+    }
+
+    //linear2, 線段ab上依投影位置之兩端點線性權重
+    let linear2 = (a, b, qx, qy, method) => {
+        let t = projT(a, b, qx, qy)
+        return { method, vs: [a, b], ws: [1 - t, t], areas: null, total: 1 }
+    }
+
+    //projectHull, 最近凸包邊(線段)之兩端點線性權重; 凸包外之點至凸包之(歐氏)距離即至最近凸包邊之距離, 不大於容許值者為'hullEdge', 否則為null(limitInsideHull為true)或投影('projection')
+    //容許值不用_makeHullTester之「至各邊所在直線之外側距離」: 該判定於銳角頂點之外會容許遠大於容許值之點(如針狀三角形頂點外0.05仍判為在內)
+    let projectHull = (qx, qy) => {
+        let h = hull.length
+        let best = -1
+        let bestD = Infinity
+        for (let i = 0; i &lt; h; i++) {
+            let a = hull[i]
+            let b = hull[(i + 1) % h]
+            let t = projT(a, b, qx, qy)
+            let d = Math.hypot(X[a] + t * (X[b] - X[a]) - qx, Y[a] + t * (Y[b] - Y[a]) - qy) //hypot不因平方下溢而失去大小
+            if (d &lt; bestD) {
+                bestD = d
+                best = i
+            }
+        }
+        if (best &lt; 0) {
+            //各邊距離皆溢位或非有限數: 必在容許值外; true時為null, false時無法投影而告知
+            return limitInsideHull ? { nul: true } : { fail: 'projectionFailed' }
+        }
+        if (bestD &lt;= TOL_HULL * side) {
+            return linear2(hull[best], hull[(best + 1) % h], qx, qy, 'hullEdge')
+        }
+        if (limitInsideHull) {
+            return { nul: true }
+        }
+        return linear2(hull[best], hull[(best + 1) % h], qx, qy, 'projection')
+    }
+
+    //lineModel, 不足3點或共線時沿直線之線性內插(僅limitInsideHull為false時使用)
+    let lineModel = null
+    if (!srcBroken &amp;&amp; degenerate &amp;&amp; nRep >= 1) {
+        if (nRep === 1) {
+            lineModel = { single: 0 }
+        }
+        else {
+            let xmin = Infinity
+            let xmax = -Infinity
+            let ymin = Infinity
+            let ymax = -Infinity
+            for (let k = 0; k &lt; nRep; k++) {
+                xmin = Math.min(xmin, X[k])
+                xmax = Math.max(xmax, X[k])
+                ymin = Math.min(ymin, Y[k])
+                ymax = Math.max(ymax, Y[k])
+            }
+            let ia = 0
+            let ib = 0
+            let useX = (xmax - xmin) >= (ymax - ymin)
+            for (let k = 0; k &lt; nRep; k++) {
+                let ck = useX ? X[k] : Y[k]
+                if (ck &lt; (useX ? X[ia] : Y[ia])) {
+                    ia = k
+                }
+                if (ck > (useX ? X[ib] : Y[ib])) {
+                    ib = k
+                }
+            }
+            let dx = X[ib] - X[ia]
+            let dy = Y[ib] - Y[ia]
+            let L2 = dx * dx + dy * dy
+            let par = (x, y) => ((x - X[ia]) * dx + (y - Y[ia]) * dy) / L2
+            let order = []
+            for (let k = 0; k &lt; nRep; k++) {
+                order.push({ k, s: par(X[k], Y[k]) })
+            }
+            order.sort((p, q) => (p.s - q.s) || (p.k - q.k))
+            //groups, 投影位置相同者(近乎共線而偏離直線者)為一組, 組內均分權重
+            let groups = []
+            for (let o of order) {
+                let g = groups.length > 0 ? groups[groups.length - 1] : null
+                if (g !== null &amp;&amp; g.s === o.s) {
+                    g.ks.push(o.k)
+                }
+                else {
+                    groups.push({ s: o.s, ks: [o.k] })
+                }
+            }
+            lineModel = { groups, par }
+        }
+    }
+    let lineAt = (qx, qy) => {
+        if (lineModel.single !== undefined) {
+            return { method: 'line', vs: [lineModel.single], ws: [1], areas: null, total: 1 }
+        }
+        let { groups, par } = lineModel
+        let s = par(qx, qy)
+        let n = groups.length
+        let gw = (g, w) => g.ks.map(() => w / g.ks.length)
+        let pack = (pairs) => {
+            let vs = []
+            let ws = []
+            for (let [g, w] of pairs) {
+                vs.push(...g.ks)
+                ws.push(...gw(g, w))
+            }
+            return { method: 'line', vs, ws, areas: null, total: 1 }
+        }
+        if (!(s > groups[0].s)) {
+            return pack([[groups[0], 1]])
+        }
+        if (!(s &lt; groups[n - 1].s)) {
+            return pack([[groups[n - 1], 1]])
+        }
+        let lo = 0
+        let hi = n - 1
+        while (hi - lo > 1) {
+            let md = (lo + hi) >> 1
+            if (groups[md].s &lt;= s) {
+                lo = md
+            }
+            else {
+                hi = md
+            }
+        }
+        let t = (s - groups[lo].s) / (groups[hi].s - groups[lo].s)
+        return pack([[groups[lo], 1 - t], [groups[hi], t]])
+    }
+
+    //geoAt, 內插點之權重(幾何), 回傳{method,vs(頂點編號),ws,areas,total}或{nul:true}(無法內插且不告知)或{fail}(無法內插且告知)
+    let geoAt = (ux, uy) => {
+
+        //原始點座標非有限數
+        if (srcBroken) {
+            return { fail: 'nonFiniteSourceCoordinate' }
         }
 
-        return r
+        //座標非有限數
+        if (!Number.isFinite(ux) || !Number.isFinite(uy)) {
+            return { fail: 'nonFiniteCoordinate' }
+        }
+
+        //與原始點同座標
+        let k = `${ux}|${uy}`
+        if (kpSrc.has(k)) {
+            return { method: 'vertex', src: kpSrc.get(k) }
+        }
+
+        //不足3點或共線
+        if (degenerate) {
+            if (limitInsideHull) {
+                return { nul: true }
+            }
+            return lineAt(ux, uy)
+        }
+
+        //三角網非Delaunay(翻邊修正失敗)
+        if (!delaunayOk) {
+            return { fail: 'triangulationNotDelaunay' }
+        }
+
+        //極遠之內插點: 內部座標之原始點皆在約[-2,2]內, 絕對值超過1e100者必在凸包外, 直接投影(免robust-predicates之運算溢位為NaN而誤判位置)
+        if (Math.abs(ux) > 1e100 || Math.abs(uy) > 1e100) {
+            return projectHull(ux, uy)
+        }
+
+        //定位
+        let i0 = nearest(ux, uy)
+        let loc = walk((inEdge[i0] / 3) | 0, ux, uy)
+        if (loc.where === 'vertex') {
+            return { method: 'vertex', src: reps[loc.v] }
+        }
+        if (loc.where === 'inside') {
+            return sibsonAt(ux, uy, i0, loc.t)
+        }
+        if (loc.where === 'onHull') {
+            return linear2(triangles[loc.e], triangles[next(loc.e)], ux, uy, 'hullEdge')
+        }
+        if (loc.where === 'outside') {
+            return projectHull(ux, uy)
+        }
+        return { fail: 'locateFailed' }
+    }
+
+    //errCount, 未給funInterpError時依原因計數, 結束時以console.warn彙總一次(只含點數與原因代碼, 不含座標與指標等資料值)
+    let errCount = new Map()
+    let notifyError = (indTar, x, y, reason) => {
+        if (useFunInterpError) {
+            try {
+                funInterpError({ indTar, x, y, reason })
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+        else {
+            errCount.set(reason, (errCount.get(reason) || 0) + 1)
+        }
+    }
+
+    //funInv
+    let funInv = (vv) => {
+        return inv(vv, 'z') //msg.v為正規化後之z, 以z軸還原
     }
 
     //getNz
-    let getNz = (nx, ny, indTar) => {
+    let getNz = (x, y, indTar) => {
 
-        //check, limitInsideHull為true時正規化後座標非有限數(原始座標範圍溢位等)者無法判斷是否於凸包內, 視為無法內插, 且須先於已知點快取檢查(NaN-NaN等鍵會誤中快取)
-        if (isInsideHull !== null &amp;&amp; (!Number.isFinite(nx) || !Number.isFinite(ny))) {
+        //geo
+        let geo = geoAt(toUX(x), toUY(y))
+        if (geo.nul) {
+            return null
+        }
+        if (geo.fail) {
+            notifyError(indTar, x, y, geo.fail)
             return null
         }
 
-        //check
-        let k = `${nx}-${ny}` //x,y已經被正規化
-        if (haskey(kpKnown, k)) {
-            return kpKnown[k]
+        //frags, 只列權重大於0者
+        let method = geo.method
+        let frags = []
+        if (method === 'vertex') {
+            frags.push({ indSrc: geo.src, w: 1, area: 1, areaTotal: 1 })
+        }
+        else {
+            let s2 = (scale / side) * (scale / side) //內部座標之面積換算為正規化座標(0至scale)之面積
+            for (let k = 0; k &lt; geo.vs.length; k++) {
+                let w = geo.ws[k]
+                if (w > 0) {
+                    let isArea = geo.areas !== null
+                    frags.push({
+                        indSrc: reps[geo.vs[k]],
+                        w,
+                        area: isArea ? geo.areas[k] * s2 : w,
+                        areaTotal: isArea ? geo.total * s2 : 1,
+                    })
+                }
+            }
         }
 
-        //check
-        if (nx &lt; vbox[0] || nx > vbox[2] || ny &lt; vbox[1] || ny > vbox[3]) {
-            return null
+        //回呼
+        let vt = null
+        try {
+            let ps = []
+            each(frags, (f) => {
+                let z = psSrc[f.indSrc].z //已正規化
+                let rA = f.w
+                let v = rA * z
+                if (useFunInterpFragment) {
+                    v = funInterpFragment({
+                        v,
+                        area: f.area,
+                        areaTotal: f.areaTotal,
+                        areaRatio: rA,
+                        z,
+                        indSrc: f.indSrc,
+                        indTar,
+                        method,
+                    })
+                }
+                ps.push({
+                    v,
+                    area: f.area,
+                    areaTotal: f.areaTotal,
+                    areaRatio: rA,
+                    z,
+                    indSrc: f.indSrc,
+                    indTar,
+                    method,
+                })
+            })
+            vt = 0
+            for (let p of ps) {
+                vt += p.v
+            }
+            if (!ps.every((p) => typeof p.v === 'number' &amp;&amp; Number.isFinite(p.v))) {
+                vt = NaN //funInterpFragment回傳非有限數(含null、字串), 不得隱式轉為0而加總
+            }
+            if (useFunInterpFragments) {
+                vt = funInterpFragments({
+                    ps,
+                    v: vt,
+                    indTar,
+                    method,
+                    funInv,
+                })
+            }
+            if (!(typeof vt === 'number' &amp;&amp; Number.isFinite(vt))) {
+                vt = null //回呼回傳非有限數者該點為null
+            }
+        }
+        catch (err) {
+            console.log(err) //同1.1.27: 回呼拋錯時該點為null
+            vt = null
         }
 
-        //check, limitInsideHull為true時凸包外之點不內插, 亦不呼叫funInterpFragment與funInterpFragments
-        if (isInsideHull !== null &amp;&amp; !isInsideHull(nx, ny)) {
-            return null
-        }
-
-        //predict
-        let nz = addPoint(psSrcItr, nx, ny, indTar)
-
-        //save
-        kpKnown[k] = nz
-
-        return nz
+        return vt
     }
 
     //itv
     let itv = (p, indTar) => {
 
-        //x, nx
+        //x, y
         let x = p.x
-        let nx = nv(x, 'x')
-        if (!isNumber(nx)) {
-            throw new Error(`invalid nx[${nx}]`) //x,y預期都是有值
-        }
-
-        //y, ny
         let y = p.y
-        let ny = nv(y, 'y')
-        if (!isNumber(ny)) {
-            throw new Error(`invalid ny[${ny}]`) //x,y預期都是有值
+        if (!isNumber(x)) {
+            throw new Error(`invalid x[${x}]`) //x,y預期都是有值
+        }
+        if (!isNumber(y)) {
+            throw new Error(`invalid y[${y}]`) //x,y預期都是有值
         }
 
         //nz, z
-        let nz = getNz(nx, ny, indTar)
+        let nz = getNz(x, y, indTar)
         let z = inv(nz, 'z')
-        if (!isNumber(z)) {
-            z = null //z須支援可能無法內插
+        if (!Number.isFinite(z)) {
+            z = null //z須支援可能無法內插; 非有限數(NaN、Infinity)亦為null
         }
-
-        // console.log('x', x, 'y', y, 'z', z)
-        // console.log('nx', nx, 'ny', ny, 'nz', nz)
 
         //r
         let r = {
@@ -702,6 +1836,17 @@ function interp2NaturalNeighbor(psSrc, psTar, opt = {}) {
         })
     }
 
+    //彙總警告
+    if (errCount.size > 0) {
+        let n = 0
+        let rs = []
+        errCount.forEach((c, reason) => {
+            n += c
+            rs.push(`${reason}:${c}`)
+        })
+        console.warn(`interp2NaturalNeighbor: ${n} point(s) cannot be interpolated and return null (${rs.join(', ')}); pass opt.funInterpError to receive each`)
+    }
+
     return r
 }
 
@@ -721,7 +1866,7 @@ export default interp2NaturalNeighbor
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Fri Nov 13 2026 23:45:00 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 14 2026 19:18:57 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
