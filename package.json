@@ -1,6 +1,6 @@
 {
   "name": "w-gis",
-  "version": "1.1.38",
+  "version": "1.1.39",
   "main": "dist/w-gis.umd.js",
   "dependencies": {
     "@turf/turf": "^7.4.0",
@@ -10,12 +10,12 @@
     "geotiff": "^3.0.5",
     "json5": "^2.2.3",
     "polybooljs": "^1.2.2",
-    "proj4": "^2.22.0",
+    "proj4": "^2.23.0",
     "robust-predicates": "^3.0.3",
-    "wsemi": "^1.9.70"
+    "wsemi": "^1.9.71"
   },
   "devDependencies": {
-    "w-package-tools": "^1.1.28"
+    "w-package-tools": "^1.1.29"
   },
   "scripts": {
     "test": "mocha --parallel \"test/*.test.mjs\" --timeout 180000",
