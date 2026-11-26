@@ -28,7 +28,7 @@
 - `toolg/gDocsExams.mjs`(主控未提交之批次改動)改呼叫 `w-package-tools/src/genDocsExams.mjs`;本機已安裝之 w-package-tools 1.1.21 無此檔,執行得 `ERR_MODULE_NOT_FOUND`.待上游新版安裝後方可執行(非本套件問題).
 - 已知限制 L1～L4、L5、D10 見帳本第二節,未修;L6(正方形裁切)、L7 已修(見上表與帳本).L5:`interp1` 之 `opt.xMin`／`opt.xMax` 原樣交給 wsemi(`Infinity` 使 stairs 該側無界);wsemi 後續輪次若改收緊須重評.
 - `interp2NaturalNeighbor` 之「空腔結構不符」與「精確備援亦不過」兩條路徑無法以公開介面構造(壓力 116,186 點 0 次),只由程式審查與變異覆蓋其上游;下游 w-maplibregl-vue、w-leaflet-vue 之 `AppCTRContourSetInterp2.vue` 示範頁(經 `dist/interp2.wk.umd.js`,`method: 'naturalNeighbor'`)之等值線會隨凸包內之值改變(無 e2e 案例涵蓋).
-- `geojsonToMultiPolygon`(R-GJ1)暫行項:`opt.debug` 警告尚未依 dspec 做「每行程一次」與 `opt.funLog`(待 wsemi 公開 opt 解析函數後改用);含高程之位置交既有深度推定函數會拋錯;`findPointInKpFeature` 之 JSDoc 列有 `opt.supposeType` 而程式碼不讀(已於該列註記「並未使用此選項」,移除該列待另案),`buildFindPointInKpBoxPolygons`、`findPointInKpBoxPolygons` 之程式碼讀 `opt.supposeType` 而 JSDoc 無該列(未補).
+- `geojsonToMultiPolygon`(R-GJ1)之 opt 讀取已於 2026-11-27 改用 wsemi 1.9.82 之 `getOptReader`(警告每行程每鍵一次、支援 `opt.funLog`,見帳本 R-GJ1);暫行項:含高程之位置交既有深度推定函數會拋錯;`findPointInKpFeature` 之 JSDoc 列有 `opt.supposeType` 而程式碼不讀(已於該列註記「並未使用此選項」,移除該列待另案),`buildFindPointInKpBoxPolygons`、`findPointInKpBoxPolygons` 之程式碼讀 `opt.supposeType` 而 JSDoc 無該列(未補).
 - `arrGroupByMaxmin`、`arrLookupByMaxmin`、`strTruncate`:本套件 `src/` 內 0 站點(2026-11-02 盤點,指令見 R-I1),本輪無須處理.
 - `src/ptsXtoArr.mjs`、`src/ptsXYtoArr.mjs` 仍以 `isnum`＋`toNumber` 判定(公開模組,供 `calcDelaunay`、`calcVoronoi`、`interp2NaturalNeighbor`、`interp2Kriging` 使用),不屬本輪範圍;`interp1` 已不再使用.
 
@@ -41,4 +41,5 @@
 - 2026-11-14(任務 20261114170613 gis145,未提交未發布):新增相依 `delaunator@^5.1.0`、`robust-predicates@^3.0.3`(冷卻期與供應鏈檢查見該任務報告);先以 `toolg/gDistRollup.mjs` 建 dist,`npm test` 全套 568 passing、0 failing、0 pending(較 gis-l7 之 512 增草案 24 案與 `unit-interp2NaturalNeighborSibson` 32 案);變異 18 個 17 個被殺(存活者為與局部座標檢查等價之負面積檢查);外審 terra、Argon、agy-opus 皆額度用盡(以其探測腳本重建並核實 13 條),agy-hydrogen 完成 11 條,處置見任務報告.
 - 2026-11-26(任務 20261126141013 t665,未提交未發布):新增 `geojsonToMultiPolygon`(R-GJ1);`npm test` 全套 591 passing、0 failing、0 pending(較 gis145 之 568 增新測試 23 案),`npm pack` 發布包解開之目錄再跑一次全套 591 passing(該目錄無相依,測試讀 cwd 之 `node_modules/@turf/turf/turf.min.js`,故先複製一份 `@turf/turf` 進去,其餘相依向上解析);新測試對修前 src 載入即 `ERR_MODULE_NOT_FOUND`(紅);變異 38 個全被殺;eslint 0 錯誤;獨立複審(sonnet,唯讀)提 8 條與測試鑑別力缺口,採納 6 條並補測試,巢狀過深僅補 JSDoc,警告去重與 `funLog` 列暫行(見帳本 R-GJ1);`dist/` 未重建(發布時依 `script.txt`).
 - 2026-11-26(任務 20261126141013 t665b,未提交未發布):另 15 檔 `opt.supposeType` 之 JSDoc 補同句註記(每檔 `git diff -U0` 只有 1 行註解,行尾 CRLF 不變);盤點 `git grep -n "@param .*opt.supposeType" -- src | grep -v geojsonToMultiPolygon` 為 0 行(17 列皆含);eslint 對 19 個改動檔 0 錯誤;`npm test` 全套 591 passing、0 failing、0 pending(與 t665 相同,純註解不增減案數).
+- 2026-11-27(任務 20261127030143 t677,未提交未發布):`geojsonToMultiPolygon` 之 opt 讀取改用 wsemi 1.9.82 `getOptReader`(刪自寫 `pickOpt`,`isCoord` 簡化為 `Number.isFinite(v)`);`npm test` 全套 594 passing、0 failing(新增 3 案);新測試對修前 src(鏡像根)為 3 紅、23 綠;變異 10 項全被殺;eslint 0 錯誤;`dist/`、`docs/` 未動.
 - `package.json` 版本:1.1.46(本輪未改版號).

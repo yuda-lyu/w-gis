@@ -1,7 +1,9 @@
+import fs from 'fs'
 import assert from 'assert'
 import geojsonToMultiPolygon from '../src/geojsonToMultiPolygon.mjs'
 import toMultiPolygon from '../src/toMultiPolygon.mjs'
 import isPointInPolygons from '../src/isPointInPolygons.mjs'
+import getOptReader from 'wsemi/src/getOptReader.mjs'
 
 
 //規則帳本R-GJ1: geojsonToMultiPolygon依GeoJSON之type(而非座標深度)轉換成MultiPolygon, Polygon之內環保留為洞(使用端Gitea #217)
@@ -18,8 +20,11 @@ describe(`geojsonToMultiPolygon`, function() {
     let gPolyHole = () => ({ type: 'Polygon', coordinates: cp([outer, hole]) })
     let feat = (geometry) => ({ type: 'Feature', properties: {}, geometry })
 
-    //取得函數執行期間之console.warn內容
-    let catchWarn = (fun) => {
+    //取得函數執行期間之console.warn內容; 警告經wsemi getOptReader輸出而同一tag同一鍵每行程只警告一次, 故預設先重設已警告之紀錄使各案獨立, keep為true時不重設(驗證每行程一次)
+    let catchWarn = (fun, keep = false) => {
+        if (!keep) {
+            getOptReader.resetWarned()
+        }
         let ws = []
         let org = console.warn
         console.warn = (...args) => {
@@ -244,6 +249,126 @@ describe(`geojsonToMultiPolygon`, function() {
             assert.strict.ok(catchWarn(() => geojsonToMultiPolygon(g, { nonAreal, debug: true })).length === 0, 'expected or unset nonAreal should not warn')
         }
         assert.strict.ok(catchWarn(() => geojsonToMultiPolygon(g, { debug: true })).length === 0, 'no nonAreal should not warn')
+    })
+
+    it(`should warn once per process for the same key and use the fixed message via wsemi getOptReader (R-GJ1-f)`, function() {
+        let g = { type: 'Polygon', coordinates: cp([outerB]) }
+        let msg = `[w-gis geojsonToMultiPolygon] invalid opt.nonAreal: must be one of 'throw', 'skip', using default 'throw'`
+
+        //同一函數同一鍵每個行程只警告一次(不論呼叫幾次、值是否相同)
+        let ws = catchWarn(() => {
+            geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true })
+            geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true })
+            geojsonToMultiPolygon(g, { nonAreal: 123, debug: true })
+        })
+        assert.strict.deepStrictEqual(ws, [msg])
+
+        //重設已警告之紀錄(wsemi getOptReader.resetWarned)後再次警告
+        assert.strict.deepStrictEqual(catchWarn(() => geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true })), [msg])
+
+        //有效值不警告
+        assert.strict.deepStrictEqual(catchWarn(() => geojsonToMultiPolygon(g, { nonAreal: 'skip', debug: true })), [])
+    })
+
+    it(`should send the warning to opt.funLog(msg, { fn, reason, key }) when opt.debug is true, else console.warn (R-GJ1-f)`, async function() {
+        let g = { type: 'Polygon', coordinates: cp([outerB]) }
+        let msg = `[w-gis geojsonToMultiPolygon] invalid opt.nonAreal: must be one of 'throw', 'skip', using default 'throw'`
+        let info = { fn: 'w-gis geojsonToMultiPolygon', reason: 'invalid', key: 'nonAreal' }
+        let calls = []
+        let funLog = (m, i) => {
+            calls.push([m, i])
+        }
+
+        //debug為true且funLog為函數: 警告交funLog, 不輸出console.warn
+        let ws = catchWarn(() => geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true, funLog }))
+        assert.strict.deepStrictEqual(calls, [[msg, info]])
+        assert.strict.deepStrictEqual(ws, [])
+
+        //debug非true: funLog不被呼叫, 無警告
+        calls.length = 0
+        ws = catchWarn(() => geojsonToMultiPolygon(g, { nonAreal: 'x', debug: 'true', funLog }))
+        assert.strict.deepStrictEqual({ calls, ws }, { calls: [], ws: [] })
+
+        //nonAreal有效或未給: funLog不被呼叫
+        for (let nonAreal of ['throw', 'skip', undefined, null]) {
+            ws = catchWarn(() => geojsonToMultiPolygon(g, { nonAreal, debug: true, funLog }))
+            assert.strict.deepStrictEqual({ calls, ws }, { calls: [], ws: [] })
+        }
+
+        //funLog非函數: 改以console.warn輸出
+        for (let bad of ['x', 1, true, {}, [], null]) {
+            ws = catchWarn(() => geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true, funLog: bad }))
+            assert.strict.deepStrictEqual(ws, [msg])
+        }
+
+        //funLog讀取拋錯(存取器): 視為未給, 改以console.warn輸出
+        let oGet = Object.defineProperty({ nonAreal: 'x', debug: true }, 'funLog', {
+            enumerable: true,
+            get: () => {
+                throw new Error('SECRET-FUNLOG-GETTER')
+            },
+        })
+        assert.strict.deepStrictEqual(catchWarn(() => geojsonToMultiPolygon(g, oGet)), [msg])
+
+        //funLog拋錯或回傳rejection: 忽略, 不影響結果, 不產生未處理之rejection(mocha遇未處理之rejection會使測試失敗, 此處留短暫觀察窗使其現形; 否定斷言, 非同步點)
+        let funThrow = () => {
+            throw new Error('SECRET-FUNLOG-ERR')
+        }
+        let funReject = () => Promise.reject(new Error('SECRET-FUNLOG-REJ'))
+        getOptReader.resetWarned()
+        let r1 = geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true, funLog: funThrow })
+        getOptReader.resetWarned()
+        let r2 = geojsonToMultiPolygon(g, { nonAreal: 'x', debug: true, funLog: funReject })
+        await new Promise((resolve) => setTimeout(resolve, 30))
+        getOptReader.resetWarned()
+        assert.strict.deepStrictEqual([r1, r2], [[[outerB]], [[outerB]]])
+    })
+
+    //findOwnReaders, 掃描原始碼中自寫之opt讀取器: 名為pickOpt/readKey/readOpt/optReader之函數或變數, 或「typeof x === 'object' && x !== null」之物件判斷寫法
+    let findOwnReaders = (src) => {
+        let hits = []
+        let re1 = /(?:\bfunction\s+(?:pickOpt|readKey|readOpt|optReader)\b|\b(?:let|const|var)\s+(?:pickOpt|readKey|readOpt|optReader)\s*=)/g
+        let re2 = /typeof\s+(\w+)\s*===\s*'object'\s*&&\s*\1\s*!==\s*null/g
+        for (let re of [re1, re2]) {
+            for (let m of src.matchAll(re)) {
+                hits.push(m[0])
+            }
+        }
+        return hits
+    }
+
+    it(`should read opt only through wsemi getOptReader and not own a reader in src (R-GJ1-f, scanner self-tested)`, function() {
+        //盲點自測: 掃描器須抓得到自寫讀取器之各種寫法, 且不誤抓一般判斷
+        let positives = [
+            'let pickOpt = (opt, key) => {\n    try {\n        return opt[key]',
+            'function readKey(opt, key) {',
+            'const readOpt = (opt, key) => opt[key]',
+            'let optReader = {}',
+            'if (typeof o === \'object\' && o !== null) { return o[k] }',
+        ]
+        for (let s of positives) {
+            assert.strict.ok(findOwnReaders(s).length > 0, `scanner should catch: ${s.slice(0, 30)}`)
+        }
+        for (let s of ['let a = typeof x === \'object\'', 'function pickOpts() {}', 'let readKeyMap = 1', 'import getOptReader from \'wsemi/src/getOptReader.mjs\'']) {
+            assert.strict.ok(findOwnReaders(s).length === 0, `scanner should not catch: ${s}`)
+        }
+
+        //掃描全部src(檔數為0或偏少即範圍壞了)
+        let files = fs.readdirSync('./src').filter((f) => f.endsWith('.mjs'))
+        assert.strict.ok(files.length >= 60, `scanned files should be at least 60 (actual ${files.length})`)
+        let hits = []
+        for (let f of files) {
+            for (let h of findOwnReaders(fs.readFileSync(`./src/${f}`, 'utf8'))) {
+                hits.push(`${f}: ${h.slice(0, 40)}`)
+            }
+        }
+        assert.strict.ok(hits.length === 0, `src should not own an opt reader: ${hits.join(' | ')}`)
+
+        //接線: geojsonToMultiPolygon匯入並以固定tag呼叫getOptReader, nonAreal經rd取值(種類檢測與警告由wsemi負責)
+        let src = fs.readFileSync('./src/geojsonToMultiPolygon.mjs', 'utf8')
+        assert.strict.ok(/import getOptReader from 'wsemi\/src\/getOptReader\.mjs'/.test(src), 'should import wsemi getOptReader')
+        assert.strict.ok(src.includes(`getOptReader('w-gis geojsonToMultiPolygon', opt)`), 'should call getOptReader with the fixed tag')
+        assert.strict.ok(/\brd\('nonAreal',/.test(src), 'nonAreal should be read through rd(key, def, check, desc, defDesc)')
     })
 
     it(`should throw invalid error without echoing input value (R-GJ1-g)`, function() {
