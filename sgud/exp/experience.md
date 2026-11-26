@@ -5,7 +5,7 @@
 ## 2026-10-14 審計 run01(任務 20261014042247:主入口可載入性)
 
 ### 環境與工具
-- 本機有可借用之工具(唯讀使用,不改該 repo):playwright 1.63.0 於 `C:/opensrc/開源-JS-001-2-w-package-tools-e2e/w-package-tools-e2e/node_modules/playwright`(瀏覽器 chromium 1243 已裝於 `%LOCALAPPDATA%/ms-playwright`);webpack 5.109.0 於 `C:/opensrc/開源-JS-405-7-w-leaflet-vue/w-leaflet-vue/node_modules/webpack`。以 `createRequire('<該repo>/package.json')` 取用,路徑一律寫 `C:/...`,勿寫 git-bash 之 `/c/...`(node 會解析成錯的磁碟路徑)。
+- 本機有可借用之工具(唯讀使用,不改該 repo):playwright 1.63.0 於自有套件 w-package-tools-e2e 之 `node_modules/playwright`(瀏覽器 chromium 1243 已裝於使用者之 ms-playwright 快取);webpack 5.109.0 於自有套件 w-leaflet-vue 之 `node_modules/webpack`。以 `createRequire('<該repo>/package.json')` 取用,路徑一律寫 `C:/...` 形式,勿寫 git-bash 之 `/c/...`(node 會解析成錯的磁碟路徑)。
 - 本機 Python 3.14 無 scipy,無法重現 interp3 之歷史數值。
 - `npm view w-gis time --json` 之輸出為陣列包一個物件,取 `t[0]`。
 - `./tmp/` 內已有 2026-06-15 之他人探測檔(bench-kriging 等),非本次產物,勿刪;本次產物集中於 `./tmp/entry-load*`。
@@ -113,7 +113,7 @@
 - **以獨立判準交叉**:測試用 `@turf/turf` 之 `convex`＋`booleanPointInPolygon` 判凸包內外(隨機點不落邊界),不用被測之凸包函數自證.
 - **舊缺陷(L7,已於 2026-11-13 gis-l7 修正)**:`funInterpFragments` 之 `msg.funInv` 內部呼叫 `inv(vv, 2)`,`dir` 只收 `'x'`、`'y'`、`'z'`,實際呼叫會拋 TypeError 而該點回 null(被 `addPoint` 之 try/catch 吞並 `console.log`).`g_interp2NaturalNeighbor.mjs` 之註解曾示範 `msg.funInv(msg.v)`,實際跑不通.
 - **L7 根因與軸之確認(勿臆測)**:`git log -S"inv(vv, 2)"` 追到 b967f01(2025-01-07 加 `funInv`):當時 `interp2Normalize` 之 `st` 為陣列 `[x, y, z]`、`inv(iv, i)` 以索引取值,`2` 即 z 軸;後 65d806d 把 `st` 改為以 `'x'`、`'y'`、`'z'` 為鍵,此呼叫端漏改.`msg.v` 為「各鄰點 `rA*z` 之總和」,z 已正規化,故還原軸為 `'z'`.**測試以 x、y、z 三軸之 min 互異(21、-378、22)區分所還原之軸**(錯軸變異 `'x'`、`'y'` 皆被殺).`funInv` 僅供讀取:回呼回傳 `msg.funInv(msg.v)` 會被 `itv` 內之 `inv(nz, 'z')` 再還原一次(實測 97.29 → 22107.85),JSDoc 範例註解與 `g_` 檔已註明.
-- **流程教訓**:`Write` 之 `file_path` 含中文資料夾時逐字複製(`開源`≠`开源`):曾因簡體字在 `C:/opensrc/` 下多建了孤兒資料夾(含一個檔),發現後只刪自己剛建之檔與空夾並回驗;寫檔後以 `ls` 確認落點(全域 §7).另 Bash 工具之守門 hook 會擋 `cd`(連 `cd .` 也擋),一律用相對路徑或絕對路徑.
+- **流程教訓**:`Write` 之 `file_path` 含中文資料夾時逐字複製(`開源`≠`开源`):曾因簡體字在套件庫根下多建了孤兒資料夾(含一個檔),發現後只刪自己剛建之檔與空夾並回驗;寫檔後以 `ls` 確認落點(全域 §7).另 Bash 工具之守門 hook 會擋 `cd`(連 `cd .` 也擋),一律用相對路徑或絕對路徑.
 
 ## 2026-11-14 gis145(interp2NaturalNeighbor 改為 Liang & Hale 之 Sibson 精確權重;使用端 Gitea #145)
 
@@ -128,3 +128,14 @@
 - **兩種浮點失準要兩種檢查**:①內插點夾於極近兩點之間(新區塊窄)→局部尺度之局部座標檢查;②原始點呈極狹長帶(衝突三角形狹長、外心遠達範圍之 1e3~1e5 倍)→「8ε×外接圓半徑平方和÷面積」之條件估計.只用其一時綜合模糊測試之最大差為 5.1e-11,兩者並用為 1.1e-13.判斷要哪一種檢查時,先印 Σ|鞋帶項|÷面積(看是否相消)與最遠多邊形頂點距離(看外心是否極遠).
 - **極遠查詢點**:robust-predicates 之 `orient2d` 於座標約 1e146 以上溢位為 NaN,`Math.sign(NaN)` 使 `s<0`、`s===0` 皆為 false 而被當成「在內」;內部座標絕對值 >1e100 者直接投影,並在走訪中把 NaN 視為定位失敗.
 - **外審額度用盡時之殘留**:codex 額度用盡前寫於 `out/` 之探測腳本與 session 紀錄(`~/.codex/sessions/…/rollout-*.jsonl` 之 `agent_message`)仍可讀,逐支改引用路徑後對本 src 重跑即可核實其發現;本輪 9 條皆由此重建.
+
+## 2026-11-26 t665(geojsonToMultiPolygon;使用端 Gitea #217)
+
+- **洞被當實心之機制(實測)**:`getPointDepth` 只看座標層數,Polygon 座標(環之陣列)為深度 2,預設 `supposeType: 'polygons'` 把各環各包一層成獨立 polygon(`src/toMultiPolygon.mjs:137`);同幾何為 MultiPolygon 座標(深度 3)則原樣返回.`buildFindPointInGeojson` 吃整份 GeoJSON 經 `getKpFeatureFromGeojson`→turf,依 type,不受影響.
+- **深度 3 時 `toMultiPolygon` 回傳輸入本身**(同一參考),`fixCloseMultiPolygon` 以 `rs.push(rs0)` 就地補封閉:`isPointInPolygons(p, mp)` 會改動呼叫端傳入之環.新函數回傳複本,故讀入之 GeoJSON 不被後續判斷弄髒(測試以未封閉環 + `isPointInPolygons` 後之輸入快照鎖定,不斷言 `fixCloseMultiPolygon` 之內部長度).
+- **既有函數對含高程位置之處置**:`getPointDepth` 要求位置恰為 2 個數字(`ip3 === 2`),`[x,y,z]` 位置使 `toMultiPolygon`、`isPointInPolygons` 拋 `invalid p[<整個座標>]`(訊息帶座標值,不屬本輪).空環(`[[]]`、`[ring, []]`)交 `isPointInPolygons` 拋原生 `TypeError: Cannot read properties of undefined`,故新函數於入口拒絕空環.
+- **opt 判斷與 wsemi 函數**:`isobj`／`isarr` 以型別標籤判定且對已撤銷之 Proxy 不拋錯(回 false),比 `Array.isArray`、`Object.getPrototypeOf` 安全;`isobj` 收類別實例,`isearr` 把 `['']`、`[null]` 當空,不可作資料陣列判定.`pickOpt` 之 try/catch 使 `isobj(opt)` 守門對「已撤銷 Proxy」變成冗餘,守門由「帶有效鍵之陣列、函式、`Date` 當 opt」之案鎖定(變異 M21 曾因此一度等價,補案後被殺).
+- **測試夾具之陷阱**:三角形之洞若有頂點落在外環斜邊上,洞內／外判定落在邊界而與預期相反(曾以 `(43,4)` 判洞內為 true,該點恰在洞之斜邊上);洞與洞內測點須嚴格位於外環內部,測點避開邊上.
+- **變異作法(鏡像根)**:每個變異於 `./tmp/<案>/mut/<id>/` 複製整個 `src` 與新測試檔、只改新模組之一處,以該夾為 cwd 跑 `node <repo>/node_modules/mocha/bin/mocha.js`(相依向上解析至 repo 之 `node_modules`,無目錄連結);錨點出現次數不為 1 即中止(曾因改寫程式後舊錨點消失而被攔下);全程在同一個 `quiet-run --lock` 內跑完,38 個約 1 分鐘.修前紅為鏡像根內只有舊 `src`:新測試載入即 `ERR_MODULE_NOT_FOUND`(無摘要行,離開碼 1).
+- **獨立複審(sonnet,唯讀)找到而自審漏掉者**:`opt` 鍵為存取器且拋錯時原錯誤外洩(`get(opt,…)` 在 try 之外);位置於驗證後再讀一次(存取器可令驗證與取值內容不同);空環不一致;巢狀過深之堆疊溢位以「可讀」訊息回報(文件載明);容器寬鬆處理無文件亦無測試.測試鑑別力之缺口:位置為 `{x,y}` 物件、MultiPolygon 內 polygon 為 `{length:0}`、第 4 個數字無效、空環皆無案,補後各變異被殺.
+- **流程**:Git Bash 呼叫 `decision-log.mjs` 時任務資料夾須寫 `C:/…` 正斜線(反斜線被 shell 吞掉而得「任務資料夾不存在」);`sed -i` 被守門 hook 擋下,改 Edit;eslint 之 `no-new-wrappers` 擋 `new String(...)`,測試以 `Object('skip')` 取得字串包裝物件.

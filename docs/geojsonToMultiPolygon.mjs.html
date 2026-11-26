@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>geojsonToMultiPolygon.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CholeskyDecomposition.html">CholeskyDecomposition</a><ul class='methods'><li data-type='method'><a href="CholeskyDecomposition.html#insertColumn">insertColumn</a></li><li data-type='method'><a href="CholeskyDecomposition.html#inverse">inverse</a></li><li data-type='method'><a href="CholeskyDecomposition.html#l">l</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solve">solve</a></li><li data-type='method'><a href="CholeskyDecomposition.html#solveLower">solveLower</a></li></ul></li><li><a href="ConstantPrior.html">ConstantPrior</a><ul class='methods'><li data-type='method'><a href="ConstantPrior.html#fit">fit</a></li><li data-type='method'><a href="ConstantPrior.html#prior">prior</a></li><li data-type='method'><a href="ConstantPrior.html#.default">default</a></li></ul></li><li><a href="Exponential.html">Exponential</a><ul class='methods'><li data-type='method'><a href="Exponential.html#gradient">gradient</a></li><li data-type='method'><a href="Exponential.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Exponential.html#kernel">kernel</a></li><li data-type='method'><a href="Exponential.html#rescale">rescale</a></li><li data-type='method'><a href="Exponential.html#setParameters">setParameters</a></li></ul></li><li><a href="ExtendableMatrix.html">ExtendableMatrix</a><ul class='methods'><li data-type='method'><a href="ExtendableMatrix.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableMatrix.html#asMatrix">asMatrix</a></li></ul></li><li><a href="ExtendableVector.html">ExtendableVector</a><ul class='methods'><li data-type='method'><a href="ExtendableVector.html#addRows">addRows</a></li><li data-type='method'><a href="ExtendableVector.html#asVector">asVector</a></li><li data-type='method'><a href="ExtendableVector.html#assign">assign</a></li></ul></li><li><a href="GaussianProcess.html">GaussianProcess</a><ul class='methods'><li data-type='method'><a href="GaussianProcess.html#add_samples">add_samples</a></li><li data-type='method'><a href="GaussianProcess.html#fit_parameters">fit_parameters</a></li><li data-type='method'><a href="GaussianProcess.html#likelihood">likelihood</a></li><li data-type='method'><a href="GaussianProcess.html#predict">predict</a></li><li data-type='method'><a href="GaussianProcess.html#predict_covariance">predict_covariance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_mean_variance">predict_mean_variance</a></li><li data-type='method'><a href="GaussianProcess.html#predict_variance">predict_variance</a></li><li data-type='method'><a href="GaussianProcess.html#sample_at">sample_at</a></li><li data-type='method'><a href="GaussianProcess.html#.builder">builder</a></li><li data-type='method'><a href="GaussianProcess.html#.default">default</a></li><li data-type='method'><a href="GaussianProcess.html#.fromData">fromData</a></li></ul></li><li><a href="GaussianProcessBuilder.html">GaussianProcessBuilder</a><ul class='methods'><li data-type='method'><a href="GaussianProcessBuilder.html#fitKernel">fitKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#fitPrior">fitPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setCholeskyEpsilon">setCholeskyEpsilon</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setFitParameters">setFitParameters</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setKernel">setKernel</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setNoise">setNoise</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#setPrior">setPrior</a></li><li data-type='method'><a href="GaussianProcessBuilder.html#train">train</a></li></ul></li><li><a href="HyperTan.html">HyperTan</a><ul class='methods'><li data-type='method'><a href="HyperTan.html#gradient">gradient</a></li><li data-type='method'><a href="HyperTan.html#kernel">kernel</a></li><li data-type='method'><a href="HyperTan.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelProd.html">KernelProd</a><ul class='methods'><li data-type='method'><a href="KernelProd.html#gradient">gradient</a></li><li data-type='method'><a href="KernelProd.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelProd.html#kernel">kernel</a></li><li data-type='method'><a href="KernelProd.html#rescale">rescale</a></li><li data-type='method'><a href="KernelProd.html#setParameters">setParameters</a></li></ul></li><li><a href="KernelSum.html">KernelSum</a><ul class='methods'><li data-type='method'><a href="KernelSum.html#gradient">gradient</a></li><li data-type='method'><a href="KernelSum.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="KernelSum.html#kernel">kernel</a></li><li data-type='method'><a href="KernelSum.html#rescale">rescale</a></li><li data-type='method'><a href="KernelSum.html#setParameters">setParameters</a></li></ul></li><li><a href="Linear.html">Linear</a><ul class='methods'><li data-type='method'><a href="Linear.html#gradient">gradient</a></li><li data-type='method'><a href="Linear.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Linear.html#kernel">kernel</a></li><li data-type='method'><a href="Linear.html#setParameters">setParameters</a></li></ul></li><li><a href="LinearPrior.html">LinearPrior</a><ul class='methods'><li data-type='method'><a href="LinearPrior.html#fit">fit</a></li><li data-type='method'><a href="LinearPrior.html#prior">prior</a></li><li data-type='method'><a href="LinearPrior.html#.default">default</a></li></ul></li><li><a href="Matern1.html">Matern1</a><ul class='methods'><li data-type='method'><a href="Matern1.html#gradient">gradient</a></li><li data-type='method'><a href="Matern1.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern1.html#kernel">kernel</a></li><li data-type='method'><a href="Matern1.html#rescale">rescale</a></li><li data-type='method'><a href="Matern1.html#setParameters">setParameters</a></li></ul></li><li><a href="Matern2.html">Matern2</a><ul class='methods'><li data-type='method'><a href="Matern2.html#gradient">gradient</a></li><li data-type='method'><a href="Matern2.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="Matern2.html#kernel">kernel</a></li><li data-type='method'><a href="Matern2.html#rescale">rescale</a></li><li data-type='method'><a href="Matern2.html#setParameters">setParameters</a></li></ul></li><li><a href="Multiquadric.html">Multiquadric</a><ul class='methods'><li data-type='method'><a href="Multiquadric.html#gradient">gradient</a></li><li data-type='method'><a href="Multiquadric.html#kernel">kernel</a></li><li data-type='method'><a href="Multiquadric.html#setParameters">setParameters</a></li></ul></li><li><a href="MultivariateNormal.html">MultivariateNormal</a><ul class='methods'><li data-type='method'><a href="MultivariateNormal.html#mean">mean</a></li><li data-type='method'><a href="MultivariateNormal.html#sample">sample</a></li></ul></li><li><a href="Polynomial.html">Polynomial</a><ul class='methods'><li data-type='method'><a href="Polynomial.html#gradient">gradient</a></li><li data-type='method'><a href="Polynomial.html#kernel">kernel</a></li><li data-type='method'><a href="Polynomial.html#setParameters">setParameters</a></li></ul></li><li><a href="RationalQuadratic.html">RationalQuadratic</a><ul class='methods'><li data-type='method'><a href="RationalQuadratic.html#gradient">gradient</a></li><li data-type='method'><a href="RationalQuadratic.html#kernel">kernel</a></li><li data-type='method'><a href="RationalQuadratic.html#setParameters">setParameters</a></li></ul></li><li><a href="SquaredExp.html">SquaredExp</a><ul class='methods'><li data-type='method'><a href="SquaredExp.html#gradient">gradient</a></li><li data-type='method'><a href="SquaredExp.html#heuristicFit">heuristicFit</a></li><li data-type='method'><a href="SquaredExp.html#kernel">kernel</a></li><li data-type='method'><a href="SquaredExp.html#rescale">rescale</a></li><li data-type='method'><a href="SquaredExp.html#setParameters">setParameters</a></li></ul></li><li><a href="ZeroPrior.html">ZeroPrior</a><ul class='methods'><li data-type='method'><a href="ZeroPrior.html#fit">fit</a></li><li data-type='method'><a href="ZeroPrior.html#prior">prior</a></li><li data-type='method'><a href="ZeroPrior.html#.default">default</a></li></ul></li><li><a href="w-gis.html">w-gis</a><ul class='methods'><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.Build">Build</a></li><li data-type='method'><a href="w-gis.html#.aggregatePoints">aggregatePoints</a></li><li data-type='method'><a href="w-gis.html#.bufferMultiPolygon">bufferMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.calcContours">calcContours</a></li><li data-type='method'><a href="w-gis.html#.calcDelaunay">calcDelaunay</a></li><li data-type='method'><a href="w-gis.html#.calcVoronoi">calcVoronoi</a></li><li data-type='method'><a href="w-gis.html#.clipMultiPolygon">clipMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.clipPolygon">clipPolygon</a></li><li data-type='method'><a href="w-gis.html#.convertCoordinate">convertCoordinate</a></li><li data-type='method'><a href="w-gis.html#.distilMultiPolygon">distilMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpBoxPolygons">findPointInKpBoxPolygons</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpFeature">findPointInKpFeature</a></li><li data-type='method'><a href="w-gis.html#.findPointInKpPolygons">findPointInKpPolygons</a></li><li data-type='method'><a href="w-gis.html#.fixCloseMultiPolygon">fixCloseMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.fixClosePolygon">fixClosePolygon</a></li><li data-type='method'><a href="w-gis.html#.fixGeometryMultiPolygon">fixGeometryMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.flattenMultiPolygon">flattenMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.geojsonToMultiPolygon">geojsonToMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygon">getAreaMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaMultiPolygonSm">getAreaMultiPolygonSm</a></li><li data-type='method'><a href="w-gis.html#.getAreaPolygon">getAreaPolygon</a></li><li data-type='method'><a href="w-gis.html#.getAreaRingString">getAreaRingString</a></li><li data-type='method'><a href="w-gis.html#.getBox">getBox</a></li><li data-type='method'><a href="w-gis.html#.getBoxFromGeojson">getBoxFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getBoxPolygon">getBoxPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCenterOfMassMultiPolygon">getCenterOfMassMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getCentroidMultiPolygon">getCentroidMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.getKpFeatureFromGeojson">getKpFeatureFromGeojson</a></li><li data-type='method'><a href="w-gis.html#.getPointDepth">getPointDepth</a></li><li data-type='method'><a href="w-gis.html#.interp1">interp1</a></li><li data-type='method'><a href="w-gis.html#.interp2">interp2</a></li><li data-type='method'><a href="w-gis.html#.interp2Grid">interp2Grid</a></li><li data-type='method'><a href="w-gis.html#.interp2Kriging">interp2Kriging</a></li><li data-type='method'><a href="w-gis.html#.interp2NaturalNeighbor">interp2NaturalNeighbor</a></li><li data-type='method'><a href="w-gis.html#.interp2Normalize">interp2Normalize</a></li><li data-type='method'><a href="w-gis.html#.interp2Raster">interp2Raster</a></li><li data-type='method'><a href="w-gis.html#.intersectMultiPolygon">intersectMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.intersectPolygon">intersectPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygon">invCoordMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolygonOrMultiPolyline">invCoordMultiPolygonOrMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordMultiPolyline">invCoordMultiPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygon">invCoordPolygon</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolygonOrPolyline">invCoordPolygonOrPolyline</a></li><li data-type='method'><a href="w-gis.html#.invCoordPolyline">invCoordPolyline</a></li><li data-type='method'><a href="w-gis.html#.isPointInPolygons">isPointInPolygons</a></li><li data-type='method'><a href="w-gis.html#.normalizeArray">normalizeArray</a></li><li data-type='method'><a href="w-gis.html#.ptXYtoObj">ptXYtoObj</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZVtoArr">ptsXYZVtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYZtoArr">ptsXYZtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXYtoArr">ptsXYtoArr</a></li><li data-type='method'><a href="w-gis.html#.ptsXtoArr">ptsXtoArr</a></li><li data-type='method'><a href="w-gis.html#.simplifyMultiPolygon">simplifyMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.splineMultiPolygon">splineMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toMultiPoint">toMultiPoint</a></li><li data-type='method'><a href="w-gis.html#.toMultiPolygon">toMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.toPolygon">toPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionMultiPolygon">unionMultiPolygon</a></li><li data-type='method'><a href="w-gis.html#.unionPolygon">unionPolygon</a></li><li data-type='method'><a href="w-gis.html#.writeTiff">writeTiff</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#DEFAULT_MAX_TIME_MS">DEFAULT_MAX_TIME_MS</a></li><li><a href="global.html#Gaussian">Gaussian</a></li><li><a href="global.html#_makeHullTester">_makeHullTester</a></li><li><a href="global.html#addKernels">addKernels</a></li><li><a href="global.html#addRowsCholeskyCovMatrix">addRowsCholeskyCovMatrix</a></li><li><a href="global.html#addToDiagonal">addToDiagonal</a></li><li><a href="global.html#addVec">addVec</a></li><li><a href="global.html#assert">assert</a></li><li><a href="global.html#cholesky">cholesky</a></li><li><a href="global.html#choleskyInverse">choleskyInverse</a></li><li><a href="global.html#choleskySolve">choleskySolve</a></li><li><a href="global.html#classifyFeature">classifyFeature</a></li><li><a href="global.html#columnDot">columnDot</a></li><li><a href="global.html#columnNormSquared">columnNormSquared</a></li><li><a href="global.html#createEmptyResult">createEmptyResult</a></li><li><a href="global.html#diagonal">diagonal</a></li><li><a href="global.html#dot">dot</a></li><li><a href="global.html#ensureRingClosed">ensureRingClosed</a></li><li><a href="global.html#fitAmplitudeVar">fitAmplitudeVar</a></li><li><a href="global.html#fitBandwidthMean">fitBandwidthMean</a></li><li><a href="global.html#fixCloseMultiPolygonCoords">fixCloseMultiPolygonCoords</a></li><li><a href="global.html#fixClosePolygonCoords">fixClosePolygonCoords</a></li><li><a href="global.html#fromVector">fromVector</a></li><li><a href="global.html#gradientMarginalLikelihood">gradientMarginalLikelihood</a></li><li><a href="global.html#hypot">hypot</a></li><li><a href="global.html#identity">identity</a></li><li><a href="global.html#injectTurf">injectTurf</a></li><li><a href="global.html#isSingle">isSingle</a></li><li><a href="global.html#lstsqSolve">lstsqSolve</a></li><li><a href="global.html#makeCholeskyCovMatrix">makeCholeskyCovMatrix</a></li><li><a href="global.html#makeCovarianceMatrix">makeCovarianceMatrix</a></li><li><a href="global.html#makeGp">makeGp</a></li><li><a href="global.html#makeGradientCovarianceMatrices">makeGradientCovarianceMatrices</a></li><li><a href="global.html#matMul">matMul</a></li><li><a href="global.html#matSub">matSub</a></li><li><a href="global.html#matTransposeVec">matTransposeVec</a></li><li><a href="global.html#matVec">matVec</a></li><li><a href="global.html#mulKernels">mulKernels</a></li><li><a href="global.html#mulberry32">mulberry32</a></li><li><a href="global.html#norm">norm</a></li><li><a href="global.html#normSquared">normSquared</a></li><li><a href="global.html#optimizeParameters">optimizeParameters</a></li><li><a href="global.html#procSpecPolygon">procSpecPolygon</a></li><li><a href="global.html#processPolygonCoords">processPolygonCoords</a></li><li><a href="global.html#scaleVec">scaleVec</a></li><li><a href="global.html#scaledGradientMarginalLikelihood">scaledGradientMarginalLikelihood</a></li><li><a href="global.html#scaledOptimizeParameters">scaledOptimizeParameters</a></li><li><a href="global.html#solveLowerTri">solveLowerTri</a></li><li><a href="global.html#solveLowerTriVec">solveLowerTriVec</a></li><li><a href="global.html#solveUpperTri">solveUpperTri</a></li><li><a href="global.html#solveUpperTriVec">solveUpperTriVec</a></li><li><a href="global.html#splitAndProcGeoJSON">splitAndProcGeoJSON</a></li><li><a href="global.html#splitGeoJSON">splitGeoJSON</a></li><li><a href="global.html#standardNormal">standardNormal</a></li><li><a href="global.html#subVec">subVec</a></li><li><a href="global.html#toMatrix">toMatrix</a></li><li><a href="global.html#toVector">toVector</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#transpose">transpose</a></li><li><a href="global.html#zeros">zeros</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">geojsonToMultiPolygon.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import isestr from 'wsemi/src/isestr.mjs'
+import isarr from 'wsemi/src/isarr.mjs'
+import isobj from 'wsemi/src/isobj.mjs'
+import JSON5 from 'json5'
+
+
+let nonArealTypes = ['Point', 'MultiPoint', 'LineString', 'MultiLineString']
+
+
+let allTypes = ['FeatureCollection', 'Feature', 'GeometryCollection', 'Polygon', 'MultiPolygon', ...nonArealTypes]
+
+
+//本函數自行判定而拋出之錯誤, 用於與讀取輸入時之非預期錯誤(存取器拋錯、已撤銷之Proxy、循環參照等)區分
+class ErrInvalid extends Error {}
+
+
+let fail = (msg) => {
+    throw new ErrInvalid(msg)
+}
+
+
+//GeoJSON之座標須為JSON數字(RFC 7946), 故判定為原始number且有限; 不用wsemi isenum因其收數字字串, 收了就須轉換使輸出與輸入型別不同
+let isCoord = (v) => {
+    return typeof v === 'number' &amp;&amp; Number.isFinite(v)
+}
+
+
+//讀取opt之鍵, 存取器拋錯視為未給(dspec V11: 讀取拋錯即無效, K3: 無效之opt鍵改用預設)
+let pickOpt = (opt, key) => {
+    try {
+        return opt[key]
+    }
+    catch (err) {
+        return undefined
+    }
+}
+
+
+//位置之複本, 無效回傳null; 位置為2個以上之有限數字(第3個起為高程等), 長度不限於2
+//先複製再驗證複本, 使檢測之值即使用之值(輸入為存取器或Proxy時, 驗證與取值不會讀到不同內容)
+let cpPos = (p) => {
+    if (!isarr(p)) {
+        return null
+    }
+    let c = p.slice()
+    if (c.length &lt; 2) {
+        return null
+    }
+    for (let i = 0; i &lt; c.length; i++) {
+        if (!isCoord(c[i])) {
+            return null
+        }
+    }
+    return c
+}
+
+
+//環(位置之陣列)之複本, 須至少含1個位置(空環下游函數會拋原生錯誤), 不檢查封閉與是否足以成面之點數
+let cpRing = (rs, where) => {
+    if (!isarr(rs) || rs.length === 0) {
+        fail(`invalid ${where}: must be a non-empty array of positions`)
+    }
+    let r = []
+    for (let i = 0; i &lt; rs.length; i++) {
+        let c = cpPos(rs[i])
+        if (c === null) {
+            fail(`invalid ${where}[${i}]: must be an array of two or more finite numbers`)
+        }
+        r.push(c)
+    }
+    return r
+}
+
+
+//polygon(環之陣列, 第1環為外環、其後為內環)之複本
+let cpPolygon = (pg, where) => {
+    if (!isarr(pg)) {
+        fail(`invalid ${where}: must be an array of rings`)
+    }
+    let r = []
+    for (let i = 0; i &lt; pg.length; i++) {
+        r.push(cpRing(pg[i], `${where}[${i}]`))
+    }
+    return r
+}
+
+
+/**
+ * 依GeoJSON之type(而非座標深度)轉換成MultiPolygon，Polygon之第1環為外環、其後為內環(洞)，內環保留為洞
+ *
+ * toMultiPolygon、isPointInPolygons等函數以座標深度推定型別，GeoJSON之Polygon座標(環之陣列)於預設supposeType('polygons')下會被視為多個獨立polygon，使內環成為實心；讀GeoJSON時請先以本函數轉換，再將回傳值交給其他函數
+ *
+ * 轉換依type：Polygon包一層成為1塊polygon，MultiPolygon原樣，FeatureCollection與GeometryCollection依序合併，Feature取其geometry，geometry為null或未給者略過，空座標(Polygon之[]、MultiPolygon內之[])略過；各層皆依其type遞迴處理，故FeatureCollection內放裸geometry、GeometryCollection內放Feature亦收
+ *
+ * 只檢查結構(type、陣列層次、環須含至少1個位置、位置為2個以上之有限數字，含NaN與Infinity者視為無效)，不檢查環之封閉、是否足以成面之點數、方向與自交，也不改寫環之方向(依GeoJSON位置判別，第1環為外環)；環之封閉可交fixCloseMultiPolygon處理(isPointInPolygons內已含)
+ *
+ * 位置保留原長度(含高程)，但toMultiPolygon、isPointInPolygons等以座標深度判斷之函數只收[x,y]位置，含高程者交給它們會拋錯，須先自行去除高程
+ *
+ * 回傳為複本，不與輸入共用陣列，輸入不被改動；無有效幾何時回傳[]，而toMultiPolygon、fixCloseMultiPolygon等收到[]會拋錯，交給它們前須先判斷長度
+ *
+ * 輸入無法讀取(存取器拋錯、已撤銷之Proxy、循環參照或巢狀過深)時一律拋固定訊息，不帶出輸入內之錯誤內容
+ *
+ * Unit Test: {@link https://github.com/yuda-lyu/w-gis/blob/master/test/geojsonToMultiPolygon.test.mjs Github}
+ * @memberOf w-gis
+ * @param {Object|String} geojson 輸入GeoJSON物件或其JSON字串(可含JSON5寫法)，可為FeatureCollection、Feature、Polygon、MultiPolygon、GeometryCollection，必給，無效(非物件、字串無法解析、type不支援、座標結構不符)時拋錯，錯誤訊息只指出位置與應有種類，不含輸入值
+ * @param {Object} [opt={}] 輸入設定物件，非物件視為未給，各鍵之值非預期或讀取拋錯者視為該鍵未給，預設{}
+ * @param {String} [opt.nonAreal='throw'] 輸入遇點或線類幾何(Point、MultiPoint、LineString、MultiLineString)之處置字串，'throw'為拋錯，'skip'為略過，其他值視為未給，預設'throw'
+ * @param {Boolean} [opt.debug=false] 輸入opt之值無效而改用預設時是否以console.warn提示(提示不含輸入值)，只收true與false，其他值視為false，預設false
+ * @returns {Array} 回傳MultiPolygon陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列(每塊polygon之第1環為外環、其後為內環)；皆無有效幾何時回傳[]
+ * @example
+ *
+ * let geojson
+ * let r
+ *
+ * geojson = { //polygon含1內環
+ *     type: 'Polygon',
+ *     coordinates: [
+ *         [[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]],
+ *         [[4, 4], [6, 4], [6, 6], [4, 6], [4, 4]],
+ *     ],
+ * }
+ * r = geojsonToMultiPolygon(geojson)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[4,4],[6,4],[6,6],[4,6],[4,4]]]]
+ *
+ * geojson = {
+ *     type: 'FeatureCollection',
+ *     features: [
+ *         { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } },
+ *         { type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: [[[[2, 0], [3, 0], [3, 1], [2, 0]]]] } },
+ *         { type: 'Feature', properties: {}, geometry: null },
+ *     ],
+ * }
+ * r = geojsonToMultiPolygon(geojson)
+ * console.log(JSON.stringify(r))
+ * // => [[[[0,0],[1,0],[1,1],[0,0]]],[[[2,0],[3,0],[3,1],[2,0]]]]
+ *
+ * geojson = { type: 'Point', coordinates: [1, 1] }
+ * try {
+ *     r = geojsonToMultiPolygon(geojson)
+ * }
+ * catch (err) {
+ *     r = err.message
+ * }
+ * console.log(r)
+ * // => invalid geojson: must be Polygon or MultiPolygon (use opt.nonAreal 'skip' to skip Point, MultiPoint, LineString and MultiLineString)
+ *
+ * r = geojsonToMultiPolygon(geojson, { nonAreal: 'skip' })
+ * console.log(JSON.stringify(r))
+ * // => []
+ *
+ */
+function geojsonToMultiPolygon(geojson, opt = {}) {
+
+    //opt, 非一般物件視為未給(isobj對任何輸入皆不拋錯)
+    if (!isobj(opt)) {
+        opt = {}
+    }
+
+    //debug
+    let debug = pickOpt(opt, 'debug') === true
+
+    //nonAreal
+    let nonAreal = pickOpt(opt, 'nonAreal')
+    if (nonAreal !== 'throw' &amp;&amp; nonAreal !== 'skip') {
+        if (debug &amp;&amp; nonAreal !== undefined &amp;&amp; nonAreal !== null) {
+            console.warn(`[w-gis geojsonToMultiPolygon] invalid opt.nonAreal: must be one of 'throw', 'skip', using default 'throw'`)
+        }
+        nonAreal = 'throw'
+    }
+
+    //geojson為字串時解析, 與getBoxFromGeojson、getKpFeatureFromGeojson同用JSON5解析(wsemi j2o只收嚴格JSON, 且失敗時回{}而無法與合法之{}區分)
+    if (isestr(geojson)) {
+        try {
+            geojson = JSON5.parse(geojson)
+        }
+        catch (err) {
+            fail('invalid geojson: must be a valid JSON text')
+        }
+    }
+
+    //check
+    if (!isobj(geojson)) {
+        fail('invalid geojson: must be an object or a JSON text')
+    }
+
+    //conv, 依type遞迴處理
+    let r = []
+    let conv = (g, where) => {
+        if (!isobj(g)) {
+            fail(`invalid ${where}: must be an object`)
+        }
+        let t = g.type
+        if (t === 'FeatureCollection') {
+            let fs = g.features
+            if (!isarr(fs)) {
+                fail(`invalid ${where}.features: must be an array`)
+            }
+            for (let i = 0; i &lt; fs.length; i++) {
+                conv(fs[i], `${where}.features[${i}]`)
+            }
+            return
+        }
+        if (t === 'Feature') {
+            let gm = g.geometry
+            if (gm === undefined || gm === null) {
+                return //GeoJSON允許之無幾何feature, 略過
+            }
+            conv(gm, `${where}.geometry`)
+            return
+        }
+        if (t === 'GeometryCollection') {
+            let gs = g.geometries
+            if (!isarr(gs)) {
+                fail(`invalid ${where}.geometries: must be an array`)
+            }
+            for (let i = 0; i &lt; gs.length; i++) {
+                conv(gs[i], `${where}.geometries[${i}]`)
+            }
+            return
+        }
+        if (t === 'Polygon') {
+            let cs = g.coordinates
+            if (!isarr(cs)) {
+                fail(`invalid ${where}.coordinates: must be an array`)
+            }
+            if (cs.length > 0) { //空座標略過
+                r.push(cpPolygon(cs, `${where}.coordinates`)) //Polygon包一層成為1塊polygon, 其內環仍為同一塊之洞
+            }
+            return
+        }
+        if (t === 'MultiPolygon') {
+            let cs = g.coordinates
+            if (!isarr(cs)) {
+                fail(`invalid ${where}.coordinates: must be an array`)
+            }
+            for (let i = 0; i &lt; cs.length; i++) {
+                if (isarr(cs[i]) &amp;&amp; cs[i].length === 0) {
+                    continue //空polygon略過
+                }
+                r.push(cpPolygon(cs[i], `${where}.coordinates[${i}]`))
+            }
+            return
+        }
+        if (nonArealTypes.includes(t)) {
+            if (nonAreal === 'skip') {
+                return
+            }
+            fail(`invalid ${where}: must be Polygon or MultiPolygon (use opt.nonAreal 'skip' to skip ${nonArealTypes.slice(0, -1).join(', ')} and ${nonArealTypes[nonArealTypes.length - 1]})`)
+        }
+        fail(`invalid ${where}.type: must be one of ${allTypes.map((v) => `'${v}'`).join(', ')}`)
+    }
+
+    //讀取輸入時之非預期錯誤(存取器拋錯、已撤銷之Proxy、循環參照等)改為固定訊息, 不帶出原錯誤內容
+    try {
+        conv(geojson, 'geojson')
+    }
+    catch (err) {
+        if (err instanceof ErrInvalid) {
+            throw err
+        }
+        throw new Error('invalid geojson: must be a readable object')
+    }
+
+    return r
+}
+
+
+export default geojsonToMultiPolygon
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Nov 26 2026 15:03:36 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

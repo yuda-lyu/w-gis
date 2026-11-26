@@ -11,7 +11,7 @@ import fixCloseMultiPolygon from './fixCloseMultiPolygon.mjs'
  * @memberOf w-gis
  * @param {Array} pgs 輸入MultiPolygon資料陣列，為[[ [[x11,y11],[x12,y12],...], [[x21,y21],[x22,y22],...] ]]構成之陣列
  * @param {Object} [opt={}] 輸入設定物件，預設{}
- * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'。注意GeoJSON之Polygon座標(第1環為外環、其後為內環)須使用ringStrings，用預設polygons會使各環成為獨立polygon而內環成為實心；讀GeoJSON時建議先以geojsonToMultiPolygon依type轉換
  * @returns {Array} 回傳形心座標陣列
  * @example
  *

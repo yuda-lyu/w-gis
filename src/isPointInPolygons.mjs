@@ -19,7 +19,7 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.keyX='x'] 輸入點物件x座標鍵字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件y座標鍵字串，預設'y'
- * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'。注意GeoJSON之Polygon座標(第1環為外環、其後為內環)須使用ringStrings，用預設polygons會使各環成為獨立polygon而內環成為實心(內環內之點被判為在內)；讀GeoJSON時建議先以geojsonToMultiPolygon依type轉換
  * @param {Boolean} [opt.toTurfMultiPolygon=true] 輸入是否轉換多邊形為Turf的MultiPolygon，若須加速可於外部先轉好就不用於函數內再轉，預設true
  * @returns {Boolean} 回傳是否位於多邊形陣列內布林值
  * @example

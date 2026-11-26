@@ -2,9 +2,9 @@
 
 本檔為套件設計與開發階段之規則帳本,為要求程式碼須長成什麼樣,或由規格產出之測試(項目/說明/流程)有哪些,包含軸、單一擁有者、已知限制、破壞性變更紀錄,以及對應是哪些測試檔案或指令等,由agent自行編列、擴充與維護.
 
-> 建立:2026-10-14(任務 20261014042247 run02,依主控複審 `C:\opensrcOper\dnow\20261014042247\review\run01-複審.md` 之裁示).來源審計:`C:\opensrcOper\dnow\20261014042247\agent-out\run01-審計回應.md`.
+> 建立:2026-10-14(任務 20261014042247 run02,依主控複審 run01 之裁示).來源審計:任務 20261014042247 之 run01 審計回應(存於主控任務資料夾).
 > 本帳本之規則先於程式寫定,測試由規則衍生;規則之「站點全集」須以盤點指令重跑得出,不得憑記憶增刪.
-> 2026-11-02:`toolg/` 之發布與建置腳本依 dspec〈自有套件之發布與建置腳本〉(`C:\opensrcOper\dspec\`);R-ENTRY-1/2/3 中據 `distConfig`／`checkDist`／`getIndexNames` 所立之條款已撤,改為「建置寫法依 dspec;產物之檢查在測試」.本帳本不另立 toolg 寫法之規則.
+> 2026-11-02:`toolg/` 之發布與建置腳本依 dspec〈自有套件之發布與建置腳本〉(主控之跨套件規格);R-ENTRY-1/2/3 中據 `distConfig`／`checkDist`／`getIndexNames` 所立之條款已撤,改為「建置寫法依 dspec;產物之檢查在測試」.本帳本不另立 toolg 寫法之規則.
 
 ## 一、規則
 
@@ -13,7 +13,7 @@
 - **規則**:`src/WGis.mjs` 可 import,其匯出名單等於「`src/` 頂層 `.mjs`,扣除 `WGis.mjs` 與 `_` 開頭者」;名單內每個 `src/<名>.mjs` 可單獨 import,其 default 與索引之同名匯出為同一參考;型別皆為函數,唯 `importTurf` 為物件(Node 下為 `@turf/turf` 之命名空間).
 - **產生與核對**:索引 `src/WGis.mjs` 由 `toolg/gPackageIndex.mjs` 產生(發布列 `script.txt:4`,寫法依 dspec〈自有套件之發布與建置腳本〉);測試以 `test/tools/getIndexNames.mjs`(測試用之獨立判準)核對索引與產物之名單,並以副本並指定 cwd 執行 `toolg/gPackageIndex.mjs`,核對產生結果等於已提交之索引.
 - **盤點指令**:`node -e "import('./test/tools/getIndexNames.mjs').then((m)=>console.log(m.default('./src').join(',')))"`;`npx mocha test/unit-entrySrc.test.mjs --timeout 180000`.
-- **站點全集**:63 個公開模組(2026-10-14 移除 interp3 後;移除前 64).索引由 gPackageIndex 以 `\r\n` 接合並補結尾換行(eslint `eol-last`).
+- **站點全集**:64 個公開模組(2026-11-26 新增 `geojsonToMultiPolygon`;2026-10-14 移除 interp3 後為 63,移除前 64).索引由 gPackageIndex 以 `\r\n` 接合並補結尾換行(eslint `eol-last`).
 - **測試**:`test/unit-entrySrc.test.mjs` 案 1(索引可載入且名單相符、型別)、案 2(逐檔可載入且與索引同參考)、案 4(副本執行 gPackageIndex,產生之索引等於已提交者且名單等於獨立判準).
 
 ### R-ENTRY-2 建置無未解析引用,產物之外部清單等於宣告
@@ -109,6 +109,27 @@
 - **測試**:`test/unit-interp2NaturalNeighborSibson.test.mjs`(32 案:參考解自身 3、對抗案例 13〔含須掃描線法重建之極小群、次正規數範圍〕、1.1.27 三原因 3、`ps`／凸包邊線性／銳角頂點 3、回呼與選項與查詢點之例外 5、備援與告知 5〔含夾於極近兩點之間、傾斜狹長帶〕;修前紅:對 1.1.27 為 17 紅、4 綠〔參考解自身 2、平移縮放逐位元、無字面值〕;對草案為 5 紅〔兩組極小群、①之小群、無 BigInt、字面值〕);`test/interp2NaturalNeighbor.test.mjs`(草案之 Liang & Hale 案例,其極小群之精確解已改為原始座標之值).
 - **變異驗證(2026-11-14,18 個,17 個被殺)**:內部座標改回草案之捨入映射、不做 Lawson 翻邊、外心固定以內插點為基準、凸包容許值 0、停用掃描線法重建、`ps` 含權重 0 者、投影不夾於線段、局部座標改回草案(最遠距離正規化、1e-9)、單一縮放因子、投影不先縮放、容許值改回「至邊所在直線之距離」、移除極遠查詢點之預檢、移除條件估計、移除回呼非有限數之檢查、移除 scale 之檢查、停用精確備援、共線時不均分皆被殺;「移除負面積檢查」存活(局部座標檢查已攔下同一批輸入,於已知輸入上行為等價,保留為廉價之必要條件).以 `W_GIS_SRC_DIR` 跑 Sibson 與 Hull 兩檔(腳本於任務 gis145 之證據資料夾,未入版控).
 
+### R-GJ1 geojsonToMultiPolygon 依 GeoJSON 之 type 轉換成 MultiPolygon,Polygon 之內環保留為洞(2026-11-26,t665;排程第 665 項,使用端 Gitea #217)
+
+- **事實(實測,2026-11-26,1.1.46)**:外環 `[[0,0],[10,0],[10,10],[0,10],[0,0]]`、內環 `[[4,4],[6,4],[6,6],[4,6],[4,4]]`、洞內點 `[5,5]`:`buildFindPointInGeojson`(吃整份 GeoJSON,依 type)為 `'unknow'`;`isPointInPolygons([5,5], polygon.coordinates)` 為 `true`、`toMultiPolygon(polygon.coordinates)` 得 2 塊(座標深度為 2 時預設 `supposeType: 'polygons'` 把各環當獨立 polygon,`src/toMultiPolygon.mjs:137`、`src/isPointInPolygons.mjs:95`);同幾何改存 MultiPolygon 座標為 `false`、1 塊;`supposeType: 'ringStrings'` 亦為 `false`.座標深度推定屬既有設計(JSDoc 範例已載),既有函數行為不改,另提供依 type 之公開轉換.
+- **規則**(`src/geojsonToMultiPolygon.mjs` 為唯一擁有者;回傳 MultiPolygon 座標,每塊之第 1 環為外環、其後為內環):
+  - **R-GJ1-a Polygon**:包一層成為 1 塊,其內環留在同一塊(洞),不拆成獨立 polygon;交 `isPointInPolygons` 時洞內點為 `false`、洞外點為 `true`,交 `toMultiPolygon` 得 1 塊 2 環(端到端).
+  - **R-GJ1-b MultiPolygon**:原樣(複本).
+  - **R-GJ1-c 容器**:FeatureCollection、GeometryCollection 依序合併;Feature 取其 `geometry`;`geometry` 為 `null` 或未給、空座標(Polygon 之 `[]`、MultiPolygon 內之 `[]`)略過;各層皆依其 type 遞迴處理(寬鬆:FeatureCollection 內裸 geometry、巢狀 FeatureCollection、GeometryCollection 內 Feature 亦收,測試鎖定);`features`／`geometries` 內之元素須為物件(`null` 拋錯,不略過).
+  - **R-GJ1-d JSON 字串**:以 `json5` 解析(與 `getBoxFromGeojson`、`getKpFeatureFromGeojson` 同;wsemi `j2o` 只收嚴格 JSON,失敗時回 `{}` 而與合法之 `{}` 無從分辨);解析失敗拋 `invalid geojson: must be a valid JSON text`.
+  - **R-GJ1-e 點線類**:Point、MultiPoint、LineString、MultiLineString 預設拋錯,`opt.nonAreal: 'skip'` 略過;其他 type(含大小寫不同、未給)一律拋錯,不受 `skip` 影響.
+  - **R-GJ1-f opt(dspec〈輸入參數之檢測機制〉K3、V4、V11)**:`opt` 非一般物件(`isobj` 為假,含陣列、函式、`Date`、已撤銷之 Proxy)整份視為未給;`opt.nonAreal` 只收 `'throw'`、`'skip'`,其餘視為未給改用 `'throw'`;`opt.debug` 只收 `true`,為 `true` 且 `nonAreal` 非 `undefined`／`null` 而無效時 `console.warn` 一次,內容不含值;各鍵讀取拋錯(存取器)視為該鍵未給,不外洩原錯誤.
+  - **R-GJ1-g 輸入檢測(K2、K9、V19、V20)**:`geojson` 為必給參數,無效即拋錯,訊息為固定詞彙 `invalid <位置>: must be <種類>`(位置如 `geojson.features[1].geometry.coordinates[0][2]`),不含輸入值;`type` 不支援時列出允許之 type 集合.
+  - **R-GJ1-h 複本與座標**:回傳之各層陣列(塊、環、位置)皆不與輸入共用,輸入(含凍結者)不被改動;座標須為原始 number 且有限(`NaN`、`±Infinity`、數字字串、BigInt 皆無效;GeoJSON 座標為 JSON 數字,wsemi `isenum` 收數字字串而須轉換,故不用);位置為 2 個以上之有限數字,保留原長度(含高程)與 `-0`;**先複製位置再驗證複本**(檢測之值即使用之值,K4;存取器或 Proxy 之位置不會驗證與取值讀到不同內容).
+  - **R-GJ1-i 不檢查幾何有效性**:環須含至少 1 個位置(空環交下游函數會拋原生 TypeError,故於此拒絕);不檢查環之封閉、是否足以成面之點數、方向與自交,不改寫方向(依 GeoJSON 位置判別,第 1 環為外環);封閉由 `fixCloseMultiPolygon` 處理(`isPointInPolygons` 內已含,就地補在回傳之複本上,輸入不受影響).與本庫「`fixCloseMultiPolygon` 為封閉之單一擁有者」一致.
+  - **R-GJ1-j 既有函數行為不變**:`toMultiPolygon`、`isPointInPolygons` 只補 `opt.supposeType` 之 JSDoc(GeoJSON Polygon 座標須用 `ringStrings`,或先以本函數轉換),另 15 檔同句 JSDoc 於 t665b 補同一註記(見下「暫行與待辦」②,純註解);測試鎖定預設 `polygons` 與 `ringStrings` 之既有結果.
+  - **R-GJ1-k 不可讀輸入**:讀取輸入時之非預期錯誤(存取器拋錯、讀索引拋錯、循環參照、巢狀過深之堆疊溢位)一律改為 `invalid geojson: must be a readable object`,不帶出原錯誤內容;已撤銷之 Proxy 由型別判斷擋下.
+- **暫行與待辦**:①dspec K3 之 `opt.debug` 警告「同函數同鍵同原因每行程一次」與 `opt.funLog` 出口,屬 wsemi opt 解析函數(§7 第 3 項)之職,該函數公開前不自寫通用解析器,本函數每次呼叫皆警告、只走 `console.warn`;公開後改用;②(已完成,2026-11-26 t665b,主控裁定補註)`toMultiPolygon`、`isPointInPolygons` 以外另 15 檔 JSDoc 含同一句 `opt.supposeType` 說明(全集:`git grep -n "@param .*opt.supposeType" -- src`),已補與 `toMultiPolygon` 同字面之註記:`bufferMultiPolygon`、`clipMultiPolygon`、`findPointInKpPolygons`、`fixCloseMultiPolygon`、`fixGeometryMultiPolygon`、`flattenMultiPolygon`、`getAreaMultiPolygon`、`getAreaMultiPolygonSm`、`getCenterOfMassMultiPolygon`、`getCentroidMultiPolygon`、`intersectMultiPolygon`、`simplifyMultiPolygon`、`splineMultiPolygon`、`unionMultiPolygon`(共 14,皆經 `fixCloseMultiPolygon` 或 `toMultiPolygon` 讀 `opt.supposeType`);`findPointInKpFeature` 例外:其程式碼**不讀** `opt.supposeType`(輸入 `kpFt` 之各 ft 為 Turf Feature,依其 type 判定、內環為洞),原 JSDoc 該列與程式碼不符,故註記改為「本函數並未使用此選項」並指向 `geojsonToMultiPolygon`,未動該列其餘字樣,是否移除該未使用之列待另案;另 `buildFindPointInKpBoxPolygons`、`findPointInKpBoxPolygons` 之程式碼讀 `opt.supposeType`(轉傳 `fixCloseMultiPolygon`)而 JSDoc 無該列,不在上列全集,未補;③含高程之位置交 `toMultiPolygon`、`isPointInPolygons` 會拋 `invalid p[...]`(既有函數只收 `[x,y]`),本函數保留高程、JSDoc 已載.
+- **站點全集**:`git grep -n "geojsonToMultiPolygon" -- src` 命中 `src/geojsonToMultiPolygon.mjs`(實作)、`src/WGis.mjs`(索引,由 `toolg/gPackageIndex.mjs` 產生)、`src/toMultiPolygon.mjs`、`src/isPointInPolygons.mjs`(JSDoc 補註)及另 15 檔 `opt.supposeType` 之 JSDoc 列(t665b 補註,見暫行與待辦②);根目錄範例 `g_geojsonToMultiPolygon.mjs`.
+- **盤點指令**:`git grep -n "geojsonToMultiPolygon" -- src g_geojsonToMultiPolygon.mjs test`;註記全覆蓋:`git grep -n "@param .*opt.supposeType" -- src | grep -v geojsonToMultiPolygon` 須 0 行(`@param` 列共 17,皆含註記);`npx mocha --no-parallel test/geojsonToMultiPolygon.test.mjs test/unit-entrySrc.test.mjs --timeout 180000`.
+- **測試**:`test/geojsonToMultiPolygon.test.mjs`(23 案,各案標 R-GJ1-a~k;座標逐一相異使順序與歸屬錯誤必現形;a 含端到端與多塊、j 為既有行為鎖定、c 含寬鬆容器、f 含 opt 存取器、g 含位置路徑與固定訊息逐字、h 含凍結輸入與陣列不共用與讀一次、i 含不補封閉與輸入不受 `isPointInPolygons` 影響、k 含存取器與循環);`test/unit-entrySrc.test.mjs`(索引含新函數).
+- **變異驗證(2026-11-26,38 個,38 個被殺)**:以鏡像根(只複製檔案,無目錄連結)逐一改一處再跑新測試檔,錨點不存在或不唯一即報錯;含 Polygon 不包一層、修前行為等價(各環成獨立塊)、null／未給 geometry 不略過、位置／環／polygon 不複製、逆序、GeometryCollection 不處理、nonAreal 預設翻轉、skip 漏 LineString、訊息回顯值、空座標不略過、位置只檢前 2／3 個、NaN／Infinity／數字字串放行、不解析字串、不攔讀取錯誤、opt 不判物件、debug 以真假值判定、警告含值、環反轉、自動補封閉、空環放行、位置讀兩次、opt 鍵讀取不攔、容器收緊等.
+
 ## 二、已知限制(文件化)
 
 | ID | 內容 | 落點 |
@@ -152,5 +173,6 @@
 | R-I1 | `test/interp1.test.mjs`、`test/unit-interp1WsemiStrict.test.mjs`(工具:`test/tools/interp1Cases.mjs`、`wsemiInterp1Strict.mjs`、`hookWsemiStrict.mjs`、`registerWsemiStrict.mjs`、`runInterp1Child.mjs`) | `npx mocha --no-parallel test/interp1.test.mjs test/unit-interp1WsemiStrict.test.mjs --timeout 180000`;環境變數 `W_GIS_INTERP1_SRC=<interp1.mjs 路徑>` 可對照他版(修前碼) |
 | R-NN1(a~l 為 `interp2NaturalNeighbor`;m 為凸包判定函數) | `test/unit-interp2NaturalNeighborHull.test.mjs`、`test/unit-makeHullTester.test.mjs` | `npx mocha --no-parallel test/unit-interp2NaturalNeighborHull.test.mjs test/unit-makeHullTester.test.mjs --timeout 180000`;`W_GIS_SRC_DIR=<src 資料夾>` 可對照修前碼或變異碼 |
 | R-NN2(Sibson 權重;判準 `test/tools/sibsonExactRef.mjs`) | `test/unit-interp2NaturalNeighborSibson.test.mjs`、`test/interp2NaturalNeighbor.test.mjs` | `npx mocha --no-parallel test/unit-interp2NaturalNeighborSibson.test.mjs test/interp2NaturalNeighbor.test.mjs --timeout 180000`;Sibson 測試支援 `W_GIS_SRC_DIR` |
+| R-GJ1(`geojsonToMultiPolygon`;a~k) | `test/geojsonToMultiPolygon.test.mjs`、`test/unit-entrySrc.test.mjs`(索引) | `npx mocha --no-parallel test/geojsonToMultiPolygon.test.mjs test/unit-entrySrc.test.mjs --timeout 180000` |
 | L7(`msg.funInv`,已修) | `test/unit-interp2NaturalNeighborFunInv.test.mjs` | `npx mocha --no-parallel test/unit-interp2NaturalNeighborFunInv.test.mjs --timeout 180000`;`W_GIS_SRC_DIR=<src 資料夾>` 可對照修前碼或變異碼 |
 | 全部 | — | `npm test` |

@@ -18,7 +18,7 @@ import ptXYtoObj from './ptXYtoObj.mjs'
  * @param {Object} [opt={}] 輸入設定物件，預設{}
  * @param {String} [opt.keyX='x'] 輸入點物件x座標鍵字串，預設'x'
  * @param {String} [opt.keyY='y'] 輸入點物件y座標鍵字串，預設'y'
- * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'
+ * @param {String} [opt.supposeType='polygons'] 輸入提取模式字串，當數據座標深度為2時，使用polygons代表每個其內多邊形為獨立polygon，若為ringStrings則表示其內多邊形為交錯的ringString(代表聯集與剔除)，預設'polygons'。注意本函數並未使用此選項：kpFt內各ft為Turf的Feature，依其type判定，Polygon之內環保留為洞，不以座標深度推定；由GeoJSON轉換為MultiPolygon座標時請用geojsonToMultiPolygon
  * @param {String} [opt.def='unknow'] 輸入若點未位於任一多邊形時，回傳指定名稱字串，預設'unknow'
  * @returns {String} 回傳名稱字串
  * @example
